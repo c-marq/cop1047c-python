@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Exam 2 Practice · COP1047C</title><meta name="description" content="Practice exercises for COP1047C Exam 2: branching and loops, Chapters 4 and 5."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:wght@400;600;700&display=swap"><style>
+/* Layout: one reading column; sticky progress strip; each exercise is a worksheet card with plan, target, hints, solution */
+:root{
+ --bg:#F6F7F9; --surface:#FFFFFF; --fg:#1C2433; --muted:#5A6577; --line:#DCE1E8;
+ --brand:#1B2A41; --brand-fg:#FFFFFF; --accent:#F5B82E; --accent-ink:#1B2A41; --link:#2F5F98;
+ --code-bg:#22272E; --code-fg:#E6EDF3; --out-bg:#EEF1F5; --out-fg:#1D232B;
+ --go-bg:#DDF3E6; --go-fg:#17663A; --why-bg:#DCEAF7; --why-fg:#1A4C78;
+ --hint-bg:#FCF3D9; --hint-fg:#6E5606; --stop-bg:#F8DDDA; --stop-fg:#8E2A20;
+ --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+ --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+ --f-mono:"JetBrains Mono", ui-monospace, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}}
+:root[data-theme="dark"]{
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:17px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding-inline:18px;padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.2}
+h1{font-size:clamp(28px,5vw,40px);margin:26px 0 6px;font-weight:700}
+h2{font-size:24px;margin:38px 0 10px}
+h4{font-size:16px;margin:16px 0 6px;font-family:var(--f-body);font-weight:700;letter-spacing:.02em}
+a{color:var(--link)}
+p{margin:8px 0}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--out-bg);color:var(--out-fg);padding:1px 6px;border-radius:4px}
+.sub{color:var(--muted);font-size:15px;max-width:65ch}
+.prog{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:2px solid var(--accent);padding-block:10px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.prog .count{font-weight:700;font-variant-numeric:tabular-nums}
+.bar{flex:1 1 140px;height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--go-fg);transition:width .3s}
+.jump{display:flex;gap:4px;flex-wrap:wrap}
+.jump a{font-size:13px;text-decoration:none;color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:1px 9px;font-variant-numeric:tabular-nums}
+.jump a.full{background:var(--go-bg);color:var(--go-fg);border-color:transparent}
+.save{font-size:13px;color:var(--muted);flex-basis:100%}
+.save[data-s="saved"]{color:var(--go-fg)} .save[data-s="error"]{color:var(--stop-fg)}
+.map{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.map span{padding:5px 11px;border-radius:14px;font-size:14px;border:1px solid var(--line)}
+.map .done{background:var(--go-bg);color:var(--go-fg);border-color:transparent;font-weight:600}
+.map .now{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.box{border-radius:8px;padding:12px 16px;margin:12px 0}
+.box .boxlbl{font-weight:700;margin:0 0 4px;letter-spacing:.03em;font-size:14px;text-transform:uppercase}
+.go{background:var(--go-bg);color:var(--fg)} .go .boxlbl{color:var(--go-fg)}
+.why{background:var(--why-bg);color:var(--fg)} .why .boxlbl{color:var(--why-fg)}
+.warn{background:var(--hint-bg);color:var(--fg)} .warn .boxlbl{color:var(--hint-fg)}
+.stop{background:var(--stop-bg);color:var(--fg)} .stop .boxlbl{color:var(--stop-fg)}
+.box ol,.box ul{margin:4px 0;padding-left:22px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15.5px;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-family:var(--f-body);font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+td.n{font-variant-numeric:tabular-nums;color:var(--muted);width:2em}
+.codewrap{position:relative;margin:8px 0;min-width:0}
+pre{margin:0;overflow-x:auto;white-space:pre;font-family:var(--f-mono);font-size:14px;line-height:1.5;border-radius:8px;padding:12px 14px}
+pre.code{background:var(--code-bg);color:var(--code-fg);padding-right:72px}
+pre.out{background:var(--out-bg);color:var(--out-fg);margin-bottom:10px}
+.lbl{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:8px}
+.copy{position:absolute;top:8px;right:8px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:5px;padding:4px 10px;font:600 13px var(--f-body);cursor:pointer}
+.copy:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.sec{background:var(--brand);color:var(--brand-fg);border-radius:10px;padding:14px 18px;margin:40px 0 12px;scroll-margin-top:70px}
+.sec h2{margin:0;color:var(--accent);font-size:22px}
+.sec p{margin:4px 0 0;opacity:.85;font-size:15px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:16px 0;scroll-margin-top:70px}
+.card.is-done{border-color:var(--go-fg)}
+.card h3{margin:0 0 6px;display:flex;gap:10px;align-items:center;font-size:20px}
+.card h3 label{display:flex;gap:10px;align-items:center;cursor:pointer}
+.tick{width:20px;height:20px;accent-color:var(--go-fg);flex:none}
+.tag{font-family:var(--f-mono);font-size:13px;background:var(--brand);color:var(--brand-fg);border-radius:5px;padding:1px 7px}
+details{margin:6px 0}
+summary{cursor:pointer;font-weight:700;padding:8px 12px;border-radius:6px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ "} details[open]>summary::before{content:"▾ "}
+details.hint>summary{background:var(--hint-bg);color:var(--hint-fg)}
+details.sol>summary{background:var(--stop-bg);color:var(--stop-fg)}
+details>div{padding:4px 4px 4px 12px}
+.rate{display:flex;gap:6px;flex-wrap:wrap}
+.rate input{position:absolute;opacity:0;pointer-events:none}
+.rate label{border:1px solid var(--line);border-radius:6px;padding:4px 12px;cursor:pointer;font-variant-numeric:tabular-nums;background:var(--surface)}
+.rate input:checked+label{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.rate input:focus-visible+label{outline:3px solid var(--link);outline-offset:2px}
+.reset{background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.reset.armed{border-color:var(--stop-fg);color:var(--stop-fg)}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+@media (max-width:480px){body{font-size:16px} pre{font-size:13px}}
+body{margin:0}</style></head><body><main class="wrap"><div class="prog" role="region" aria-label="Progress"><span class="count"><span id="done">0</span> / 26 done</span><div class="bar" aria-hidden="true"><i id="barfill"></i></div><nav class="jump" aria-label="Jump to section"><a href="#secA" data-sec="A">A</a><a href="#secB" data-sec="B">B</a><a href="#secC" data-sec="C">C</a><a href="#secD" data-sec="D">D</a><a href="#secE" data-sec="E">E</a><a href="#secF" data-sec="F">F</a><a href="#secG" data-sec="G">G</a><a href="#secH" data-sec="H">H</a><a href="#secI" data-sec="I">I</a></nav><span class="save" id="save" data-s="wait">Checking whether this browser can save your progress…</span></div>
+<h1>Exam 2 Practice: Branching and Loops</h1><p class="sub">COP1047C Intro to Python · Miami Dade College · Chapters 4 and 5 · 26 exercises. Every sample run and solution here was produced by running the code on Python 3.12, the version Google Colab uses. Your checkmarks and self-ratings save in this browser, so you can close the page and pick up where you left off.</p>
+<h2>What's covered</h2><div class="map"><span>A · Ch 4 Part 1 · Sept 28</span><span>B · Ch 4 Part 2 · Sept 30</span><span>C · Ch 5 Part 1 · Oct 5</span><span>D · Ch 5 Part 1 · Oct 5</span><span>E · Ch 5 Part 1 · Oct 5</span><span>F · Ch 5 Part 2 · Oct 7</span><span>G · Ch 5 Part 2 · Oct 7</span><span>H · Ch 5 Part 2 · Oct 7</span><span>I · Ch 5 Part 3 · Oct 12</span></div><p>Each section matches one class session. Exercises get a little harder inside each section, and later sections reuse earlier skills, so going in order works best. Everything here is fair game for Exam 2.</p>
+<h2>How to use this practice set</h2><div class="box go"><p class="boxlbl">Do this in Colab</p><ol><li>Open a new notebook at colab.new. Use one code cell per exercise.</li><li>Read the story and answer the <b>Think first</b> questions out loud, or as a comment, before writing code.</li><li>Copy <b>Your plan</b> into the cell. The plan is the program, written as comments.</li><li>Build one plan line at a time. Type the code under its comment and run the cell after each piece.</li><li>Compare with the <b>Target</b> run. Type the same inputs: the logic and the numbers should match. Your messages can be worded your own way unless the story quotes them exactly.</li><li>Stuck? Open Hint 1. Still stuck after a couple of minutes? Hint 2, then Hint 3.</li><li>Open the solution last. Compare it to yours, then try the edge cases it lists.</li><li>Tick the box beside the title. Your progress saves in this browser.</li></ol></div><div class="box why"><p class="boxlbl">Why plan in comments first?</p><p>It's the order experienced programmers think in, and the same order we use when we build exercises live in class. A blank cell is hard. A to-do list is easy: each comment becomes one or two lines of code.</p></div><div class="box warn"><p class="boxlbl">Use the solutions honestly</p><p>The solutions are here so you can check your thinking, not skip it. If you open a solution before trying, close it, wait a day, and redo that exercise from a blank cell. That's what the exam will feel like.</p></div>
+<h3>The thinking order, for every exercise</h3><div class="tablewrap"><table><thead><tr><th></th><th>Step</th><th>Ask yourself</th></tr></thead><tbody><tr><td class="n">1</td><td><b>Restate</b></td><td>What goes in, what comes out, what are the rules? Look at the target run.</td></tr><tr><td class="n">2</td><td><b>Plan in comments</b></td><td>3 to 6 # lines, in order. Imports go first.</td></tr><tr><td class="n">3</td><td><b>Imports and constants</b></td><td>import random? Fixed values in ALL_CAPS?</td></tr><tr><td class="n">4</td><td><b>Inputs and starting variables</b></td><td>int, float or text? Counters and totals start at 0 before the loop.</td></tr><tr><td class="n">5</td><td><b>Pick the structure</b></td><td>One decision (if), repeat an unknown number of times (while), or a known number (for)?</td></tr><tr><td class="n">6</td><td><b>Body, one line at a time</b></td><td>What happens on each pass? What changes so the loop can end?</td></tr><tr><td class="n">7</td><td><b>After the loop</b></td><td>Summaries print once, at the left edge.</td></tr><tr><td class="n">8</td><td><b>Test</b></td><td>The sample input first, then an edge case: 0, the boundary, an empty entry.</td></tr></tbody></table></div>
+<section class="sec" id="secA"><h2>A · if, elif, else</h2><p>Ch 4 Part 1 · Sept 28 · One decision, or a ladder of decisions where the first True wins.</p></section>
+<div class="box why"><p class="boxlbl">Quick refresher</p><p>One decision, or a ladder where the first True wins. = stores a value; == compares.</p><div class="codewrap"><pre class="code">if x &gt; 10:
+    ...
+elif x &gt; 5:
+    ...
+else:
+    ...</pre></div></div>
+<article class="card" id="A1"><h3><label><input type="checkbox" class="tick" id="tick-A1" data-id="A1" data-sec="A"><span class="tag">A1</span>Hurricane category</label></h3><p>You&#x27;re building a quick tool for a Miami-Dade emergency office. Type a hurricane&#x27;s wind speed in mph and the program prints its Saffir-Simpson category: below 74 is not a hurricane, 74 to 95 is Category 1, 96 to 110 is Category 2, 111 to 129 is Category 3, 130 to 156 is Category 4, 157 and up is Category 5.</p><h4>Think first</h4><ul><li>What goes in? (a whole number) What comes out? (one message)</li><li>Only ONE category can be true, so is this several ifs or one if/elif/else ladder?</li><li>If you check the biggest speeds first, how simple can each condition be?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># A1 · Hurricane category
+# PLAN
+# 1. ask for the wind speed, as an int
+# 2. one if/elif/else ladder, checking the HIGHEST category first
+# 3.     each branch prints one message
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 120</div><pre class="out">Wind speed in mph: 120
+Category 3 hurricane</pre><details class="hint"><summary>Hint 1</summary><div><p>Use one ladder: if, then several elif, then else. Only the first True branch runs.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Start from the top: if speed &gt;= 157 is Category 5. Because that branch already caught 157 and up, the next one only needs speed &gt;= 130.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>if speed &gt;= 157: ... elif speed &gt;= 130: ... elif speed &gt;= 111: ... elif speed &gt;= 96: ... elif speed &gt;= 74: ... else: not a hurricane</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">speed = int(input(&quot;Wind speed in mph: &quot;))
+
+if speed &gt;= 157:
+    print(&quot;Category 5 hurricane&quot;)
+elif speed &gt;= 130:
+    print(&quot;Category 4 hurricane&quot;)
+elif speed &gt;= 111:
+    print(&quot;Category 3 hurricane&quot;)
+elif speed &gt;= 96:
+    print(&quot;Category 2 hurricane&quot;)
+elif speed &gt;= 74:
+    print(&quot;Category 1 hurricane&quot;)
+else:
+    print(&quot;Not a hurricane (tropical storm or weaker)&quot;)</pre></div><div class="lbl">Edge case · typed 74</div><pre class="out">Wind speed in mph: 74
+Category 1 hurricane</pre><div class="lbl">Edge case · typed 73</div><pre class="out">Wind speed in mph: 73
+Not a hurricane (tropical storm or weaker)</pre><div class="lbl">Edge case · typed 157</div><pre class="out">Wind speed in mph: 157
+Category 5 hurricane</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>If you write separate ifs instead of elif, 160 mph prints Category 5, 4, 3, 2 AND 1. Order and elif both matter.</p></div></div></details></article>
+<article class="card" id="A2"><h3><label><input type="checkbox" class="tick" id="tick-A2" data-id="A2" data-sec="A"><span class="tag">A2</span>Even or odd line</label></h3><p>At a busy Hialeah DMV, odd ticket numbers go to Window A and even numbers go to Window B. Ask for a ticket number and print which window.</p><h4>Think first</h4><ul><li>What operator tells you the remainder after dividing?</li><li>What is the remainder when an even number is divided by 2?</li><li>Two possible outcomes: if/else is enough.</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># A2 · Even or odd line
+# PLAN
+# 1. ask for the ticket number, as an int
+# 2. if the remainder after dividing by 2 is 0: Window B (even)
+# 3. else: Window A (odd)
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 57</div><pre class="out">Ticket number: 57
+Ticket 57: please go to Window A</pre><details class="hint"><summary>Hint 1</summary><div><p>The modulus operator % gives the remainder: 7 % 2 is 1, 8 % 2 is 0.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Compare with ==, not =. One = stores a value; two compare.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>if ticket % 2 == 0: ... else: ...</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">ticket = int(input(&quot;Ticket number: &quot;))
+
+if ticket % 2 == 0:
+    print(f&quot;Ticket {ticket}: please go to Window B&quot;)
+else:
+    print(f&quot;Ticket {ticket}: please go to Window A&quot;)</pre></div><div class="lbl">Edge case · typed 58</div><pre class="out">Ticket number: 58
+Ticket 58: please go to Window B</pre><div class="lbl">Edge case · typed 0</div><pre class="out">Ticket number: 0
+Ticket 0: please go to Window B</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>if ticket % 2 = 0 is a SyntaxError. Comparisons need ==.</p></div></div></details></article>
+<article class="card" id="A3"><h3><label><input type="checkbox" class="tick" id="tick-A3" data-id="A3" data-sec="A"><span class="tag">A3</span>Tip suggestion</label></h3><p>At a Brickell restaurant, bills of $100 or more get a suggested 20% tip; smaller bills get 18%. Ask for the bill, then print the tip and the total, both with 2 decimals.</p><h4>Think first</h4><ul><li>Bills have cents: int or float?</li><li>What&#x27;s the only thing the if decides? (the percent) Can the math and printing happen AFTER the if, just once?</li><li>How do you show exactly 2 decimals in an f-string?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># A3 · Tip suggestion
+# PLAN
+# 1. constants: the two tip rates
+# 2. ask for the bill, as a float
+# 3. if/else decides the rate only
+# 4. AFTER the if: compute tip and total, print both with :.2f
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 86.50</div><pre class="out">Bill amount: $86.50
+Suggested tip: $15.57
+Total: $102.07</pre><details class="hint"><summary>Hint 1</summary><div><p>Put the rates in ALL_CAPS constants at the top: BIG_RATE = 0.20 and SMALL_RATE = 0.18.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Let the if/else set one variable, rate. Then the math lines don&#x27;t need to be repeated in both branches.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>tip = bill * rate, total = bill + tip, then print(f&quot;Tip: ${tip:.2f}&quot;)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">BIG_RATE = 0.20
+SMALL_RATE = 0.18
+
+bill = float(input(&quot;Bill amount: $&quot;))
+
+if bill &gt;= 100:
+    rate = BIG_RATE
+else:
+    rate = SMALL_RATE
+
+tip = bill * rate
+total = bill + tip
+print(f&quot;Suggested tip: ${tip:.2f}&quot;)
+print(f&quot;Total: ${total:.2f}&quot;)</pre></div><div class="lbl">Edge case · typed 100</div><pre class="out">Bill amount: $100
+Suggested tip: $20.00
+Total: $120.00</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Both rates live in constants, so if the restaurant changes its policy you edit one line at the top, not the logic.</p></div></div></details></article>
+<section class="sec" id="secB"><h2>B · and, or, not, nested if, flags, in</h2><p>Ch 4 Part 2 · Sept 30 · Combining conditions, decisions inside decisions, and True/False switches.</p></section>
+<div class="box why"><p class="boxlbl">Quick refresher</p><p>and needs both sides True; or needs one; not flips it. A flag is a True/False variable. in checks membership. A nested if lives inside another if&#x27;s block.</p><div class="codewrap"><pre class="code">if age &lt; 12 or age &gt;= 65:
+    ...
+is_member = answer == &quot;Y&quot;
+if name in USERS:            # in checks a dict&#x27;s keys
+    if password == USERS[name]:
+        ...</pre></div></div>
+<article class="card" id="B1"><h3><label><input type="checkbox" class="tick" id="tick-B1" data-id="B1" data-sec="B"><span class="tag">B1</span>Cinema discount</label></h3><p>A Coral Gables theater gives a discount to kids under 12 OR seniors 65 and up. Ask for an age and print the price: $9.50 with the discount, $14.00 without.</p><h4>Think first</h4><ul><li>How many conditions decide the discount? Do BOTH need to be true, or just one?</li><li>Write the condition in English first: &#x27;age is under 12 or age is 65 or more.&#x27;</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># B1 · Cinema discount
+# PLAN
+# 1. constants: the two prices
+# 2. ask for the age, as an int
+# 3. one if with an OR condition: discount price, else regular price
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 70</div><pre class="out">Age: 70
+Your ticket is $9.50</pre><details class="hint"><summary>Hint 1</summary><div><p>or is True if EITHER side is True.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Each side of or must be a full comparison. age &lt; 12 or age &gt;= 65 works; age &lt; 12 or &gt;= 65 does not.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>if age &lt; 12 or age &gt;= 65: price = DISCOUNT_PRICE else: price = REGULAR_PRICE</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">DISCOUNT_PRICE = 9.50
+REGULAR_PRICE = 14.00
+
+age = int(input(&quot;Age: &quot;))
+
+if age &lt; 12 or age &gt;= 65:
+    price = DISCOUNT_PRICE
+else:
+    price = REGULAR_PRICE
+
+print(f&quot;Your ticket is ${price:.2f}&quot;)</pre></div><div class="lbl">Edge case · typed 11</div><pre class="out">Age: 11
+Your ticket is $9.50</pre><div class="lbl">Edge case · typed 12</div><pre class="out">Age: 12
+Your ticket is $14.00</pre><div class="lbl">Edge case · typed 65</div><pre class="out">Age: 65
+Your ticket is $9.50</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>age &lt; 12 or 65 is always truthy, the same trap as x == 1 or 2 from Ch 4.</p></div></div></details></article>
+<article class="card" id="B2"><h3><label><input type="checkbox" class="tick" id="tick-B2" data-id="B2" data-sec="B"><span class="tag">B2</span>Two-step login with a nested if</label></h3><p>Your team&#x27;s tool keeps each approved user&#x27;s password in a dictionary: the username is the key and that user&#x27;s password is the value (given in the plan). First check that the username is in the dictionary. Only if it is, ask for the password and check it against THAT user&#x27;s password. Unknown username: &#x27;Unknown user.&#x27; Right user, wrong password: &#x27;Wrong password.&#x27; Both right: &#x27;Welcome, &lt;username&gt;!&#x27;</p><h4>Think first</h4><ul><li>Which check has to happen first? Should the password question even appear for an unknown user?</li><li>When you use in with a dictionary, does it check the keys or the values?</li><li>How do you look up one user&#x27;s password in the dictionary?</li><li>Where does the second if go: after the first one, or inside it?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># B2 · Two-step login
+USERS = {&quot;mgarcia&quot;: &quot;Cafecito305&quot;, &quot;jbaptiste&quot;: &quot;Pastelito22&quot;, &quot;lnguyen&quot;: &quot;Colada786&quot;}   # Run as given
+
+# PLAN
+# 1. ask for the username
+# 2. if the username is IN the dictionary (checks the keys):
+# 3.     ask for the password (nested inside)
+# 4.     if it matches USERS[username]: welcome, else: wrong password
+# 5. else: unknown user
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed jbaptiste, Pastelito22</div><pre class="out">Username: jbaptiste
+Password: Pastelito22
+Welcome, jbaptiste!</pre><details class="hint"><summary>Hint 1</summary><div><p>in on a dictionary checks the KEYS: &quot;jbaptiste&quot; in USERS is True, but &quot;Pastelito22&quot; in USERS is False.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>USERS[username] gives that one user&#x27;s password. Only look it up after you know the username exists, or Python raises a KeyError.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>if username in USERS: password = input(...); if password == USERS[username]: ... else: ...   The else for an unknown user lines up with the outer if.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">USERS = {&quot;mgarcia&quot;: &quot;Cafecito305&quot;, &quot;jbaptiste&quot;: &quot;Pastelito22&quot;, &quot;lnguyen&quot;: &quot;Colada786&quot;}
+
+username = input(&quot;Username: &quot;)
+
+if username in USERS:
+    password = input(&quot;Password: &quot;)
+    if password == USERS[username]:
+        print(f&quot;Welcome, {username}!&quot;)
+    else:
+        print(&quot;Wrong password.&quot;)
+else:
+    print(&quot;Unknown user.&quot;)</pre></div><div class="lbl">Edge case · typed jbaptiste, pastelito22</div><pre class="out">Username: jbaptiste
+Password: pastelito22
+Wrong password.</pre><div class="lbl">Edge case · typed mgarcia, Pastelito22</div><pre class="out">Username: mgarcia
+Password: Pastelito22
+Wrong password.</pre><div class="lbl">Edge case · typed carlos</div><pre class="out">Username: carlos
+Unknown user.</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Each user has their own password, so mgarcia can&#x27;t log in with jbaptiste&#x27;s password. The unknown user is never asked for a password at all: that&#x27;s why the second check is nested, and it&#x27;s also what keeps USERS[username] from raising KeyError: &#x27;carlos&#x27;.</p></div></div></details></article>
+<article class="card" id="B3"><h3><label><input type="checkbox" class="tick" id="tick-B3" data-id="B3" data-sec="B"><span class="tag">B3</span>Free shipping with a flag</label></h3><p>An online Little Havana guayabera shop ships free if the customer is a member OR the order is $50 or more. Ask &#x27;Member? (Y/N)&#x27; and the order total. Store the membership answer in a True/False flag, then decide shipping ($7.95 otherwise).</p><h4>Think first</h4><ul><li>A flag is a variable that holds True or False. How do you turn &#x27;Y&#x27; into True?</li><li>Should lowercase &#x27;y&#x27; count? How could you handle both?</li><li>Once you have the flag, how does the shipping condition read in English?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># B3 · Free shipping with a flag
+# PLAN
+# 1. constants: free-shipping minimum and shipping fee
+# 2. ask member Y/N, turn it into a True/False flag
+# 3. ask for the order total, as a float
+# 4. if the flag OR total &gt;= minimum: free, else add the fee
+# 5. print the final total
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed n, 42.00</div><pre class="out">Member? (Y/N): n
+Order total: $42.00
+Shipping: $7.95
+You pay: $49.95</pre><details class="hint"><summary>Hint 1</summary><div><p>is_member = answer == &quot;Y&quot; stores True or False directly. The == makes the comparison; the = stores the result.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>To accept y too: answer.upper() == &quot;Y&quot;, or answer in [&quot;Y&quot;, &quot;y&quot;].</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>if is_member or total &gt;= FREE_MIN: shipping = 0 else: shipping = SHIP_FEE</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">FREE_MIN = 50.00
+SHIP_FEE = 7.95
+
+answer = input(&quot;Member? (Y/N): &quot;)
+is_member = answer.upper() == &quot;Y&quot;     # flag: True or False
+
+total = float(input(&quot;Order total: $&quot;))
+
+if is_member or total &gt;= FREE_MIN:
+    shipping = 0
+else:
+    shipping = SHIP_FEE
+
+print(f&quot;Shipping: ${shipping:.2f}&quot;)
+print(f&quot;You pay: ${total + shipping:.2f}&quot;)</pre></div><div class="lbl">Edge case · typed y, 42.00</div><pre class="out">Member? (Y/N): y
+Order total: $42.00
+Shipping: $0.00
+You pay: $42.00</pre><div class="lbl">Edge case · typed N, 50</div><pre class="out">Member? (Y/N): N
+Order total: $50
+Shipping: $0.00
+You pay: $50.00</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>You don&#x27;t need if is_member == True. The flag is already True or False, so if is_member reads like English.</p></div></div></details></article>
+<section class="sec" id="secC"><h2>C · while loops for input validation</h2><p>Ch 5 Part 1 · Oct 5 · Keep asking until the input is good. Start it, test it, change it.</p></section>
+<div class="box why"><p class="boxlbl">Quick refresher</p><p>Start it (ask before the loop), test it (the condition), change it (ask again as the last line inside).</p><div class="codewrap"><pre class="code">value = int(input(&quot;...&quot;))
+while value &lt; 1:
+    value = int(input(&quot;...&quot;))</pre></div></div>
+<article class="card" id="C1"><h3><label><input type="checkbox" class="tick" id="tick-C1" data-id="C1" data-sec="C"><span class="tag">C1</span>Rating from 1 to 5</label></h3><p>A survey asks a customer to rate their visit from 1 to 5. Keep asking until they type a number in that range, then thank them and repeat the rating.</p><h4>Think first</h4><ul><li>Do you know how many tries they&#x27;ll need? So: while or for?</li><li>START: what has to exist before the while line? TEST: what does &#x27;invalid&#x27; look like as a condition? CHANGE: what line gives the loop a new value?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># C1 · Rating from 1 to 5
+# PLAN
+# 1. ask for the rating BEFORE the loop (START)
+# 2. while the rating is outside 1 to 5 (TEST):
+# 3.     print an error and ask again (CHANGE)
+# 4. AFTER the loop: thank them
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 0, 9, 4</div><pre class="out">Rate your visit (1-5): 0
+Please enter a number from 1 to 5.
+Rate your visit (1-5): 9
+Please enter a number from 1 to 5.
+Rate your visit (1-5): 4
+Thanks! You rated us 4 out of 5.</pre><details class="hint"><summary>Hint 1</summary><div><p>&#x27;Outside 1 to 5&#x27; is rating &lt; 1 or rating &gt; 5.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>The ask-again line is the last line inside the loop. Without it, the loop never ends.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>rating = int(input(...)) then while rating &lt; 1 or rating &gt; 5: print(...); rating = int(input(...))</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">rating = int(input(&quot;Rate your visit (1-5): &quot;))
+
+while rating &lt; 1 or rating &gt; 5:
+    print(&quot;Please enter a number from 1 to 5.&quot;)
+    rating = int(input(&quot;Rate your visit (1-5): &quot;))
+
+print(f&quot;Thanks! You rated us {rating} out of 5.&quot;)</pre></div><div class="lbl">Edge case · typed 5</div><pre class="out">Rate your visit (1-5): 5
+Thanks! You rated us 5 out of 5.</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>while 1 &lt;= rating &lt;= 5 is the VALID range. The loop needs the INVALID condition, so it keeps asking while things are wrong.</p></div></div></details></article>
+<article class="card" id="C2"><h3><label><input type="checkbox" class="tick" id="tick-C2" data-id="C2" data-sec="C"><span class="tag">C2</span>PIN with three tries</label></h3><p>An ATM gives you 3 tries to enter the PIN 2580. Keep asking while the PIN is wrong AND you still have tries left. After the loop, print &#x27;Access granted&#x27; or &#x27;Card locked&#x27;.</p><h4>Think first</h4><ul><li>Two reasons to stop: the PIN is right, or the tries ran out. So the loop continues while both &#x27;wrong&#x27; and &#x27;tries left&#x27; are True.</li><li>You need a counter. Where does it start, where does it change?</li><li>After the loop, how do you know WHICH reason ended it?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># C2 · PIN with three tries
+# PLAN
+# 1. constants: the PIN and max tries
+# 2. ask for the first PIN; start the attempts counter at 1
+# 3. while the PIN is wrong AND attempts &lt; max:
+# 4.     ask again, add 1 to attempts
+# 5. AFTER the loop: if the PIN is right, granted; else locked
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 1111, 2580</div><pre class="out">Enter PIN: 1111
+Wrong PIN. Tries left: 2
+Enter PIN: 2580
+Access granted</pre><details class="hint"><summary>Hint 1</summary><div><p>The first input counts as attempt 1, so attempts starts at 1, not 0.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>while pin != PIN and attempts &lt; MAX_TRIES:</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>After the loop, check the PIN again: if pin == PIN: granted else: locked. The loop can end for either reason.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">PIN = &quot;2580&quot;
+MAX_TRIES = 3
+
+pin = input(&quot;Enter PIN: &quot;)
+attempts = 1
+
+while pin != PIN and attempts &lt; MAX_TRIES:
+    print(f&quot;Wrong PIN. Tries left: {MAX_TRIES - attempts}&quot;)
+    pin = input(&quot;Enter PIN: &quot;)
+    attempts += 1
+
+if pin == PIN:
+    print(&quot;Access granted&quot;)
+else:
+    print(&quot;Card locked&quot;)</pre></div><div class="lbl">Edge case · typed 1111, 2222, 3333</div><pre class="out">Enter PIN: 1111
+Wrong PIN. Tries left: 2
+Enter PIN: 2222
+Wrong PIN. Tries left: 1
+Enter PIN: 3333
+Card locked</pre><div class="lbl">Edge case · typed 2580</div><pre class="out">Enter PIN: 2580
+Access granted</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>This is the answer to Monday&#x27;s hook question, &#x27;what if we wanted 10 tries?&#x27; Change MAX_TRIES and nothing else.</p></div></div></details></article>
+<section class="sec" id="secD"><h2>D · Sentinels, counters, accumulators</h2><p>Ch 5 Part 1 · Oct 5 · Keep going until the &#x27;I&#x27;m done&#x27; value, counting and totaling along the way.</p></section>
+<div class="box why"><p class="boxlbl">Quick refresher</p><p>A sentinel is the I&#x27;m-done value. Counter: count += 1. Accumulator: total += value. Set up before, update inside, report after.</p><div class="codewrap"><pre class="code">count = 0
+total = 0
+x = float(input())
+while x != SENTINEL:
+    count += 1
+    total += x
+    x = float(input())</pre></div></div>
+<article class="card" id="D1"><h3><label><input type="checkbox" class="tick" id="tick-D1" data-id="D1" data-sec="D"><span class="tag">D1</span>Grocery cart totals</label></h3><p>At Sedano&#x27;s, enter item prices one at a time. Type 0 to finish. Then print how many items, the total, and the average price. If no items were entered, say so instead of dividing by zero.</p><h4>Think first</h4><ul><li>What&#x27;s the sentinel here?</li><li>You need one counter and one accumulator. What are they, and where do they start?</li><li>Which line would crash if the count is 0? How do you guard it?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># D1 · Grocery cart totals
+# PLAN
+# 1. constant: the sentinel (0)
+# 2. counter = 0, accumulator = 0 (BEFORE the loop)
+# 3. ask for the first price
+# 4. while price is not the sentinel:
+# 5.     count += 1, total += price, ask for the next price
+# 6. AFTER the loop: if count &gt; 0, print count, total, average; else &#x27;no items&#x27;
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 3.49, 5.99, 2.50, 0</div><pre class="out">Item price (0 to finish): $3.49
+Item price (0 to finish): $5.99
+Item price (0 to finish): $2.50
+Item price (0 to finish): $0
+3 items, total $11.98, average $3.99</pre><details class="hint"><summary>Hint 1</summary><div><p>Same shape as the weights cell from Monday: first input before the loop, next input as the last line inside.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>average = total / count only makes sense when count &gt; 0.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>if count &gt; 0: print(...) else: print(&quot;No items entered.&quot;)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">SENTINEL = 0
+count = 0
+total = 0
+
+price = float(input(f&quot;Item price ({SENTINEL} to finish): $&quot;))
+
+while price != SENTINEL:
+    count += 1
+    total += price
+    price = float(input(f&quot;Item price ({SENTINEL} to finish): $&quot;))
+
+if count &gt; 0:
+    print(f&quot;{count} items, total ${total:.2f}, average ${total / count:.2f}&quot;)
+else:
+    print(&quot;No items entered.&quot;)</pre></div><div class="lbl">Edge case · typed 0</div><pre class="out">Item price (0 to finish): $0
+No items entered.</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Without the if, typing 0 first crashes with ZeroDivisionError: division by zero.</p></div></div></details></article>
+<article class="card" id="D2"><h3><label><input type="checkbox" class="tick" id="tick-D2" data-id="D2" data-sec="D"><span class="tag">D2</span>Step tracker</label></h3><p>Log your daily steps until you type -1. Print how many days you logged, the total steps, and how many days you hit 10,000 or more.</p><h4>Think first</h4><ul><li>That&#x27;s TWO counters and one accumulator. Which counter goes up every day, and which only sometimes?</li><li>Where does the &#x27;only sometimes&#x27; counter&#x27;s if go: inside or outside the loop?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># D2 · Step tracker
+# PLAN
+# 1. constants: sentinel (-1) and the goal (10000)
+# 2. days = 0, goal_days = 0, total = 0
+# 3. ask for the first day&#x27;s steps
+# 4. while steps is not the sentinel:
+# 5.     days += 1, total += steps
+# 6.     if steps &gt;= goal: goal_days += 1
+# 7.     ask for the next day
+# 8. AFTER: print days, total, goal days
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 8200, 12050, 10000, 6400, -1</div><pre class="out">Steps today (-1 to stop): 8200
+Steps today (-1 to stop): 12050
+Steps today (-1 to stop): 10000
+Steps today (-1 to stop): 6400
+Steps today (-1 to stop): -1
+4 days logged, 36650 total steps, goal hit on 2 days</pre><details class="hint"><summary>Hint 1</summary><div><p>A counter inside an if only counts the times the condition is True.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>The if is indented inside the while, and the ask-again line comes after the if, lined up with it.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>if steps &gt;= GOAL: goal_days += 1</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">SENTINEL = -1
+GOAL = 10000
+days = 0
+goal_days = 0
+total = 0
+
+steps = int(input(f&quot;Steps today ({SENTINEL} to stop): &quot;))
+
+while steps != SENTINEL:
+    days += 1
+    total += steps
+    if steps &gt;= GOAL:
+        goal_days += 1
+    steps = int(input(f&quot;Steps today ({SENTINEL} to stop): &quot;))
+
+print(f&quot;{days} days logged, {total} total steps, goal hit on {goal_days} days&quot;)</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>The goal counter lives INSIDE an if inside the loop, so it only counts the days that qualify. 10,000 exactly counts, because the test is &gt;=.</p></div></div></details></article>
+<section class="sec" id="secE"><h2>E · for loops over collections</h2><p>Ch 5 Part 1 · Oct 5 · Once per item in a string, list or dictionary.</p></section>
+<div class="box why"><p class="boxlbl">Quick refresher</p><p>Once per item. No start or change line needed. Dictionaries: .items() gives key and value.</p><div class="codewrap"><pre class="code">for temp in highs:
+    ...
+for name, price in menu.items():
+    ...</pre></div></div>
+<article class="card" id="E1"><h3><label><input type="checkbox" class="tick" id="tick-E1" data-id="E1" data-sec="E"><span class="tag">E1</span>Hot days this week</label></h3><p>Given this week&#x27;s Miami highs, count how many days hit 90°F or more and print the week&#x27;s average high.</p><h4>Think first</h4><ul><li>Do you have a collection? Then which loop?</li><li>One counter (hot days) and one accumulator (sum of temps). The count of days is len(highs).</li><li>Where does the average print: inside the loop or after?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># E1 · Hot days this week
+highs = [88, 91, 93, 89, 90, 92, 87]   # Run this line as given
+
+# PLAN
+# 1. hot_days = 0, total = 0
+# 2. for each temp in highs:
+# 3.     total += temp; if temp &gt;= 90, hot_days += 1
+# 4. AFTER: print hot days and the average (total / len(highs))
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">Days at 90 or above: 4
+Average high: 90.0</pre><details class="hint"><summary>Hint 1</summary><div><p>for temp in highs: gives you one number per pass. No input, no sentinel.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>The average is total / len(highs), printed once after the loop.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>Inside: total += temp, then if temp &gt;= 90: hot_days += 1</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">highs = [88, 91, 93, 89, 90, 92, 87]
+
+hot_days = 0
+total = 0
+
+for temp in highs:
+    total += temp
+    if temp &gt;= 90:
+        hot_days += 1
+
+print(f&quot;Days at 90 or above: {hot_days}&quot;)
+print(f&quot;Average high: {total / len(highs):.1f}&quot;)</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>Python also has sum(highs), but building the accumulator yourself is the skill being practiced.</p></div></div></details></article>
+<article class="card" id="E2"><h3><label><input type="checkbox" class="tick" id="tick-E2" data-id="E2" data-sec="E"><span class="tag">E2</span>Bakery menu with .items()</label></h3><p>A Cuban bakery&#x27;s prices are in a dictionary. Print the menu one line per item, then the cost of ordering one of everything.</p><h4>Think first</h4><ul><li>You need both the name (key) and price (value) on each line. Which dictionary method gives both?</li><li>What&#x27;s the accumulator, and where does it start?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># E2 · Bakery menu
+menu = {&quot;pastelito&quot;: 1.25, &quot;croqueta&quot;: 0.95, &quot;cafecito&quot;: 1.50, &quot;medianoche&quot;: 6.75}   # Run as given
+
+# PLAN
+# 1. total = 0
+# 2. for each item, price in menu.items():
+# 3.     print the line; total += price
+# 4. AFTER: print the total
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">pastelito: $1.25
+croqueta: $0.95
+cafecito: $1.50
+medianoche: $6.75
+One of everything: $10.45</pre><details class="hint"><summary>Hint 1</summary><div><p>for item, price in menu.items(): gives two loop variables per pass.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Format money with :.2f so 1.5 prints as 1.50.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>Inside: print(f&quot;{item}: ${price:.2f}&quot;) and total += price</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">menu = {&quot;pastelito&quot;: 1.25, &quot;croqueta&quot;: 0.95, &quot;cafecito&quot;: 1.50, &quot;medianoche&quot;: 6.75}
+
+total = 0
+
+for item, price in menu.items():
+    print(f&quot;{item}: ${price:.2f}&quot;)
+    total += price
+
+print(f&quot;One of everything: ${total:.2f}&quot;)</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>for item, price in menu: (without .items()) crashes with ValueError: too many values to unpack.</p></div></div></details></article>
+<article class="card" id="E3"><h3><label><input type="checkbox" class="tick" id="tick-E3" data-id="E3" data-sec="E"><span class="tag">E3</span>Count the vowels</label></h3><p>Ask for a word or name and count how many vowels it has. Count upper- and lowercase.</p><h4>Think first</h4><ul><li>A string is a collection of characters. What loop walks through it?</li><li>How do you check if a letter is one of &#x27;aeiou&#x27;?</li><li>How do you make &#x27;A&#x27; and &#x27;a&#x27; both count?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># E3 · Count the vowels
+# PLAN
+# 1. constant: VOWELS = &quot;aeiou&quot;
+# 2. ask for the word; vowel_count = 0
+# 3. for each letter in the word (lowercased):
+# 4.     if the letter is in VOWELS, count it
+# 5. AFTER: print the count
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed Opa-locka</div><pre class="out">Enter a word: Opa-locka
+Opa-locka has 4 vowels</pre><details class="hint"><summary>Hint 1</summary><div><p>in works on strings too: &quot;e&quot; in &quot;aeiou&quot; is True.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>word.lower() turns every letter lowercase, so you only check five vowels.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>for letter in word.lower(): if letter in VOWELS: vowel_count += 1</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">VOWELS = &quot;aeiou&quot;
+
+word = input(&quot;Enter a word: &quot;)
+vowel_count = 0
+
+for letter in word.lower():
+    if letter in VOWELS:
+        vowel_count += 1
+
+print(f&quot;{word} has {vowel_count} vowels&quot;)</pre></div><div class="lbl">Edge case · typed Rhythm</div><pre class="out">Enter a word: Rhythm
+Rhythm has 0 vowels</pre></div></details></article>
+<section class="sec" id="secF"><h2>F · range()</h2><p>Ch 5 Part 2 · Oct 7 · A for loop that runs a set number of times. Stop is never included.</p></section>
+<div class="box why"><p class="boxlbl">Quick refresher</p><p>range(start, stop, step): stop is never included. range(n) runs n times, 0 to n-1.</p><div class="codewrap"><pre class="code">for i in range(1, 11):     # 1 to 10
+for i in range(10, 0, -1): # 10 down to 1</pre></div></div>
+<article class="card" id="F1"><h3><label><input type="checkbox" class="tick" id="tick-F1" data-id="F1" data-sec="F"><span class="tag">F1</span>New Year&#x27;s countdown</label></h3><p>Print a countdown from 10 down to 1, all on one line, then &#x27;¡Feliz Año Nuevo!&#x27; on the next line.</p><h4>Think first</h4><ul><li>Which range() walks backwards? What are start, stop and step?</li><li>Stop is never included. To end at 1, what must the stop be?</li><li>How do you keep numbers on one line?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># F1 · Countdown
+# PLAN
+# 1. for i in a range that starts at 10, steps by -1, and stops BEFORE 0
+# 2.     print i on the same line
+# 3. AFTER: new line, then the message
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">10 9 8 7 6 5 4 3 2 1 
+¡Feliz Año Nuevo!</pre><details class="hint"><summary>Hint 1</summary><div><p>A negative step counts down: range(10, 0, -1).</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>print(i, end=&quot; &quot;) keeps everything on one line.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>After the loop, print() starts a new line. Or put \n at the start of the message.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">for i in range(10, 0, -1):
+    print(i, end=&quot; &quot;)
+
+print()
+print(&quot;¡Feliz Año Nuevo!&quot;)</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>range(10, 1, -1) stops at 2. Off by one.</p></div></div></details></article>
+<article class="card" id="F2"><h3><label><input type="checkbox" class="tick" id="tick-F2" data-id="F2" data-sec="F"><span class="tag">F2</span>Times table for any number</label></h3><p>Ask for a number and print its times table from 1 to 12, one line each, like &#x27;7 x 3 = 21&#x27;.</p><h4>Think first</h4><ul><li>You know exactly how many lines: 12. Which loop?</li><li>What range() gives 1 through 12?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># F2 · Times table
+# PLAN
+# 1. ask for the number, as an int
+# 2. for i from 1 to 12 (what&#x27;s the stop?):
+# 3.     print number x i = product
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 7</div><pre class="out">Times table for: 7
+7 x 1 = 7
+7 x 2 = 14
+7 x 3 = 21
+7 x 4 = 28
+7 x 5 = 35
+7 x 6 = 42
+7 x 7 = 49
+7 x 8 = 56
+7 x 9 = 63
+7 x 10 = 70
+7 x 11 = 77
+7 x 12 = 84</pre><details class="hint"><summary>Hint 1</summary><div><p>range(1, 13): stop one past 12.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Inside: print(f&quot;{num} x {i} = {num * i}&quot;)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">num = int(input(&quot;Times table for: &quot;))
+
+for i in range(1, 13):
+    print(f&quot;{num} x {i} = {num * i}&quot;)</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>range(12) would start at 0 and end at 11: 7 x 0 through 7 x 11.</p></div></div></details></article>
+<article class="card" id="F3"><h3><label><input type="checkbox" class="tick" id="tick-F3" data-id="F3" data-sec="F"><span class="tag">F3</span>Sum of the even numbers</label></h3><p>Use range() with a step to add up every even number from 2 to 100. Print the total.</p><h4>Think first</h4><ul><li>Which range() gives 2, 4, 6, ..., 100? What step? What stop?</li><li>What&#x27;s the accumulator?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># F3 · Sum of evens
+# PLAN
+# 1. total = 0
+# 2. for n in a range that starts at 2, steps by 2, and includes 100
+# 3.     total += n
+# 4. AFTER: print the total
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">Sum of the even numbers from 2 to 100: 2550</pre><details class="hint"><summary>Hint 1</summary><div><p>range(2, 101, 2): the stop has to be past 100 to include it.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>total += n inside, print once after.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">total = 0
+
+for n in range(2, 101, 2):
+    total += n
+
+print(f&quot;Sum of the even numbers from 2 to 100: {total}&quot;)</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>Check: 50 even numbers averaging 51 should give 50 × 51 = 2,550.</p></div></div></details></article>
+<section class="sec" id="secG"><h2>G · While vs for, and loops in sequence</h2><p>Ch 5 Part 2 · Oct 7 · Choosing the right loop, and putting one loop after another.</p></section>
+<div class="box why"><p class="boxlbl">Quick refresher</p><p>Don&#x27;t know how many times before the loop starts? while. Know (a collection, a range, a number already typed)? for. One loop needs another&#x27;s result first? Put them in sequence.</p></div>
+<article class="card" id="G1"><h3><label><input type="checkbox" class="tick" id="tick-G1" data-id="G1" data-sec="G"><span class="tag">G1</span>Pick the loop (no code)</label></h3><p>For each situation, decide: while or for? Write your answer and a one-line reason, then reveal.</p><h4>Think first</h4><ul><li>Ask the one question: do we know how many times BEFORE the loop starts?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># G1 · Pick the loop: write while or for, plus why
+# a) Keep asking for an email until it contains &quot;@&quot;
+# b) Print every student name on a class roster list
+# c) Roll a die as many times as the user asks for
+# d) Keep a game running until the player types &quot;quit&quot;
+# e) Print the numbers 1 to 100
+# f) Ask &quot;Another order? (Y/N)&quot; after each order</pre></div><details class="hint"><summary>Hint 1</summary><div><p>Unknown count: validation, sentinels, &#x27;another?&#x27; questions. Known count: collections, range, or a number the user already gave you.</p></div></details><details class="sol"><summary>Show answers</summary><div><div class="tablewrap"><table><thead><tr><th>Situation</th><th>Loop</th><th>Why</th></tr></thead><tbody><tr><td>a) Email until it has @</td><td><b>while</b></td><td>Unknown number of tries: input validation.</td></tr><tr><td>b) Every name on a roster</td><td><b>for</b></td><td>A collection: once per item.</td></tr><tr><td>c) Roll as many times as the user asks</td><td><b>for</b></td><td>Once they answer, the count is known: range(n).</td></tr><tr><td>d) Game until the player types quit</td><td><b>while</b></td><td>Sentinel: unknown how long.</td></tr><tr><td>e) Numbers 1 to 100</td><td><b>for</b></td><td>range(1, 101).</td></tr><tr><td>f) &#x27;Another order? (Y/N)&#x27;</td><td><b>while</b></td><td>Continue-until-no: unknown count.</td></tr></tbody></table></div></div></details></article>
+<article class="card" id="G2"><h3><label><input type="checkbox" class="tick" id="tick-G2" data-id="G2" data-sec="G"><span class="tag">G2</span>Payroll: a while, then a for</label></h3><p>First ask how many employees worked today, and keep asking until it&#x27;s at least 1. Then, for each employee, ask their hours and add them up. Print the total hours and the payroll at $15.50 per hour.</p><h4>Think first</h4><ul><li>Two jobs. Does the second job need the first job&#x27;s answer before it can start?</li><li>Job 1 (validation): while or for? Job 2 (one question per employee): while or for?</li><li>Should the for loop be inside the while, or after it?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># G2 · Payroll
+# PLAN
+# 1. constant: hourly rate
+# 2. ask how many employees
+# 3. while the count is less than 1: ask again          (loop 1: validate)
+# 4. total_hours = 0
+# 5. for i in range(count):                             (loop 2: process)
+# 6.     ask employee #i+1&#x27;s hours (float); total_hours += hours
+# 7. AFTER: print total hours and payroll
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 0, 3, 8, 6.5, 4</div><pre class="out">How many employees worked today? 0
+Please enter at least 1: 3
+Hours for employee #1: 8
+Hours for employee #2: 6.5
+Hours for employee #3: 4
+Total hours: 18.5
+Payroll: $286.75</pre><details class="hint"><summary>Hint 1</summary><div><p>These loops go in SEQUENCE, not nested: the for loop needs a valid count first.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Show employees as #1, #2... with i + 1.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>payroll = total_hours * RATE, printed once after the for loop.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">RATE = 15.50
+
+count = int(input(&quot;How many employees worked today? &quot;))
+while count &lt; 1:
+    count = int(input(&quot;Please enter at least 1: &quot;))
+
+total_hours = 0
+for i in range(count):
+    hours = float(input(f&quot;Hours for employee #{i + 1}: &quot;))
+    total_hours += hours
+
+print(f&quot;Total hours: {total_hours}&quot;)
+print(f&quot;Payroll: ${total_hours * RATE:.2f}&quot;)</pre></div></div></details></article>
+<section class="sec" id="secH"><h2>H · Nested loops</h2><p>Ch 5 Part 2 · Oct 7 · A loop inside a loop. The inner one finishes every lap first.</p></section>
+<div class="box why"><p class="boxlbl">Quick refresher</p><p>The inner loop finishes every lap before the outer loop takes one step. Inner counters and accumulators reset inside the outer loop.</p><div class="codewrap"><pre class="code">for row in &quot;ABC&quot;:
+    for seat in range(1, 5):
+        ...
+    print()</pre></div></div>
+<article class="card" id="H1"><h3><label><input type="checkbox" class="tick" id="tick-H1" data-id="H1" data-sec="H"><span class="tag">H1</span>Seating chart</label></h3><p>Print a seating chart for rows A, B and C with seats 1 to 4, one row per line: &#x27;A1 A2 A3 A4&#x27;.</p><h4>Think first</h4><ul><li>Outer loop: rows. Inner loop: seats. Which one finishes all its laps first?</li><li>Where does the line break go: inside the inner loop, or after it?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># H1 · Seating chart
+# PLAN
+# 1. for each row in &quot;ABC&quot;:                (outer)
+# 2.     for seat in 1 to 4:               (inner: what range?)
+# 3.         print row+seat on the same line
+# 4.     after the inner loop: new line    (still inside the outer loop)
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">A1 A2 A3 A4 
+B1 B2 B3 B4 
+C1 C2 C3 C4 </pre><details class="hint"><summary>Hint 1</summary><div><p>A string is a collection: for row in &quot;ABC&quot;: gives A, then B, then C.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>for seat in range(1, 5): and print(f&quot;{row}{seat}&quot;, end=&quot; &quot;)</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>The print() that starts a new line is indented ONCE (inside the outer loop, after the inner loop).</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">for row in &quot;ABC&quot;:
+    for seat in range(1, 5):
+        print(f&quot;{row}{seat}&quot;, end=&quot; &quot;)
+    print()</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>Indent that last print() twice and every seat lands on its own line.</p></div></div></details></article>
+<article class="card" id="H2"><h3><label><input type="checkbox" class="tick" id="tick-H2" data-id="H2" data-sec="H"><span class="tag">H2</span>Star triangle</label></h3><p>Ask for a height and print a triangle of stars: row 1 has 1 star, row 2 has 2, and so on.</p><h4>Think first</h4><ul><li>Outer loop: one pass per row. How many stars on row number r?</li><li>So the inner loop&#x27;s range depends on the outer loop variable. What range gives r passes?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># H2 · Star triangle
+# PLAN
+# 1. ask for the height, as an int
+# 2. for each row r from 1 to height:          (outer: what range?)
+# 3.     for each star in that row (r of them):  (inner)
+# 4.         print &quot;*&quot; on the same line
+# 5.     new line after each row
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 5</div><pre class="out">Triangle height: 5
+*
+**
+***
+****
+*****</pre><details class="hint"><summary>Hint 1</summary><div><p>Outer: for r in range(1, height + 1):</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Inner: for star in range(r): runs r times.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>print(&quot;*&quot;, end=&quot;&quot;) inside, print() after the inner loop.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">height = int(input(&quot;Triangle height: &quot;))
+
+for r in range(1, height + 1):
+    for star in range(r):
+        print(&quot;*&quot;, end=&quot;&quot;)
+    print()</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>Python shortcut: print(&quot;*&quot; * r) does the inner loop in one line. Build the nested version first; that&#x27;s the skill.</p></div></div></details></article>
+<article class="card" id="H3"><h3><label><input type="checkbox" class="tick" id="tick-H3" data-id="H3" data-sec="H"><span class="tag">H3</span>Grade book with a reset</label></h3><p>For 3 students, ask each one&#x27;s name and then 3 quiz scores. Print each student&#x27;s average right after their scores.</p><h4>Think first</h4><ul><li>Outer loop: students. Inner loop: scores. Where does each student&#x27;s total start over?</li><li>If the total = 0 line is BEFORE the outer loop, what goes wrong for student 2?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># H3 · Grade book
+# PLAN
+# 1. constants: number of students, quizzes per student
+# 2. for each student:                         (outer)
+# 3.     ask the name; total = 0 (RESET for each student)
+# 4.     for each quiz:                        (inner)
+# 5.         ask the score (float); total += score
+# 6.     after the inner loop: print this student&#x27;s average
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed Maria, 90, 85, 100, Jean, 70, 80, 75, Luis, 88, 92, 95</div><pre class="out">
+Student #1 name: Maria
+  Quiz 1 score for Maria: 90
+  Quiz 2 score for Maria: 85
+  Quiz 3 score for Maria: 100
+Maria&#x27;s average: 91.7
+
+Student #2 name: Jean
+  Quiz 1 score for Jean: 70
+  Quiz 2 score for Jean: 80
+  Quiz 3 score for Jean: 75
+Jean&#x27;s average: 75.0
+
+Student #3 name: Luis
+  Quiz 1 score for Luis: 88
+  Quiz 2 score for Luis: 92
+  Quiz 3 score for Luis: 95
+Luis&#x27;s average: 91.7</pre><details class="hint"><summary>Hint 1</summary><div><p>The reset goes INSIDE the outer loop, before the inner loop. Same lesson as guess_count and password = &quot;&quot; on Wednesday.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Quiz numbers for people: range(QUIZZES) with q + 1 in the prompt.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>average = total / QUIZZES, printed at the outer loop&#x27;s indent level, after the inner loop.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">STUDENTS = 3
+QUIZZES = 3
+
+for s in range(STUDENTS):
+    name = input(f&quot;\nStudent #{s + 1} name: &quot;)
+    total = 0
+    for q in range(QUIZZES):
+        score = float(input(f&quot;  Quiz {q + 1} score for {name}: &quot;))
+        total += score
+    print(f&quot;{name}&#x27;s average: {total / QUIZZES:.1f}&quot;)</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>Move total = 0 above the outer loop and Jean&#x27;s average includes Maria&#x27;s scores.</p></div></div></details></article>
+<section class="sec" id="secI"><h2>I · break, continue, enumerate, unpacking</h2><p>Ch 5 Part 3 · Oct 12 · Leaving a loop early, skipping one pass, numbering items, and assigning several variables at once.</p></section>
+<div class="box why"><p class="boxlbl">Quick refresher</p><p>break leaves the loop immediately. continue skips the rest of this pass and jumps to the next one. enumerate() hands you the position and the item together. Unpacking assigns several variables in one line, and a, b = b, a swaps them. Build every program incrementally: one small piece, run, then the next.</p><div class="codewrap"><pre class="code">for i, item in enumerate(items):
+    if item == target:
+        break          # stop the whole loop
+    if item == &quot;&quot;:
+        continue       # skip just this one
+a, b = b, a            # swap</pre></div></div>
+<article class="card" id="I1"><h3><label><input type="checkbox" class="tick" id="tick-I1" data-id="I1" data-sec="I"><span class="tag">I1</span>Find a guest with break</label></h3><p>You&#x27;re checking names at the door of a quinceañera in Westchester. Ask for a name and search the guest list. As soon as you find it, stop searching and welcome them. If the loop finishes without finding it, say the name isn&#x27;t on the list.</p><h4>Think first</h4><ul><li>Once you&#x27;ve found the name, is there any reason to keep looping?</li><li>After the loop, how do you know whether it was found? (Think Ch 4: a flag.)</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># I1 · Find a guest with break
+guests = [&quot;Valentina&quot;, &quot;Mateo&quot;, &quot;Camila&quot;, &quot;Santiago&quot;, &quot;Isabella&quot;]   # Run as given
+
+# PLAN
+# 1. ask for the name; found = False (a flag, set BEFORE the loop)
+# 2. for each guest in the list:
+# 3.     if it matches: found = True, then break
+# 4. AFTER the loop: if found, welcome; else, not on the list
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed Camila</div><pre class="out">Name at the door: Camila
+Welcome, Camila! Enjoy the party.</pre><details class="hint"><summary>Hint 1</summary><div><p>break ends the loop on the spot. Lines after it in the loop body don&#x27;t run.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Set found = True on the line BEFORE break. Once break runs, nothing else in the loop does.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>for guest in guests: if guest == name: found = True; break   then after the loop: if found: ... else: ...</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">guests = [&quot;Valentina&quot;, &quot;Mateo&quot;, &quot;Camila&quot;, &quot;Santiago&quot;, &quot;Isabella&quot;]
+
+name = input(&quot;Name at the door: &quot;)
+found = False
+
+for guest in guests:
+    if guest == name:
+        found = True
+        break
+
+if found:
+    print(f&quot;Welcome, {name}! Enjoy the party.&quot;)
+else:
+    print(f&quot;Sorry, {name} is not on the guest list.&quot;)</pre></div><div class="lbl">Edge case · typed camila</div><pre class="out">Name at the door: camila
+Sorry, camila is not on the guest list.</pre><div class="lbl">Edge case · typed Isabella</div><pre class="out">Name at the door: Isabella
+Welcome, Isabella! Enjoy the party.</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Comparisons are case sensitive: &quot;camila&quot; is not &quot;Camila&quot;. To ignore case, compare guest.lower() == name.lower().</p></div></div></details></article>
+<article class="card" id="I2"><h3><label><input type="checkbox" class="tick" id="tick-I2" data-id="I2" data-sec="I"><span class="tag">I2</span>Skip bad sensor readings with continue</label></h3><p>A water-quality sensor in Biscayne Bay logs temperatures in °F, but it writes -999 whenever a reading fails. Average only the good readings, skip the -999s, and report how many were skipped.</p><h4>Think first</h4><ul><li>For a -999, you want to skip the rest of THIS pass but keep looping. Which keyword does that?</li><li>Which counters and accumulators do you need, and where do they start?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># I2 · Skip bad readings
+readings = [84.2, 85.0, -999, 86.1, -999, 85.7]   # Run as given
+
+# PLAN
+# 1. constant: ERROR = -999
+# 2. total = 0, good = 0, skipped = 0
+# 3. for each reading:
+# 4.     if it&#x27;s the error code: skipped += 1, then continue
+# 5.     total += reading, good += 1
+# 6. AFTER: print the average of the good readings and the skipped count
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">Average of 4 good readings: 85.2 °F
+Skipped 2 failed readings</pre><details class="hint"><summary>Hint 1</summary><div><p>continue jumps straight back to the for line for the next reading.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Count the skip BEFORE continue. Anything after continue in that pass never runs.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>if reading == ERROR: skipped += 1; continue   then, outside that if: total += reading; good += 1</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">readings = [84.2, 85.0, -999, 86.1, -999, 85.7]
+ERROR = -999
+
+total = 0
+good = 0
+skipped = 0
+
+for reading in readings:
+    if reading == ERROR:
+        skipped += 1
+        continue
+    total += reading
+    good += 1
+
+print(f&quot;Average of {good} good readings: {total / good:.1f} °F&quot;)
+print(f&quot;Skipped {skipped} failed readings&quot;)</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>The same loop without continue is an if/else: if reading == ERROR: skipped += 1 else: add it. Both are correct; continue keeps the main path unindented.</p></div></div></details></article>
+<article class="card" id="I3"><h3><label><input type="checkbox" class="tick" id="tick-I3" data-id="I3" data-sec="I"><span class="tag">I3</span>Donation drive with while True</label></h3><p>A hurricane-relief drive in Homestead takes donations one at a time. Use while True. Type 0 to finish (break). A negative amount is a typo: show a message and skip it (continue). At the end, print the number of donations and the total.</p><h4>Think first</h4><ul><li>while True never ends on its own. What line ends it?</li><li>Two different exits from one pass: which keyword ends the loop, and which just skips this pass?</li><li>Where do the count and total start?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># I3 · Donation drive
+# PLAN
+# 1. count = 0, total = 0
+# 2. while True:
+# 3.     ask for an amount (float)
+# 4.     if it&#x27;s 0: break
+# 5.     if it&#x27;s negative: print a message, then continue
+# 6.     count += 1, total += amount
+# 7. AFTER: print count and total
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 25, -10, 40, 15.50, 0</div><pre class="out">Donation amount (0 to finish): $25
+Donation amount (0 to finish): $-10
+Amounts can&#x27;t be negative. Try again.
+Donation amount (0 to finish): $40
+Donation amount (0 to finish): $15.50
+Donation amount (0 to finish): $0
+3 donations, total $80.50</pre><details class="hint"><summary>Hint 1</summary><div><p>Check for 0 first, then for negatives, then do the normal work.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>This replaces the sentinel pattern from Part 1: no input before the loop, because the loop asks first.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>if amount == 0: break   elif-style checks are fine too: if amount &lt; 0: print(...); continue</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">count = 0
+total = 0
+
+while True:
+    amount = float(input(&quot;Donation amount (0 to finish): $&quot;))
+    if amount == 0:
+        break
+    if amount &lt; 0:
+        print(&quot;Amounts can&#x27;t be negative. Try again.&quot;)
+        continue
+    count += 1
+    total += amount
+
+print(f&quot;{count} donations, total ${total:.2f}&quot;)</pre></div><div class="lbl">Edge case · typed 0</div><pre class="out">Donation amount (0 to finish): $0
+0 donations, total $0.00</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Forget the break and while True really is forever. If a cell won&#x27;t stop, use the stop button.</p></div></div></details></article>
+<article class="card" id="I4"><h3><label><input type="checkbox" class="tick" id="tick-I4" data-id="I4" data-sec="I"><span class="tag">I4</span>Number a list with enumerate()</label></h3><p>Print the top five dishes from a Calle Ocho food tour as a ranked list: &#x27;#1: croquetas&#x27;, &#x27;#2: ...&#x27;. Use enumerate() instead of a counter.</p><h4>Think first</h4><ul><li>What two things does enumerate() hand you on each pass?</li><li>enumerate() starts counting at 0. What do people expect the first rank to be?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># I4 · Ranked list with enumerate()
+dishes = [&quot;croquetas&quot;, &quot;pastelitos&quot;, &quot;vaca frita&quot;, &quot;ropa vieja&quot;, &quot;flan&quot;]   # Run as given
+
+# PLAN
+# 1. for each position and dish in enumerate(dishes):    (two loop variables)
+# 2.     print &quot;#&quot; + (position + 1) + &quot;: &quot; + dish
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">#1: croquetas
+#2: pastelitos
+#3: vaca frita
+#4: ropa vieja
+#5: flan</pre><details class="hint"><summary>Hint 1</summary><div><p>for i, dish in enumerate(dishes): gives (0, &#x27;croquetas&#x27;), (1, &#x27;pastelitos&#x27;), ...</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Show i + 1 so the list starts at #1, the same trick as the dice roller.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>print(f&quot;#{i + 1}: {dish}&quot;)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">dishes = [&quot;croquetas&quot;, &quot;pastelitos&quot;, &quot;vaca frita&quot;, &quot;ropa vieja&quot;, &quot;flan&quot;]
+
+for i, dish in enumerate(dishes):
+    print(f&quot;#{i + 1}: {dish}&quot;)</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>enumerate(dishes, start=1) also works and lets you print i directly. Either way, the ranks should start at 1.</p></div></div></details></article>
+<article class="card" id="I5"><h3><label><input type="checkbox" class="tick" id="tick-I5" data-id="I5" data-sec="I"><span class="tag">I5</span>Order three packages with swaps</label></h3><p>A Doral warehouse scale gives three package weights in pounds. Put them in order from lightest to heaviest using only comparisons and swaps (a, b = b, a). No sort().</p><h4>Think first</h4><ul><li>How do you swap two variables in one line?</li><li>Compare the first two and swap if they&#x27;re out of order. Then the last two. Is one pass enough, or do you need to check the first two again?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># I5 · Order three weights with swaps
+a, b, c = 12.5, 3.2, 7.8   # unpacking: three variables in one line. Run as given
+
+# PLAN
+# 1. if a &gt; b: swap a and b
+# 2. if b &gt; c: swap b and c      (the heaviest is now in c)
+# 3. if a &gt; b: swap a and b again (fix the first two)
+# 4. print a, b, c
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">Lightest to heaviest: 3.2 lb, 7.8 lb, 12.5 lb</pre><details class="hint"><summary>Hint 1</summary><div><p>a, b = b, a swaps two variables. Python builds the right side first, then unpacks it.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>After steps 1 and 2 the heaviest is guaranteed to be in c, but a and b might still be out of order.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>Three if statements, each with one swap line, then print(a, b, c).</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">a, b, c = 12.5, 3.2, 7.8
+
+if a &gt; b:
+    a, b = b, a
+if b &gt; c:
+    b, c = c, b
+if a &gt; b:
+    a, b = b, a
+
+print(f&quot;Lightest to heaviest: {a} lb, {b} lb, {c} lb&quot;)</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>Swapping in two lines (a = b, then b = a) loses a value: both end up equal. Use a, b = b, a.</p></div></div></details></article>
+<h2 id="rate">Rate yourself</h2><p>Give each section a 1 (shaky), 2 (okay) or 3 (solid). Your ratings save with your progress. Any 1s? Redo that section's last exercise tomorrow from a blank cell, without the plan. That's the real test, and those are the sections to bring questions about to the Exam 2 review.</p>
+<div class="tablewrap"><table><thead><tr><th>Section</th><th>Topic</th><th>Your rating</th></tr></thead><tbody><tr><td><b>A</b></td><td>if, elif, else</td><td><div class="rate" role="radiogroup" aria-label="Rating for section A"><input type="radio" name="rate-A" id="rate-A-1" value="1" data-sec="A"><label for="rate-A-1">1</label><input type="radio" name="rate-A" id="rate-A-2" value="2" data-sec="A"><label for="rate-A-2">2</label><input type="radio" name="rate-A" id="rate-A-3" value="3" data-sec="A"><label for="rate-A-3">3</label></div></td></tr><tr><td><b>B</b></td><td>and, or, not, nested if, flags, in</td><td><div class="rate" role="radiogroup" aria-label="Rating for section B"><input type="radio" name="rate-B" id="rate-B-1" value="1" data-sec="B"><label for="rate-B-1">1</label><input type="radio" name="rate-B" id="rate-B-2" value="2" data-sec="B"><label for="rate-B-2">2</label><input type="radio" name="rate-B" id="rate-B-3" value="3" data-sec="B"><label for="rate-B-3">3</label></div></td></tr><tr><td><b>C</b></td><td>while loops for input validation</td><td><div class="rate" role="radiogroup" aria-label="Rating for section C"><input type="radio" name="rate-C" id="rate-C-1" value="1" data-sec="C"><label for="rate-C-1">1</label><input type="radio" name="rate-C" id="rate-C-2" value="2" data-sec="C"><label for="rate-C-2">2</label><input type="radio" name="rate-C" id="rate-C-3" value="3" data-sec="C"><label for="rate-C-3">3</label></div></td></tr><tr><td><b>D</b></td><td>Sentinels, counters, accumulators</td><td><div class="rate" role="radiogroup" aria-label="Rating for section D"><input type="radio" name="rate-D" id="rate-D-1" value="1" data-sec="D"><label for="rate-D-1">1</label><input type="radio" name="rate-D" id="rate-D-2" value="2" data-sec="D"><label for="rate-D-2">2</label><input type="radio" name="rate-D" id="rate-D-3" value="3" data-sec="D"><label for="rate-D-3">3</label></div></td></tr><tr><td><b>E</b></td><td>for loops over collections</td><td><div class="rate" role="radiogroup" aria-label="Rating for section E"><input type="radio" name="rate-E" id="rate-E-1" value="1" data-sec="E"><label for="rate-E-1">1</label><input type="radio" name="rate-E" id="rate-E-2" value="2" data-sec="E"><label for="rate-E-2">2</label><input type="radio" name="rate-E" id="rate-E-3" value="3" data-sec="E"><label for="rate-E-3">3</label></div></td></tr><tr><td><b>F</b></td><td>range()</td><td><div class="rate" role="radiogroup" aria-label="Rating for section F"><input type="radio" name="rate-F" id="rate-F-1" value="1" data-sec="F"><label for="rate-F-1">1</label><input type="radio" name="rate-F" id="rate-F-2" value="2" data-sec="F"><label for="rate-F-2">2</label><input type="radio" name="rate-F" id="rate-F-3" value="3" data-sec="F"><label for="rate-F-3">3</label></div></td></tr><tr><td><b>G</b></td><td>While vs for, and loops in sequence</td><td><div class="rate" role="radiogroup" aria-label="Rating for section G"><input type="radio" name="rate-G" id="rate-G-1" value="1" data-sec="G"><label for="rate-G-1">1</label><input type="radio" name="rate-G" id="rate-G-2" value="2" data-sec="G"><label for="rate-G-2">2</label><input type="radio" name="rate-G" id="rate-G-3" value="3" data-sec="G"><label for="rate-G-3">3</label></div></td></tr><tr><td><b>H</b></td><td>Nested loops</td><td><div class="rate" role="radiogroup" aria-label="Rating for section H"><input type="radio" name="rate-H" id="rate-H-1" value="1" data-sec="H"><label for="rate-H-1">1</label><input type="radio" name="rate-H" id="rate-H-2" value="2" data-sec="H"><label for="rate-H-2">2</label><input type="radio" name="rate-H" id="rate-H-3" value="3" data-sec="H"><label for="rate-H-3">3</label></div></td></tr><tr><td><b>I</b></td><td>break, continue, enumerate, unpacking</td><td><div class="rate" role="radiogroup" aria-label="Rating for section I"><input type="radio" name="rate-I" id="rate-I-1" value="1" data-sec="I"><label for="rate-I-1">1</label><input type="radio" name="rate-I" id="rate-I-2" value="2" data-sec="I"><label for="rate-I-2">2</label><input type="radio" name="rate-I" id="rate-I-3" value="3" data-sec="I"><label for="rate-I-3">3</label></div></td></tr></tbody></table></div>
+<div class="box why"><p class="boxlbl">Before the exam</p><ul><li>Redo any exercise you rated a 1, from a blank cell.</li><li>Say the thinking order out loud on every problem: restate, plan, imports and constants, inputs, structure, body, after the loop, test.</li><li>Know the traps: = vs ==, elif order, forgetting int(), the loop's CHANGE line, range()'s stop value, and resetting inner counters.</li></ul></div>
+<p><button class="reset" id="reset" type="button">Reset my progress</button></p>
+<p class="sub">Progress is stored only in this browser on this device. A different browser, a private window or clearing your browsing data starts fresh.</p></main><script>
+(function(){
+const KEY="cop1047c-exam2-practice-v1";
+const ticks=[...document.querySelectorAll('.tick')];
+const radios=[...document.querySelectorAll('.rate input')];
+const saveEl=document.getElementById('save');
+let state={done:{},ratings:{}}, canSave=false;
+function setStatus(s,m){saveEl.dataset.s=s;saveEl.textContent=m;}
+function render(){
+  ticks.forEach(t=>{t.checked=!!state.done[t.dataset.id];t.closest('.card').classList.toggle('is-done',t.checked);});
+  radios.forEach(r=>{r.checked=String(state.ratings[r.dataset.sec]||'')===r.value;});
+  const n=ticks.filter(t=>t.checked).length;
+  document.getElementById('done').textContent=n;
+  document.getElementById('barfill').style.width=(100*n/ticks.length)+'%';
+  document.querySelectorAll('.jump a').forEach(a=>{const ts=ticks.filter(t=>t.dataset.sec===a.dataset.sec);a.classList.toggle('full',ts.length>0&&ts.every(t=>t.checked));});
+}
+function save(){
+  render();
+  if(!canSave) return;
+  try{localStorage.setItem(KEY,JSON.stringify(state));setStatus('saved','Saved in this browser');}
+  catch(e){canSave=false;setStatus('error','This browser stopped saving. Your checkmarks last until you close the page.');}
+}
+try{
+  const raw=localStorage.getItem(KEY);
+  if(raw){const d=JSON.parse(raw);state={done:Object.assign({},d.done||{}),ratings:Object.assign({},d.ratings||{})};}
+  localStorage.setItem(KEY+'-test','1');localStorage.removeItem(KEY+'-test');
+  canSave=true;setStatus('saved',raw?'Progress loaded from this browser':'Progress saves in this browser');
+}catch(e){setStatus('local','This browser is blocking saving (private window?). Your checkmarks last until you close the page.');}
+ticks.forEach(t=>t.addEventListener('change',()=>{if(t.checked) state.done[t.dataset.id]=true; else delete state.done[t.dataset.id]; save();}));
+radios.forEach(r=>r.addEventListener('change',()=>{state.ratings[r.dataset.sec]=Number(r.value);save();}));
+const btn=document.getElementById('reset');let armed=false;
+btn.addEventListener('click',()=>{
+  if(!armed){armed=true;btn.classList.add('armed');btn.textContent='Tap again to clear every checkmark and rating';setTimeout(()=>{armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';},4000);return;}
+  armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';state={done:{},ratings:{}};save();
+});
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
+  const pre=b.parentElement.querySelector('pre');const t=pre.innerText;
+  const done=m=>{b.textContent=m;setTimeout(()=>b.textContent='Copy',1400);};
+  const sel=()=>{const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);done('Selected: press Ctrl+C');};
+  try{navigator.clipboard.writeText(t).then(()=>done('Copied'),sel);}catch(e){sel();}
+}));
+render();
+})();
+</script></body></html>
