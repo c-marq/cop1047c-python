@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>COP1047C Python · Student Materials</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;600;700&display=swap"><style>
+/* Layout: one reading column; sticky progress strip; each exercise is a worksheet card with plan, target, hints, solution */
+:root{
+ --bg:#F6F7F9; --surface:#FFFFFF; --fg:#1C2433; --muted:#5A6577; --line:#DCE1E8;
+ --brand:#1B2A41; --brand-fg:#FFFFFF; --accent:#F5B82E; --accent-ink:#1B2A41; --link:#2F5F98;
+ --code-bg:#22272E; --code-fg:#E6EDF3; --out-bg:#EEF1F5; --out-fg:#1D232B;
+ --go-bg:#DDF3E6; --go-fg:#17663A; --why-bg:#DCEAF7; --why-fg:#1A4C78;
+ --hint-bg:#FCF3D9; --hint-fg:#6E5606; --stop-bg:#F8DDDA; --stop-fg:#8E2A20;
+ --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+ --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+ --f-mono:"JetBrains Mono", ui-monospace, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}}
+:root[data-theme="dark"]{
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:17px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding-inline:18px;padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.2}
+h1{font-size:clamp(28px,5vw,40px);margin:26px 0 6px;font-weight:700}
+h2{font-size:24px;margin:38px 0 10px}
+h4{font-size:16px;margin:16px 0 6px;font-family:var(--f-body);font-weight:700;letter-spacing:.02em}
+a{color:var(--link)}
+p{margin:8px 0}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--out-bg);color:var(--out-fg);padding:1px 6px;border-radius:4px}
+.sub{color:var(--muted);font-size:15px;max-width:65ch}
+.prog{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:2px solid var(--accent);padding-block:10px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.prog .count{font-weight:700;font-variant-numeric:tabular-nums}
+.bar{flex:1 1 140px;height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--go-fg);transition:width .3s}
+.jump{display:flex;gap:4px;flex-wrap:wrap}
+.jump a{font-size:13px;text-decoration:none;color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:1px 9px;font-variant-numeric:tabular-nums}
+.jump a.full{background:var(--go-bg);color:var(--go-fg);border-color:transparent}
+.save{font-size:13px;color:var(--muted);flex-basis:100%}
+.save[data-s="saved"]{color:var(--go-fg)} .save[data-s="error"]{color:var(--stop-fg)}
+.map{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.map span{padding:5px 11px;border-radius:14px;font-size:14px;border:1px solid var(--line)}
+.map .done{background:var(--go-bg);color:var(--go-fg);border-color:transparent;font-weight:600}
+.map .now{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.box{border-radius:8px;padding:12px 16px;margin:12px 0}
+.box .boxlbl{font-weight:700;margin:0 0 4px;letter-spacing:.03em;font-size:14px;text-transform:uppercase}
+.go{background:var(--go-bg);color:var(--fg)} .go .boxlbl{color:var(--go-fg)}
+.why{background:var(--why-bg);color:var(--fg)} .why .boxlbl{color:var(--why-fg)}
+.warn{background:var(--hint-bg);color:var(--fg)} .warn .boxlbl{color:var(--hint-fg)}
+.stop{background:var(--stop-bg);color:var(--fg)} .stop .boxlbl{color:var(--stop-fg)}
+.box ol,.box ul{margin:4px 0;padding-left:22px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15.5px;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-family:var(--f-body);font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+td.n{font-variant-numeric:tabular-nums;color:var(--muted);width:2em}
+.codewrap{position:relative;margin:8px 0;min-width:0}
+pre{margin:0;overflow-x:auto;white-space:pre;font-family:var(--f-mono);font-size:14px;line-height:1.5;border-radius:8px;padding:12px 14px}
+pre.code{background:var(--code-bg);color:var(--code-fg);padding-right:72px}
+pre.out{background:var(--out-bg);color:var(--out-fg);margin-bottom:10px}
+.lbl{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:8px}
+.copy{position:absolute;top:8px;right:8px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:5px;padding:4px 10px;font:600 13px var(--f-body);cursor:pointer}
+.copy:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.sec{background:var(--brand);color:var(--brand-fg);border-radius:10px;padding:14px 18px;margin:40px 0 12px;scroll-margin-top:70px}
+.sec h2{margin:0;color:var(--accent);font-size:22px}
+.sec p{margin:4px 0 0;opacity:.85;font-size:15px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:16px 0;scroll-margin-top:70px}
+.card.is-done{border-color:var(--go-fg)}
+.card h3{margin:0 0 6px;display:flex;gap:10px;align-items:center;font-size:20px}
+.card h3 label{display:flex;gap:10px;align-items:center;cursor:pointer}
+.tick{width:20px;height:20px;accent-color:var(--go-fg);flex:none}
+.tag{font-family:var(--f-mono);font-size:13px;background:var(--brand);color:var(--brand-fg);border-radius:5px;padding:1px 7px}
+details{margin:6px 0}
+summary{cursor:pointer;font-weight:700;padding:8px 12px;border-radius:6px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ "} details[open]>summary::before{content:"▾ "}
+details.hint>summary{background:var(--hint-bg);color:var(--hint-fg)}
+details.sol>summary{background:var(--stop-bg);color:var(--stop-fg)}
+details>div{padding:4px 4px 4px 12px}
+.rate{display:flex;gap:6px;flex-wrap:wrap}
+.rate input{position:absolute;opacity:0;pointer-events:none}
+.rate label{border:1px solid var(--line);border-radius:6px;padding:4px 12px;cursor:pointer;font-variant-numeric:tabular-nums;background:var(--surface)}
+.rate input:checked+label{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.rate input:focus-visible+label{outline:3px solid var(--link);outline-offset:2px}
+.reset{background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.reset.armed{border-color:var(--stop-fg);color:var(--stop-fg)}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+@media (max-width:480px){body{font-size:16px} pre{font-size:13px}}
+body{margin:0}.links{display:grid;gap:12px;margin:20px 0}.links a{display:block;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;text-decoration:none;color:var(--fg)}.links a:hover{border-color:var(--accent)}.links b{font-family:var(--f-display);font-size:20px;display:block}</style></head>
+<body><main class="wrap"><h1>COP1047C Intro to Python</h1><p class="sub">Miami Dade College · Student practice materials. Open any set below in your browser, and keep Google Colab open in another tab to write your code.</p>
+<div class="links"><a href="exam2-practice/"><b>Exam 2 Practice: Branching and Loops</b>Chapters 4 and 5 · 26 exercises with plans, hints and solutions · your progress saves in your browser</a></div>
+</main></body></html>
