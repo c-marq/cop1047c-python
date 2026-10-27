@@ -1,13 +1,108 @@
-# COP1047C Intro to Python: Student Materials
+# COP1047C: Introduction to Python Programming
 
-Practice materials for COP1047C at Miami Dade College, published with GitHub Pages.
+**Miami Dade College | School of Engineering and Technology**
 
-| Page | What it covers |
-|---|---|
-| [Exam 2 Practice](exam2-practice/) | Chapters 4 and 5: if/elif/else, and/or/not, nested ifs, flags, `in`, while loops, sentinels, counters and accumulators, for loops, `range()`, nested loops, `break`, `continue`, `enumerate()` and unpacking. 26 exercises, each with a plan in comments, hints, a target run and a verified solution. |
-| [Exam 2 Study Set](exam2-study/) | Six lab-style problems, two for each kind of Exam 2 lab, each with a new scenario. |
-| [Chapter 6 Practice Enhancements: Functions, Part 1](ch06-practice/) | Optional. `def`, calling a function, `return`, and parameters. 4 exercises. |
-| [Chapter 6 Practice Enhancements: Functions, Part 2](ch06-part2-practice/) | Optional. Dynamic typing, function stubs, and ifs and loops inside functions. 4 exercises. |
-| [Chapter 6 Practice Enhancements: Functions, Part 3](ch06-part3-practice/) | Optional. Scope and constants, returning two values, recursion to a loop, and docstrings with a validation loop. 4 exercises. |
+---
 
-Students: open the page in a browser and keep Google Colab open in another tab. Progress and self-ratings save in your own browser; nothing is sent anywhere.
+## 👋 Welcome
+
+This site holds the extra practice for COP1047C Intro to Python: exam prep sets and optional Practice Enhancements for each chapter. Every exercise has a plan, hints and a verified solution, and your progress saves in your own browser.
+
+**Your Canvas course remains the official source for:**
+
+* The calendar and all dates
+* Assignment submissions
+* Grades and feedback
+* Announcements
+
+**zyBooks remains your textbook.** Your zyBooks labs and homework always come first. The pages here are extra reps when you want them.
+
+Think of zyBooks as your **textbook**, this site as your **practice gym**, and Canvas as your **gradebook and calendar**.
+
+---
+
+## 🚀 Getting Started
+
+### First Time Here?
+
+1. **Bookmark the site:** [c-marq.github.io/cop1047c-python](https://c-marq.github.io/cop1047c-python/). Every page is linked from there.
+2. **Set up Google Colab:** see the [Getting Started Guide](GETTING-STARTED.md)
+3. **Try one exercise:** open any practice page, keep Colab open in another tab, and work the first exercise
+
+### New to GitHub?
+
+You don't need GitHub for this course. Use the site link above. Each page opens in your browser, and nothing is sent anywhere.
+
+---
+
+## 📁 Repository Structure
+
+The site follows the four Parts of the course.
+
+| Folder | What's Inside | When to Use It |
+|--------|--------------|----------------|
+| [`part-2-decisions-and-loops/`](part-2-decisions-and-loops/) | Exam 2 Practice and the Exam 2 Study Set | Before Exam 2 |
+| [`part-3-functions-strings-exceptions/`](part-3-functions-strings-exceptions/) | Chapter 6 Practice Enhancements (Parts 1 to 3) | After each class, on your own time |
+
+Part 1 and Part 4 pages will be added as they are built.
+
+---
+
+## 📚 Course Overview
+
+| Part | Chapters | Pages on this site |
+|------|----------|--------------------|
+| 1 · Python Basics | 1 Intro, 2 Variables and Expressions, 3 Types | Coming later |
+| 2 · Decisions and Loops | 4 Branching (if-else), 5 Loops | [Exam 2 Practice](https://c-marq.github.io/cop1047c-python/part-2-decisions-and-loops/exam-2-practice/) · [Exam 2 Study Set](https://c-marq.github.io/cop1047c-python/part-2-decisions-and-loops/exam-2-study-set/) |
+| 3 · Functions, Strings, Exceptions | 6 Functions, 7 Strings, 8 Exceptions | [Chapter 6 Part 1](https://c-marq.github.io/cop1047c-python/part-3-functions-strings-exceptions/chapter-06-functions-part-1-practice/) · [Chapter 6 Part 2](https://c-marq.github.io/cop1047c-python/part-3-functions-strings-exceptions/chapter-06-functions-part-2-practice/) · [Chapter 6 Part 3](https://c-marq.github.io/cop1047c-python/part-3-functions-strings-exceptions/chapter-06-functions-part-3-practice/) |
+| 4 · Final Chapters and Cert Prep | 9 Lists and Dictionaries, 12 Files, 10 Classes, 11 Modules, 13 Plotting lab | Coming later |
+| Final | Knowledge Pillars Python Coding Specialist certification | |
+
+---
+
+## 🛠️ Tools We Use
+
+| Tool | Purpose | Access |
+|------|---------|--------|
+| **zyBooks** | Textbook, labs and homework | Through Canvas |
+| **Google Colab** | Write and run Python code | [colab.research.google.com](https://colab.research.google.com) |
+| **This site** | Extra practice with hints and solutions | [c-marq.github.io/cop1047c-python](https://c-marq.github.io/cop1047c-python/) |
+| **Canvas** | Submissions, grades, communication | [MDC Canvas](https://mdc.instructure.com) |
+
+No software installation required. Everything runs in your browser.
+
+---
+
+## ❓ Getting Help
+
+1. **Use the hints first:** every exercise has up to three, from a nudge to almost the answer
+2. **Check zyBooks:** the matching section explains the idea step by step
+3. **Post in Canvas:** classmates and your professor can help
+4. **Office Hours:** see Canvas for the schedule
+
+When asking for help with code:
+* Describe what you're trying to do
+* Share the error message (screenshot or copy and paste)
+* Tell us what you've already tried
+
+---
+
+## 📋 Quick Links
+
+* [All practice pages](https://c-marq.github.io/cop1047c-python/)
+* [Getting Started Guide](GETTING-STARTED.md)
+* [Exam 2 Practice](https://c-marq.github.io/cop1047c-python/part-2-decisions-and-loops/exam-2-practice/)
+* [Chapter 6 Practice Enhancements, Part 1](https://c-marq.github.io/cop1047c-python/part-3-functions-strings-exceptions/chapter-06-functions-part-1-practice/)
+
+---
+
+## ⚠️ Important Notes
+
+* **Practice Enhancements are optional and not graded.** zyBooks comes first.
+* **Submissions go to Canvas.** Never submit work through GitHub.
+* **Progress saves in the browser you use.** It doesn't carry across devices, browsers or private windows.
+* **Pages may be updated.** Refresh your browser to see the latest version.
+
+---
+
+*Questions about this site? Ask in Canvas or bring them to class.*

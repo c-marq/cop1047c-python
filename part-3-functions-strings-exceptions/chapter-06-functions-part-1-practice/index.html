@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Chapter 6 Part 1 Practice · COP1047C</title><meta name="description" content="Optional practice enhancements for COP1047C Chapter 6: functions."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:wght@400;600;700&display=swap"><style>
+/* Layout: one reading column; sticky progress strip; each exercise is a worksheet card with plan, target, hints, solution */
+:root{
+ --bg:#F6F7F9; --surface:#FFFFFF; --fg:#1C2433; --muted:#5A6577; --line:#DCE1E8;
+ --brand:#1B2A41; --brand-fg:#FFFFFF; --accent:#F5B82E; --accent-ink:#1B2A41; --link:#2F5F98;
+ --code-bg:#22272E; --code-fg:#E6EDF3; --out-bg:#EEF1F5; --out-fg:#1D232B;
+ --go-bg:#DDF3E6; --go-fg:#17663A; --why-bg:#DCEAF7; --why-fg:#1A4C78;
+ --hint-bg:#FCF3D9; --hint-fg:#6E5606; --stop-bg:#F8DDDA; --stop-fg:#8E2A20;
+ --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+ --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+ --f-mono:"JetBrains Mono", ui-monospace, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}}
+:root[data-theme="dark"]{
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:17px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding-inline:18px;padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.2}
+h1{font-size:clamp(28px,5vw,40px);margin:26px 0 6px;font-weight:700}
+h2{font-size:24px;margin:38px 0 10px}
+h4{font-size:16px;margin:16px 0 6px;font-family:var(--f-body);font-weight:700;letter-spacing:.02em}
+a{color:var(--link)}
+p{margin:8px 0}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--out-bg);color:var(--out-fg);padding:1px 6px;border-radius:4px}
+.sub{color:var(--muted);font-size:15px;max-width:65ch}
+.prog{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:2px solid var(--accent);padding-block:10px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.prog .count{font-weight:700;font-variant-numeric:tabular-nums}
+.bar{flex:1 1 140px;height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--go-fg);transition:width .3s}
+.jump{display:flex;gap:4px;flex-wrap:wrap}
+.jump a{font-size:13px;text-decoration:none;color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:1px 9px;font-variant-numeric:tabular-nums}
+.jump a.full{background:var(--go-bg);color:var(--go-fg);border-color:transparent}
+.save{font-size:13px;color:var(--muted);flex-basis:100%}
+.save[data-s="saved"]{color:var(--go-fg)} .save[data-s="error"]{color:var(--stop-fg)}
+.map{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.map span{padding:5px 11px;border-radius:14px;font-size:14px;border:1px solid var(--line)}
+.map .done{background:var(--go-bg);color:var(--go-fg);border-color:transparent;font-weight:600}
+.map .now{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.box{border-radius:8px;padding:12px 16px;margin:12px 0}
+.box .boxlbl{font-weight:700;margin:0 0 4px;letter-spacing:.03em;font-size:14px;text-transform:uppercase}
+.go{background:var(--go-bg);color:var(--fg)} .go .boxlbl{color:var(--go-fg)}
+.why{background:var(--why-bg);color:var(--fg)} .why .boxlbl{color:var(--why-fg)}
+.warn{background:var(--hint-bg);color:var(--fg)} .warn .boxlbl{color:var(--hint-fg)}
+.stop{background:var(--stop-bg);color:var(--fg)} .stop .boxlbl{color:var(--stop-fg)}
+.box ol,.box ul{margin:4px 0;padding-left:22px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15.5px;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-family:var(--f-body);font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+td.n{font-variant-numeric:tabular-nums;color:var(--muted);width:2em}
+.codewrap{position:relative;margin:8px 0;min-width:0}
+pre{margin:0;overflow-x:auto;white-space:pre;font-family:var(--f-mono);font-size:14px;line-height:1.5;border-radius:8px;padding:12px 14px}
+pre.code{background:var(--code-bg);color:var(--code-fg);padding-right:72px}
+pre.out{background:var(--out-bg);color:var(--out-fg);margin-bottom:10px}
+.lbl{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:8px}
+.copy{position:absolute;top:8px;right:8px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:5px;padding:4px 10px;font:600 13px var(--f-body);cursor:pointer}
+.copy:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.sec{background:var(--brand);color:var(--brand-fg);border-radius:10px;padding:14px 18px;margin:40px 0 12px;scroll-margin-top:70px}
+.sec h2{margin:0;color:var(--accent);font-size:22px}
+.sec p{margin:4px 0 0;opacity:.85;font-size:15px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:16px 0;scroll-margin-top:70px}
+.card.is-done{border-color:var(--go-fg)}
+.card h3{margin:0 0 6px;display:flex;gap:10px;align-items:center;font-size:20px}
+.card h3 label{display:flex;gap:10px;align-items:center;cursor:pointer}
+.tick{width:20px;height:20px;accent-color:var(--go-fg);flex:none}
+.tag{font-family:var(--f-mono);font-size:13px;background:var(--brand);color:var(--brand-fg);border-radius:5px;padding:1px 7px}
+details{margin:6px 0}
+summary{cursor:pointer;font-weight:700;padding:8px 12px;border-radius:6px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ "} details[open]>summary::before{content:"▾ "}
+details.hint>summary{background:var(--hint-bg);color:var(--hint-fg)}
+details.sol>summary{background:var(--stop-bg);color:var(--stop-fg)}
+details>div{padding:4px 4px 4px 12px}
+.rate{display:flex;gap:6px;flex-wrap:wrap}
+.rate input{position:absolute;opacity:0;pointer-events:none}
+.rate label{border:1px solid var(--line);border-radius:6px;padding:4px 12px;cursor:pointer;font-variant-numeric:tabular-nums;background:var(--surface)}
+.rate input:checked+label{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.rate input:focus-visible+label{outline:3px solid var(--link);outline-offset:2px}
+.reset{background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.reset.armed{border-color:var(--stop-fg);color:var(--stop-fg)}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+@media (max-width:480px){body{font-size:16px} pre{font-size:13px}}
+body{margin:0}</style></head><body><main class="wrap"><div class="prog" role="region" aria-label="Progress"><span class="count"><span id="done">0</span> / 4 done</span><div class="bar" aria-hidden="true"><i id="barfill"></i></div><nav class="jump" aria-label="Jump to section"><a href="#secA" data-sec="A">A</a></nav><span class="save" id="save" data-s="wait">Checking whether this browser can save your progress…</span></div>
+<p class="sub"><a href="../../">&larr; All COP1047C practice pages</a></p><h1>Chapter 6 Practice Enhancements: Functions, Part 1</h1><p class="sub">COP1047C Intro to Python · Miami Dade College · Optional · 4 short exercises on def, calling, return, and parameters. Every sample run and solution here was produced by running the code on Python 3.12, the version Google Colab uses. Your checkmarks and self-ratings save in this browser.</p>
+<h2>What's covered</h2><div class="map"><span>A · Ch 6 Part 1 · zyBooks 6.1, 6.2, 6.5</span></div><div class="box go"><p class="boxlbl">Optional · on your own time</p><p><b>Your zyBooks labs and homework come first.</b> This page is extra practice if you want more reps on what we did in class. It is not graded and nothing here is due. Do one exercise or all four, whenever it works for you.</p></div><p>A1 to A3 practice the core skills from class. A4 is a stretch that brings back the Chapter 4 hurricane ladder inside a function. For every exercise, put the function at the top of the cell and the main program underneath it.</p><p>Need loop practice? See <a href="../../part-2-decisions-and-loops/exam-2-practice/">Exam 2 Practice</a>.</p>
+<h2>How to use this practice set</h2><div class="box go"><p class="boxlbl">Do this in Colab</p><ol><li>Open a new notebook at colab.new. Use one code cell per exercise.</li><li>Read the story and answer the <b>Think first</b> questions out loud, or as a comment, before writing code.</li><li>Copy <b>Your plan</b> into the cell. The plan is the program, written as comments.</li><li>Build one plan line at a time. Type the code under its comment and run the cell after each piece.</li><li>Compare with the <b>Target</b> run. Type the same inputs: the logic and the numbers should match. Your messages can be worded your own way unless the story quotes them exactly.</li><li>Stuck? Open Hint 1. Still stuck after a couple of minutes? Hint 2, then Hint 3.</li><li>Open the solution last. Compare it to yours, then try the edge cases it lists.</li><li>Tick the box beside the title. Your progress saves in this browser.</li></ol></div><div class="box why"><p class="boxlbl">Why plan in comments first?</p><p>It's the order experienced programmers think in, and the same order we use when we build exercises live in class. A blank cell is hard. A to-do list is easy: each comment becomes one or two lines of code.</p></div><div class="box warn"><p class="boxlbl">Use the solutions honestly</p><p>The solutions are here so you can check your thinking, not skip it. If you open a solution before trying, close it, wait a day, and redo that exercise from a blank cell. That's what the exam will feel like.</p></div>
+<h3>The thinking order, for every exercise</h3><div class="tablewrap"><table><thead><tr><th></th><th>Step</th><th>Ask yourself</th></tr></thead><tbody><tr><td class="n">1</td><td><b>Restate</b></td><td>What goes in, what comes out, what are the rules? Look at the target run.</td></tr><tr><td class="n">2</td><td><b>Plan in comments</b></td><td>3 to 6 # lines, in order. Imports go first.</td></tr><tr><td class="n">3</td><td><b>Imports and constants</b></td><td>import random? Fixed values in ALL_CAPS?</td></tr><tr><td class="n">4</td><td><b>Inputs and starting variables</b></td><td>int, float or text? Counters and totals start at 0 before the loop.</td></tr><tr><td class="n">5</td><td><b>Pick the structure</b></td><td>One decision (if), repeat an unknown number of times (while), or a known number (for)?</td></tr><tr><td class="n">6</td><td><b>Body, one line at a time</b></td><td>What happens on each pass? What changes so the loop can end?</td></tr><tr><td class="n">7</td><td><b>After the loop</b></td><td>Summaries print once, at the left edge.</td></tr><tr><td class="n">8</td><td><b>Test</b></td><td>The sample input first, then an edge case: 0, the boundary, an empty entry.</td></tr></tbody></table></div>
+<section class="sec" id="secA"><h2>A · Define, call, return, pass in</h2><p>Ch 6 Part 1 · zyBooks 6.1, 6.2, 6.5 · Write a function once, call it as many times as you need, send values in, and get a value back.</p></section>
+<div class="box why"><p class="boxlbl">Quick refresher</p><p>def makes a function: a header (def name(parameters):) and an indented body. Nothing in the body runs until you CALL it: name(arguments). return sends one value back to the line that called it. A function with no return gives back None. Define the function above the code that calls it.</p><div class="codewrap"><pre class="code">def cafecito_cost(cups):        # header: name and parameter
+    return cups * 1.50          # body: send a value back
+
+total = cafecito_cost(3)        # call: 3 is the argument
+print(total)</pre></div></div>
+<article class="card" id="A1"><h3><label><input type="checkbox" class="tick" id="tick-A1" data-id="A1" data-sec="A"><span class="tag">A1</span>Wrap it in a function</label></h3><p>A Calle Ocho ventanita prints the cost of a cafecito order. The code below works, but it isn&#x27;t in a function. Move the math and the order line into a function named cafecito_order(). Keep the &#x27;Ventanita receipt:&#x27; heading in the main program, then call the function.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>This is about WHERE code lives, not what it does. The output should be exactly the same before and after.</li><li>The function needs a header with def, a name in lowercase with underscores, empty parentheses (no inputs yet) and a colon.</li><li>Everything that belongs to the function is indented one level under the header.</li><li>The main program starts back at the left edge: print the heading, then call the function. Defining it doesn&#x27;t run it. Calling it does.</li></ol></div><h4>Think first</h4><ul><li>Which lines go inside the function, and which stay in the main program?</li><li>What happens if you define the function but never call it?</li><li>Does the heading print before or after the order line? Where does the call go?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># A1 · Wrap it in a function
+# Starting code (it works, but it isn&#x27;t in a function yet):
+#     cups = 3
+#     price = 1.50
+#     print(&quot;Ventanita receipt:&quot;)
+#     print(f&quot;{cups} cafecitos = ${cups * price:.2f}&quot;)
+
+# PLAN
+# 1. imports: none needed
+# 2. def cafecito_order(): header with a colon
+# 3.     inside (indented): cups = 3, price = 1.50, print the order line
+# 4. main program (left edge): print the heading
+# 5. call cafecito_order()
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">Ventanita receipt:
+3 cafecitos = $4.50</pre><details class="hint"><summary>Hint 1</summary><div><p>The header is def cafecito_order(): with the colon at the end.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Indent cups, price and the order print under the header. The heading print stays at the left edge.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>After the heading, call the function: cafecito_order()  (with the parentheses).</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">def cafecito_order():
+    cups = 3
+    price = 1.50
+    print(f&quot;{cups} cafecitos = ${cups * price:.2f}&quot;)
+
+print(&quot;Ventanita receipt:&quot;)
+cafecito_order()</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>Typing cafecito_order without the () doesn&#x27;t call it. And if you call the function ABOVE its def, Python stops with NameError: name &#x27;cafecito_order&#x27; is not defined. In Colab that error can hide if you ran an earlier version of the cell, so restart the runtime to be sure.</p></div></div></details></article>
+<article class="card" id="A2"><h3><label><input type="checkbox" class="tick" id="tick-A2" data-id="A2" data-sec="A"><span class="tag">A2</span>Two prices, one function</label></h3><p>At Sedano&#x27;s, a shopper buys two items. Write a function named get_price() that asks for a price as a float and returns it. In the main program, call it twice, store each result in its own variable, then print the total with 2 decimals.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>The task repeats the same step twice: ask for a price. Any time code repeats, a function can do it once and be called twice.</li><li>The function&#x27;s job is to ASK and hand back the number. It shouldn&#x27;t print the total. That&#x27;s the main program&#x27;s job.</li><li>return is how the number gets out of the function. Without it, the function hands back None.</li><li>Each call gives back one number, so catch each one in its own variable: price1 = get_price().</li></ol></div><h4>Think first</h4><ul><li>What does the function need to do, and what should it give back?</li><li>How do you get the number from inside the function to the main program?</li><li>How many times do you call it, and where does each result go?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># A2 · Two prices, one function
+# PLAN
+# 1. imports: none needed
+# 2. def get_price():
+# 3.     ask for a price as a float
+# 4.     return it
+# 5. main program: price1 = get_price(), price2 = get_price()
+# 6. print the total with 2 decimals
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 3.49 | 12.99</div><pre class="out">Item price: $3.49
+Item price: $12.99
+Total: $16.48</pre><details class="hint"><summary>Hint 1</summary><div><p>Inside the function: price = float(input(&quot;Item price: $&quot;)) then return price.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>In the main program: price1 = get_price() and price2 = get_price().</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>print(f&quot;Total: ${price1 + price2:.2f}&quot;)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">def get_price():
+    price = float(input(&quot;Item price: $&quot;))
+    return price
+
+price1 = get_price()
+price2 = get_price()
+print(f&quot;Total: ${price1 + price2:.2f}&quot;)</pre></div><div class="lbl">Edge case · typed 5 | 0.5</div><pre class="out">Item price: $5
+Item price: $0.5
+Total: $5.50</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Forget the return and both variables hold None. Then the addition fails with TypeError: unsupported operand type(s) for +: &#x27;NoneType&#x27; and &#x27;NoneType&#x27;.</p></div></div></details></article>
+<article class="card" id="A3"><h3><label><input type="checkbox" class="tick" id="tick-A3" data-id="A3" data-sec="A"><span class="tag">A3</span>Fahrenheit to Celsius</label></h3><p>A Miami weather app shows temperatures to visitors from abroad. Write a function named to_celsius() with one parameter, the temperature in °F. It returns the temperature in °C using (F - 32) * 5 / 9. In the main program, ask for a temperature in °F and print the result with 1 decimal.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Now the function needs something FROM us: the °F temperature. That&#x27;s a parameter, a name inside the parentheses in the header.</li><li>When we call it, we pass a value in. That value is the argument. The names don&#x27;t have to match: the argument can be temp_f, the parameter fahrenheit.</li><li>The function returns the answer instead of printing it, so the main program decides how to show it.</li><li>Plan the main program in order: ask, call, print.</li></ol></div><h4>Think first</h4><ul><li>What goes in the parentheses in the header? What goes in the parentheses in the call?</li><li>Why return the Celsius value instead of printing it inside the function?</li><li>What is 95°F in Celsius? Work it out before you run the code.</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># A3 · Fahrenheit to Celsius
+# PLAN
+# 1. imports: none needed
+# 2. def to_celsius(fahrenheit):   (one parameter)
+# 3.     return (fahrenheit - 32) * 5 / 9
+# 4. main program: ask for the temperature in °F, as a float
+# 5. call to_celsius() with it and store the result
+# 6. print the result with 1 decimal
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 95</div><pre class="out">Temperature in °F: 95
+95.0°F is 35.0°C</pre><details class="hint"><summary>Hint 1</summary><div><p>Header: def to_celsius(fahrenheit):  The body is one line: return (fahrenheit - 32) * 5 / 9</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>In the main program: temp_f = float(input(...)), then temp_c = to_celsius(temp_f).</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>print(f&quot;{temp_f}°F is {temp_c:.1f}°C&quot;)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">def to_celsius(fahrenheit):
+    return (fahrenheit - 32) * 5 / 9
+
+temp_f = float(input(&quot;Temperature in °F: &quot;))
+temp_c = to_celsius(temp_f)
+print(f&quot;{temp_f}°F is {temp_c:.1f}°C&quot;)</pre></div><div class="lbl">Edge case · typed 32</div><pre class="out">Temperature in °F: 32
+32.0°F is 0.0°C</pre><div class="lbl">Edge case · typed -40</div><pre class="out">Temperature in °F: -40
+-40.0°F is -40.0°C</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Calling to_celsius() with nothing in the parentheses stops with TypeError: to_celsius() missing 1 required positional argument: &#x27;fahrenheit&#x27;. The parentheses must match: one parameter, one argument.</p></div></div></details></article>
+<article class="card" id="A4"><h3><label><input type="checkbox" class="tick" id="tick-A4" data-id="A4" data-sec="A"><span class="tag">A4</span>Hurricane category, as a function (stretch)</label></h3><p>Bring back the Chapter 4 hurricane ladder, but inside a function. Write category(wind) that returns a message for a wind speed in mph: below 74 is &#x27;Not a hurricane&#x27;, 74 to 95 &#x27;Category 1&#x27;, 96 to 110 &#x27;Category 2&#x27;, 111 to 129 &#x27;Category 3&#x27;, 130 to 156 &#x27;Category 4&#x27;, 157 and up &#x27;Category 5&#x27;. Call it for the three wind speeds in the plan and print each result.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>The if/elif ladder is the same as Chapter 4. The difference is that each branch RETURNS its message instead of printing it.</li><li>return ends the function right away, so as soon as one branch returns, the rest of the ladder is skipped. Check the biggest speeds first.</li><li>The main program calls the function once per speed. A for loop over the list does that without repeating the call three times.</li><li>This is why functions matter: the ladder is written once and used as many times as we need.</li></ol></div><h4>Think first</h4><ul><li>What changes when a branch says return instead of print?</li><li>How does the main program call the function for each speed in the list?</li><li>Why can the next elif be simpler once the one above it has returned?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># A4 · Hurricane category, as a function
+speeds = [120, 70, 160]   # Run as given
+
+# PLAN
+# 1. imports: none needed
+# 2. def category(wind):
+# 3.     if/elif ladder, highest category first; each branch RETURNS its message
+# 4. main program: for each speed in speeds:
+# 5.     print the speed and category(speed)
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">120 mph: Category 3
+70 mph: Not a hurricane
+160 mph: Category 5</pre><details class="hint"><summary>Hint 1</summary><div><p>Each branch is one return line, for example: if wind &gt;= 157: return &quot;Category 5&quot;</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>The last line is a plain return &quot;Not a hurricane&quot; (or an else). If nothing above returned, it runs.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>for speed in speeds: print(f&quot;{speed} mph: {category(speed)}&quot;)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">speeds = [120, 70, 160]
+
+def category(wind):
+    if wind &gt;= 157:
+        return &quot;Category 5&quot;
+    elif wind &gt;= 130:
+        return &quot;Category 4&quot;
+    elif wind &gt;= 111:
+        return &quot;Category 3&quot;
+    elif wind &gt;= 96:
+        return &quot;Category 2&quot;
+    elif wind &gt;= 74:
+        return &quot;Category 1&quot;
+    else:
+        return &quot;Not a hurricane&quot;
+
+for speed in speeds:
+    print(f&quot;{speed} mph: {category(speed)}&quot;)</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>If the branches print instead of return, each line shows the category AND then None, because print(category(speed)) prints what the function returned, and a function with no return returns None.</p></div></div></details></article>
+<h2 id="rate">Rate yourself</h2><p>Give each section a 1 (shaky), 2 (okay) or 3 (solid). Your ratings save with your progress. Any 1s? Redo that section's last exercise tomorrow from a blank cell, without the plan. That's the real test, and those are the ones to bring questions about next class.</p>
+<div class="tablewrap"><table><thead><tr><th>Section</th><th>Topic</th><th>Your rating</th></tr></thead><tbody><tr><td><b>A</b></td><td>Define, call, return, pass in</td><td><div class="rate" role="radiogroup" aria-label="Rating for section A"><input type="radio" name="rate-A" id="rate-A-1" value="1" data-sec="A"><label for="rate-A-1">1</label><input type="radio" name="rate-A" id="rate-A-2" value="2" data-sec="A"><label for="rate-A-2">2</label><input type="radio" name="rate-A" id="rate-A-3" value="3" data-sec="A"><label for="rate-A-3">3</label></div></td></tr></tbody></table></div>
+<div class="box why"><p class="boxlbl">If you want more practice</p><ul><li>Redo any exercise you rated a 1, from a blank cell.</li><li>Say the thinking order out loud on every problem: restate, plan, imports and constants, inputs, structure, body, after the loop, test.</li><li>Know the traps: forgetting the colon or the indent, calling before the def, forgetting the parentheses on a call, forgetting return (you get None), and passing the wrong number of arguments.</li></ul></div>
+<p><button class="reset" id="reset" type="button">Reset my progress</button></p>
+<p class="sub">Progress is stored only in this browser on this device. A different browser, a private window or clearing your browsing data starts fresh.</p></main><script>
+(function(){
+const KEY="cop1047c-ch06-practice-v1";
+const ticks=[...document.querySelectorAll('.tick')];
+const radios=[...document.querySelectorAll('.rate input')];
+const saveEl=document.getElementById('save');
+let state={done:{},ratings:{}}, canSave=false;
+function setStatus(s,m){saveEl.dataset.s=s;saveEl.textContent=m;}
+function render(){
+  ticks.forEach(t=>{t.checked=!!state.done[t.dataset.id];t.closest('.card').classList.toggle('is-done',t.checked);});
+  radios.forEach(r=>{r.checked=String(state.ratings[r.dataset.sec]||'')===r.value;});
+  const n=ticks.filter(t=>t.checked).length;
+  document.getElementById('done').textContent=n;
+  document.getElementById('barfill').style.width=(100*n/ticks.length)+'%';
+  document.querySelectorAll('.jump a').forEach(a=>{const ts=ticks.filter(t=>t.dataset.sec===a.dataset.sec);a.classList.toggle('full',ts.length>0&&ts.every(t=>t.checked));});
+}
+function save(){
+  render();
+  if(!canSave) return;
+  try{localStorage.setItem(KEY,JSON.stringify(state));setStatus('saved','Saved in this browser');}
+  catch(e){canSave=false;setStatus('error','This browser stopped saving. Your checkmarks last until you close the page.');}
+}
+try{
+  const raw=localStorage.getItem(KEY);
+  if(raw){const d=JSON.parse(raw);state={done:Object.assign({},d.done||{}),ratings:Object.assign({},d.ratings||{})};}
+  localStorage.setItem(KEY+'-test','1');localStorage.removeItem(KEY+'-test');
+  canSave=true;setStatus('saved',raw?'Progress loaded from this browser':'Progress saves in this browser');
+}catch(e){setStatus('local','This browser is blocking saving (private window?). Your checkmarks last until you close the page.');}
+ticks.forEach(t=>t.addEventListener('change',()=>{if(t.checked) state.done[t.dataset.id]=true; else delete state.done[t.dataset.id]; save();}));
+radios.forEach(r=>r.addEventListener('change',()=>{state.ratings[r.dataset.sec]=Number(r.value);save();}));
+const btn=document.getElementById('reset');let armed=false;
+btn.addEventListener('click',()=>{
+  if(!armed){armed=true;btn.classList.add('armed');btn.textContent='Tap again to clear every checkmark and rating';setTimeout(()=>{armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';},4000);return;}
+  armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';state={done:{},ratings:{}};save();
+});
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
+  const pre=b.parentElement.querySelector('pre');const t=pre.innerText;
+  const done=m=>{b.textContent=m;setTimeout(()=>b.textContent='Copy',1400);};
+  const sel=()=>{const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);done('Selected: press Ctrl+C');};
+  try{navigator.clipboard.writeText(t).then(()=>done('Copied'),sel);}catch(e){sel();}
+}));
+render();
+})();
+</script></body></html>

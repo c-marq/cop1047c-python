@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Exam 2 Study Set · COP1047C</title><meta name="description" content="Lab-style study problems for COP1047C Exam 2."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:wght@400;600;700&display=swap"><style>
+/* Layout: one reading column; sticky progress strip; each exercise is a worksheet card with plan, target, hints, solution */
+:root{
+ --bg:#F6F7F9; --surface:#FFFFFF; --fg:#1C2433; --muted:#5A6577; --line:#DCE1E8;
+ --brand:#1B2A41; --brand-fg:#FFFFFF; --accent:#F5B82E; --accent-ink:#1B2A41; --link:#2F5F98;
+ --code-bg:#22272E; --code-fg:#E6EDF3; --out-bg:#EEF1F5; --out-fg:#1D232B;
+ --go-bg:#DDF3E6; --go-fg:#17663A; --why-bg:#DCEAF7; --why-fg:#1A4C78;
+ --hint-bg:#FCF3D9; --hint-fg:#6E5606; --stop-bg:#F8DDDA; --stop-fg:#8E2A20;
+ --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+ --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+ --f-mono:"JetBrains Mono", ui-monospace, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}}
+:root[data-theme="dark"]{
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:17px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding-inline:18px;padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.2}
+h1{font-size:clamp(28px,5vw,40px);margin:26px 0 6px;font-weight:700}
+h2{font-size:24px;margin:38px 0 10px}
+h4{font-size:16px;margin:16px 0 6px;font-family:var(--f-body);font-weight:700;letter-spacing:.02em}
+a{color:var(--link)}
+p{margin:8px 0}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--out-bg);color:var(--out-fg);padding:1px 6px;border-radius:4px}
+.sub{color:var(--muted);font-size:15px;max-width:65ch}
+.prog{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:2px solid var(--accent);padding-block:10px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.prog .count{font-weight:700;font-variant-numeric:tabular-nums}
+.bar{flex:1 1 140px;height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--go-fg);transition:width .3s}
+.jump{display:flex;gap:4px;flex-wrap:wrap}
+.jump a{font-size:13px;text-decoration:none;color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:1px 9px;font-variant-numeric:tabular-nums}
+.jump a.full{background:var(--go-bg);color:var(--go-fg);border-color:transparent}
+.save{font-size:13px;color:var(--muted);flex-basis:100%}
+.save[data-s="saved"]{color:var(--go-fg)} .save[data-s="error"]{color:var(--stop-fg)}
+.map{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.map span{padding:5px 11px;border-radius:14px;font-size:14px;border:1px solid var(--line)}
+.map .done{background:var(--go-bg);color:var(--go-fg);border-color:transparent;font-weight:600}
+.map .now{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.box{border-radius:8px;padding:12px 16px;margin:12px 0}
+.box .boxlbl{font-weight:700;margin:0 0 4px;letter-spacing:.03em;font-size:14px;text-transform:uppercase}
+.go{background:var(--go-bg);color:var(--fg)} .go .boxlbl{color:var(--go-fg)}
+.why{background:var(--why-bg);color:var(--fg)} .why .boxlbl{color:var(--why-fg)}
+.warn{background:var(--hint-bg);color:var(--fg)} .warn .boxlbl{color:var(--hint-fg)}
+.stop{background:var(--stop-bg);color:var(--fg)} .stop .boxlbl{color:var(--stop-fg)}
+.box ol,.box ul{margin:4px 0;padding-left:22px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15.5px;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-family:var(--f-body);font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+td.n{font-variant-numeric:tabular-nums;color:var(--muted);width:2em}
+.codewrap{position:relative;margin:8px 0;min-width:0}
+pre{margin:0;overflow-x:auto;white-space:pre;font-family:var(--f-mono);font-size:14px;line-height:1.5;border-radius:8px;padding:12px 14px}
+pre.code{background:var(--code-bg);color:var(--code-fg);padding-right:72px}
+pre.out{background:var(--out-bg);color:var(--out-fg);margin-bottom:10px}
+.lbl{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:8px}
+.copy{position:absolute;top:8px;right:8px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:5px;padding:4px 10px;font:600 13px var(--f-body);cursor:pointer}
+.copy:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.sec{background:var(--brand);color:var(--brand-fg);border-radius:10px;padding:14px 18px;margin:40px 0 12px;scroll-margin-top:70px}
+.sec h2{margin:0;color:var(--accent);font-size:22px}
+.sec p{margin:4px 0 0;opacity:.85;font-size:15px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:16px 0;scroll-margin-top:70px}
+.card.is-done{border-color:var(--go-fg)}
+.card h3{margin:0 0 6px;display:flex;gap:10px;align-items:center;font-size:20px}
+.card h3 label{display:flex;gap:10px;align-items:center;cursor:pointer}
+.tick{width:20px;height:20px;accent-color:var(--go-fg);flex:none}
+.tag{font-family:var(--f-mono);font-size:13px;background:var(--brand);color:var(--brand-fg);border-radius:5px;padding:1px 7px}
+details{margin:6px 0}
+summary{cursor:pointer;font-weight:700;padding:8px 12px;border-radius:6px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ "} details[open]>summary::before{content:"▾ "}
+details.hint>summary{background:var(--hint-bg);color:var(--hint-fg)}
+details.sol>summary{background:var(--stop-bg);color:var(--stop-fg)}
+details>div{padding:4px 4px 4px 12px}
+.rate{display:flex;gap:6px;flex-wrap:wrap}
+.rate input{position:absolute;opacity:0;pointer-events:none}
+.rate label{border:1px solid var(--line);border-radius:6px;padding:4px 12px;cursor:pointer;font-variant-numeric:tabular-nums;background:var(--surface)}
+.rate input:checked+label{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.rate input:focus-visible+label{outline:3px solid var(--link);outline-offset:2px}
+.reset{background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.reset.armed{border-color:var(--stop-fg);color:var(--stop-fg)}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+@media (max-width:480px){body{font-size:16px} pre{font-size:13px}}
+body{margin:0}</style></head><body><main class="wrap"><div class="prog" role="region" aria-label="Progress"><span class="count"><span id="done">0</span> / 6 done</span><div class="bar" aria-hidden="true"><i id="barfill"></i></div><nav class="jump" aria-label="Jump to section"><a href="#secA" data-sec="A">A</a><a href="#secB" data-sec="B">B</a><a href="#secC" data-sec="C">C</a></nav><span class="save" id="save" data-s="wait">Checking whether this browser can save your progress…</span></div>
+<p class="sub"><a href="../../">&larr; All COP1047C practice pages</a></p><h1>Exam 2 Study Set: Lab-Style Problems</h1><p class="sub">COP1047C Intro to Python · Miami Dade College · 6 exercises, two for each kind of lab problem on Exam 2. Each one is a new scenario that uses the same skills as the exam lab. Every sample run and solution here was produced by running the code on Python 3.12, the version Google Colab uses. Your checkmarks and self-ratings save in this browser, so you can close the page and pick up where you left off.</p>
+<h2>What's covered</h2><div class="map"><span>A · Like the exam lab Numbers Before</span><span>B · Like the exam lab Wine Request Form</span><span>C · Like the exam lab Player Ranking Summary</span></div><p>Each section matches one style of lab problem. The first exercise in each section follows the exam lab's shape closely. The second one changes a piece of it, so you practice the idea, not one exact program. Match the sample output: the prompts end with a new line, so your typing goes on the line below, and the blank lines come from <code>\n</code>.</p><p>Want more practice by topic? The full practice set is at <a href="../exam-2-practice/">Exam 2 Practice</a>.</p>
+<h2>How to use this practice set</h2><div class="box go"><p class="boxlbl">Do this in Colab</p><ol><li>Open a new notebook at colab.new. Use one code cell per exercise.</li><li>Read the story and answer the <b>Think first</b> questions out loud, or as a comment, before writing code.</li><li>Copy <b>Your plan</b> into the cell. The plan is the program, written as comments.</li><li>Build one plan line at a time. Type the code under its comment and run the cell after each piece.</li><li>Compare with the <b>Target</b> run. Type the same inputs: the logic and the numbers should match. Your messages can be worded your own way unless the story quotes them exactly.</li><li>Stuck? Open Hint 1. Still stuck after a couple of minutes? Hint 2, then Hint 3.</li><li>Open the solution last. Compare it to yours, then try the edge cases it lists.</li><li>Tick the box beside the title. Your progress saves in this browser.</li></ol></div><div class="box why"><p class="boxlbl">Why plan in comments first?</p><p>It's the order experienced programmers think in, and the same order we use when we build exercises live in class. A blank cell is hard. A to-do list is easy: each comment becomes one or two lines of code.</p></div><div class="box warn"><p class="boxlbl">Use the solutions honestly</p><p>The solutions are here so you can check your thinking, not skip it. If you open a solution before trying, close it, wait a day, and redo that exercise from a blank cell. That's what the exam will feel like.</p></div>
+<h3>The thinking order, for every exercise</h3><div class="tablewrap"><table><thead><tr><th></th><th>Step</th><th>Ask yourself</th></tr></thead><tbody><tr><td class="n">1</td><td><b>Restate</b></td><td>What goes in, what comes out, what are the rules? Look at the target run.</td></tr><tr><td class="n">2</td><td><b>Plan in comments</b></td><td>3 to 6 # lines, in order. Imports go first.</td></tr><tr><td class="n">3</td><td><b>Imports and constants</b></td><td>import random? Fixed values in ALL_CAPS?</td></tr><tr><td class="n">4</td><td><b>Inputs and starting variables</b></td><td>int, float or text? Counters and totals start at 0 before the loop.</td></tr><tr><td class="n">5</td><td><b>Pick the structure</b></td><td>One decision (if), repeat an unknown number of times (while), or a known number (for)?</td></tr><tr><td class="n">6</td><td><b>Body, one line at a time</b></td><td>What happens on each pass? What changes so the loop can end?</td></tr><tr><td class="n">7</td><td><b>After the loop</b></td><td>Summaries print once, at the left edge.</td></tr><tr><td class="n">8</td><td><b>Test</b></td><td>The sample input first, then an edge case: 0, the boundary, an empty entry.</td></tr></tbody></table></div>
+<section class="sec" id="secA"><h2>A · Validate, then count down</h2><p>Like the exam lab Numbers Before · A while loop that rejects bad input, then a for loop with range() that counts backwards.</p></section>
+<div class="box why"><p class="boxlbl">Quick refresher</p><p>Validation is START, TEST, CHANGE: ask once before the while, loop while the value is bad, ask again inside. Counting down uses a negative step, and the stop is never included, so stopping at 0 means the last number printed is 1.</p><div class="codewrap"><pre class="code">num = int(input(&quot;Enter a number:\n&quot;))
+while num &lt;= 0:
+    num = int(input(&quot;\nInvalid. Enter a number:\n&quot;))
+for i in range(num - 1, 0, -1):   # num-1 down to 1
+    print(i, end=&quot; &quot;)</pre></div></div>
+<article class="card" id="A1"><h3><label><input type="checkbox" class="tick" id="tick-A1" data-id="A1" data-sec="A"><span class="tag">A1</span>Floors below you</label></h3><p>A Brickell condo&#x27;s elevator screen lists every floor below the one you&#x27;re on. Ask for your floor number. If it&#x27;s not a positive number (larger than 0), print an error and keep asking. Then print every floor below yours, from highest to lowest, separated by single spaces and always ending with 1. Each prompt ends with a new line, so the typing goes on the line below it, exactly like the exam lab.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>The output has two jobs that happen one after the other: first get a GOOD number, then count with it. Two loops in sequence, not nested.</li><li>Getting a good number: we don&#x27;t know how many tries it will take, so that&#x27;s a while loop (validation: start, test, change).</li><li>Counting: once we have the number, we know exactly how many floors to print, so that&#x27;s a for loop with range().</li><li>The range walks backwards: start one below the floor, step -1, and stop at 0 because the stop is never included. That makes the last number 1.</li><li>Match the sample&#x27;s blank lines: \n at the start of the error prompt and the summary heading, and \n at the end of each prompt.</li></ol></div><h4>Think first</h4><ul><li>What&#x27;s the first number printed if you&#x27;re on floor 8? The last?</li><li>Do you know how many times the user will type a bad number? So: while or for for the validation?</li><li>What range() gives 7 6 5 4 3 2 1 when the number is 8?</li><li>Where does the blank line before &#x27;Invalid floor.&#x27; come from?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># A1 · Floors below you
+# PLAN
+# 1. print the two intro lines
+# 2. ask for the floor number as an int (prompt ends with \n)
+# 3. while the number is 0 or less: print the error prompt and ask again
+# 4. print the heading for the results
+# 5. for each number from floor - 1 down to 1: print it with end=&quot; &quot;
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 0 | 8</div><pre class="out">This program lists every floor below yours.
+Floors are shown from highest to lowest, ending with 1.
+
+Enter your floor number:
+0
+
+Invalid floor. Enter your floor number:
+8
+
+Floors below you:
+7 6 5 4 3 2 1 </pre><details class="hint"><summary>Hint 1</summary><div><p>Validation shape: floor = int(input(...)) once before the loop, then while floor &lt;= 0: floor = int(input(...)) inside.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>range(start, stop, step): range(floor - 1, 0, -1) starts one below the floor and stops BEFORE 0.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>print(i, end=&quot; &quot;) keeps the numbers on one line with a single space between them.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">print(&quot;This program lists every floor below yours.&quot;)
+print(&quot;Floors are shown from highest to lowest, ending with 1.\n&quot;)
+
+floor = int(input(&quot;Enter your floor number:\n&quot;))
+
+while floor &lt;= 0:
+    floor = int(input(&quot;\nInvalid floor. Enter your floor number:\n&quot;))
+
+print(&quot;\nFloors below you:&quot;)
+for i in range(floor - 1, 0, -1):
+    print(i, end=&quot; &quot;)</pre></div><div class="lbl">Edge case · typed -3 | 0 | 2</div><pre class="out">This program lists every floor below yours.
+Floors are shown from highest to lowest, ending with 1.
+
+Enter your floor number:
+-3
+
+Invalid floor. Enter your floor number:
+0
+
+Invalid floor. Enter your floor number:
+2
+
+Floors below you:
+1 </pre><div class="lbl">Edge case · typed 1</div><pre class="out">This program lists every floor below yours.
+Floors are shown from highest to lowest, ending with 1.
+
+Enter your floor number:
+1
+
+Floors below you:</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>range(floor, 0, -1) would start with YOUR floor. The story says floors BELOW yours, so start at floor - 1. And typing 1 is valid but prints no floors, because there are none below it.</p></div></div></details></article>
+<article class="card" id="A2"><h3><label><input type="checkbox" class="tick" id="tick-A2" data-id="A2" data-sec="A"><span class="tag">A2</span>Launch countdown</label></h3><p>Watching a launch from Cocoa Beach? Ask for the number of seconds to count down, from 1 to 10. If the number is outside 1 to 10, print an error and keep asking. Then count down from that number to 1 on one line, separated by spaces, and print Liftoff! on the next line.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Same two steps as A1: a while loop to get a good number, then a for loop to count with it.</li><li>The validation has TWO ways to be wrong now: too small OR too big. So the while condition joins two tests with or.</li><li>This time the count INCLUDES the number typed: 5 prints 5 4 3 2 1. So the range starts at the number itself, not number - 1.</li><li>Liftoff! prints once, after the loop. A print() with nothing in it ends the line of numbers first.</li></ol></div><h4>Think first</h4><ul><li>What&#x27;s different from A1 about where the countdown starts?</li><li>Write the &#x27;bad number&#x27; condition in English, then in Python.</li><li>Why does the countdown still end at 1 even though we never type 1 in range()?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># A2 · Launch countdown
+# PLAN
+# 1. ask for the seconds as an int (prompt ends with \n)
+# 2. while the number is below 1 OR above 10: print the error prompt and ask again
+# 3. for each number from seconds down to 1: print it with end=&quot; &quot;
+# 4. AFTER the loop: end the line, then print Liftoff!
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 15 | 5</div><pre class="out">Seconds to count down (1-10):
+15
+
+Invalid. Seconds to count down (1-10):
+5
+
+5 4 3 2 1 
+Liftoff!</pre><details class="hint"><summary>Hint 1</summary><div><p>Bad means seconds &lt; 1 or seconds &gt; 10.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>range(seconds, 0, -1) includes seconds and stops before 0.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>After the loop, print() ends the line of numbers, then print(&quot;Liftoff!&quot;).</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">seconds = int(input(&quot;Seconds to count down (1-10):\n&quot;))
+
+while seconds &lt; 1 or seconds &gt; 10:
+    seconds = int(input(&quot;\nInvalid. Seconds to count down (1-10):\n&quot;))
+
+print()
+for i in range(seconds, 0, -1):
+    print(i, end=&quot; &quot;)
+print()
+print(&quot;Liftoff!&quot;)</pre></div><div class="lbl">Edge case · typed 0 | -2 | 10</div><pre class="out">Seconds to count down (1-10):
+0
+
+Invalid. Seconds to count down (1-10):
+-2
+
+Invalid. Seconds to count down (1-10):
+10
+
+10 9 8 7 6 5 4 3 2 1 
+Liftoff!</pre><div class="lbl">Edge case · typed 1</div><pre class="out">Seconds to count down (1-10):
+1
+
+1 
+Liftoff!</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>while seconds &lt; 1 and seconds &gt; 10 never runs: no number is both. Bad input is one OR the other.</p></div></div></details></article>
+<section class="sec" id="secB"><h2>B · Build a list until the user is done</h2><p>Like the exam lab Wine Request Form · Keep asking, reject blank entries, append to a list, and print the list at the end.</p></section>
+<div class="box why"><p class="boxlbl">Quick refresher</p><p>Start with an empty list before the loop. Each pass: get a valid entry (a while loop that rejects &quot;&quot;), append it, then ask whether to continue. print(the_list) shows the list with brackets and quotes.</p><div class="codewrap"><pre class="code">items = []
+again = &quot;Y&quot;
+while again == &quot;Y&quot;:
+    item = input(&quot;Item:\n&quot;)
+    while item == &quot;&quot;:
+        item = input(&quot;Invalid. Item:\n&quot;)
+    items.append(item)
+    again = input(&quot;Another? (Y or N):\n&quot;)
+print(items)</pre></div></div>
+<article class="card" id="B1"><h3><label><input type="checkbox" class="tick" id="tick-B1" data-id="B1" data-sec="B"><span class="tag">B1</span>Library book requests</label></h3><p>A Miami-Dade library branch takes requests for books it doesn&#x27;t carry. Ask for the title and author of a book. If the user types nothing (an empty entry), print an error and keep asking. Store each request in a list. After each request, ask whether they want to request another book (Y or N). When they answer N, print the whole list.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Two loops, one inside the other. The OUTER loop repeats while the answer is Y. The INNER loop repeats while the entry is empty.</li><li>The list has to exist before the outer loop, or it starts over on every pass. Same rule as a counter: set up before, update inside, report after.</li><li>The outer loop needs a starting answer of Y so it runs the first time. That&#x27;s the &#x27;play again&#x27; pattern from Part 2.</li><li>Order inside the outer loop: ask for the book, validate it, append it, then ask Y or N. The append comes after validation, so a blank never gets in.</li><li>print(requests) prints the list with brackets and quotes, which is exactly what the sample shows.</li></ol></div><h4>Think first</h4><ul><li>What has to exist before any loop starts?</li><li>Which loop is the validation, and which loop is &#x27;keep going&#x27;? Which one goes inside the other?</li><li>If you put .append() before the empty check, what ends up in the list?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># B1 · Library book requests
+# PLAN
+# 1. empty list for the requests; answer = &quot;Y&quot; so the loop runs once
+# 2. print the intro line
+# 3. while answer is &quot;Y&quot;:
+# 4.     ask for the title and author
+# 5.     while the entry is &quot;&quot;: print the error prompt and ask again
+# 6.     append the entry to the list
+# 7.     ask: another book? (Y or N)
+# 8. AFTER the loop: print the heading, then the list
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed (Enter on a blank line) | Dreaming in Cuban, Garcia | Y | Brown Girl Dreaming, Woodson | N</div><pre class="out">This program lets you request books our branch doesn&#x27;t carry.
+
+Enter the title and author of the book:
+
+
+Invalid entry. Enter the title and author of the book:
+Dreaming in Cuban, Garcia
+
+Do you want to request another book? (Y or N):
+Y
+
+Enter the title and author of the book:
+Brown Girl Dreaming, Woodson
+
+Do you want to request another book? (Y or N):
+N
+
+Here is a summary of your requested books:
+[&#x27;Dreaming in Cuban, Garcia&#x27;, &#x27;Brown Girl Dreaming, Woodson&#x27;]</pre><details class="hint"><summary>Hint 1</summary><div><p>requests = [] and answer = &quot;Y&quot; go above the outer while.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>The empty check is while book == &quot;&quot;: with the ask-again line inside it.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>requests.append(book) adds one item to the end. print(requests) shows the whole list.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">requests = []
+answer = &quot;Y&quot;
+
+print(&quot;This program lets you request books our branch doesn&#x27;t carry.&quot;)
+
+while answer == &quot;Y&quot;:
+    book = input(&quot;\nEnter the title and author of the book:\n&quot;)
+    while book == &quot;&quot;:
+        book = input(&quot;\nInvalid entry. Enter the title and author of the book:\n&quot;)
+    requests.append(book)
+    answer = input(&quot;\nDo you want to request another book? (Y or N):\n&quot;)
+
+print(&quot;\nHere is a summary of your requested books:&quot;)
+print(requests)</pre></div><div class="lbl">Edge case · typed Tia Lola, Alvarez | N</div><pre class="out">This program lets you request books our branch doesn&#x27;t carry.
+
+Enter the title and author of the book:
+Tia Lola, Alvarez
+
+Do you want to request another book? (Y or N):
+N
+
+Here is a summary of your requested books:
+[&#x27;Tia Lola, Alvarez&#x27;]</pre><div class="lbl">Edge case · typed Bless Me Ultima, Anaya | y</div><pre class="out">This program lets you request books our branch doesn&#x27;t carry.
+
+Enter the title and author of the book:
+Bless Me Ultima, Anaya
+
+Do you want to request another book? (Y or N):
+y
+
+Here is a summary of your requested books:
+[&#x27;Bless Me Ultima, Anaya&#x27;]</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>The check is answer == &quot;Y&quot;, so a lowercase y ends the program (see the last edge case). If you want both, use answer.upper() == &quot;Y&quot;.</p></div></div></details></article>
+<article class="card" id="B2"><h3><label><input type="checkbox" class="tick" id="tick-B2" data-id="B2" data-sec="B"><span class="tag">B2</span>DJ song requests</label></h3><p>A DJ at a Kendall quinceañera collects song requests. Keep asking for a song until the user types DONE. A blank entry gets an error message. A song that&#x27;s already on the list gets &#x27;Already on the list.&#x27; and isn&#x27;t added again. At the end, print how many songs were requested and a numbered list of them.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>This time there&#x27;s no Y or N question. The user types a stop word, DONE, so it&#x27;s a sentinel loop from Part 1: ask before the loop, test it in the while, ask again as the last line inside.</li><li>Each entry is one of three cases: blank, already in the list, or new. That&#x27;s one if/elif/else, and only the else appends.</li><li>in checks whether the song is already in the list, same as checking a username in Ch 4.</li><li>The numbered list at the end is enumerate() with i + 1, from Part 3. len() gives the count.</li></ol></div><h4>Think first</h4><ul><li>What&#x27;s the sentinel, and where does it go: in a constant, the prompt, or the while condition?</li><li>Three possible cases for each entry. Which ones add to the list?</li><li>What gives you both the number and the song in the final loop?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># B2 · DJ song requests
+# PLAN
+# 1. constant: SENTINEL = &quot;DONE&quot;; empty list for the songs
+# 2. ask for the first song (BEFORE the loop)
+# 3. while the song is not the sentinel:
+# 4.     if blank: error message
+# 5.     elif already in the list: &#x27;Already on the list.&#x27;
+# 6.     else: append it
+# 7.     ask for the next song
+# 8. AFTER: print how many, then a numbered list with enumerate()
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed La Gozadera | (Enter on a blank line) | Vivir Mi Vida | La Gozadera | Suavemente | DONE</div><pre class="out">Song request (DONE to finish): La Gozadera
+Song request (DONE to finish): 
+Invalid entry. Type a song name.
+Song request (DONE to finish): Vivir Mi Vida
+Song request (DONE to finish): La Gozadera
+Already on the list.
+Song request (DONE to finish): Suavemente
+Song request (DONE to finish): DONE
+
+3 songs requested:
+1. La Gozadera
+2. Vivir Mi Vida
+3. Suavemente</pre><details class="hint"><summary>Hint 1</summary><div><p>Same shape as the grocery cart: song = input(...) before the loop and again as the last line inside.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>if song == &quot;&quot;: ... elif song in songs: ... else: songs.append(song)</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>for i, song in enumerate(songs): print(f&quot;{i + 1}. {song}&quot;)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">SENTINEL = &quot;DONE&quot;
+songs = []
+
+song = input(&quot;Song request (DONE to finish): &quot;)
+
+while song != SENTINEL:
+    if song == &quot;&quot;:
+        print(&quot;Invalid entry. Type a song name.&quot;)
+    elif song in songs:
+        print(&quot;Already on the list.&quot;)
+    else:
+        songs.append(song)
+    song = input(&quot;Song request (DONE to finish): &quot;)
+
+print(f&quot;\n{len(songs)} songs requested:&quot;)
+for i, s in enumerate(songs):
+    print(f&quot;{i + 1}. {s}&quot;)</pre></div><div class="lbl">Edge case · typed DONE</div><pre class="out">Song request (DONE to finish): DONE
+
+0 songs requested:</pre><div class="lbl">Edge case · typed Bemba Colora | done | DONE</div><pre class="out">Song request (DONE to finish): Bemba Colora
+Song request (DONE to finish): done
+Song request (DONE to finish): DONE
+
+2 songs requested:
+1. Bemba Colora
+2. done</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>The sentinel check is exact, so &#x27;done&#x27; in lowercase gets added as a song (see the last edge case). Also: the ask-again line must be outside the if/elif/else, lined up with it, or a blank entry loops forever.</p></div></div></details></article>
+<section class="sec" id="secC"><h2>C · Summarize given data</h2><p>Like the exam lab Player Ranking Summary · Loop over a dictionary, sort each value into a group with if/elif, count each group, and flag the bad entries.</p></section>
+<div class="box why"><p class="boxlbl">Quick refresher</p><p>The data is given. A for loop with .items() visits every name and value. An if/elif ladder puts each value in exactly one group, and in with a list checks several spellings at once. The last two branches catch the empty string (missing) and everything else (invalid).</p><div class="codewrap"><pre class="code">for name, value in data.items():
+    if value in [&quot;Gold-1&quot;, &quot;Gold-2&quot;]:
+        gold += 1
+    elif value == &quot;&quot;:
+        print(f&quot;{name} is missing!&quot;)
+    else:
+        print(f&quot;{name} is invalid.&quot;)</pre></div></div>
+<article class="card" id="C1"><h3><label><input type="checkbox" class="tick" id="tick-C1" data-id="C1" data-sec="C"><span class="tag">C1</span>Domino league levels</label></h3><p>The domino league at Máximo Gómez Park in Little Havana tracks each player&#x27;s level in the dictionary in the plan. Expert-1 and Expert-2 both count as Expert. Same for Club and Rookie. A level that is empty is missing. Anything else is a typo. Print a message for each missing or invalid level as you find it, then print a summary with the count for each group and the number of errors.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>The data is already given, so there&#x27;s no input. We have a collection, so it&#x27;s a for loop, and with a dictionary we want the name AND the level: .items().</li><li>Four counters: expert, club, rookie, errors. All start at 0 before the loop.</li><li>Each level lands in exactly one place, so it&#x27;s one if/elif/else ladder. in with a list checks both spellings of a level at once.</li><li>Missing and invalid both count as errors but print different messages, so they&#x27;re two separate branches: check for &quot;&quot; first, then else catches everything left.</li><li>Error messages print inside the loop as we find them. The summary prints once, after the loop.</li></ol></div><h4>Think first</h4><ul><li>How many counters do you need, and where do they start?</li><li>Why does the empty-string check have to come before the final else?</li><li>Where do the error messages print, and where does the summary print?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># C1 · Domino league levels
+players = {&quot;DobleSeis&quot;: &quot;Expert-1&quot;, &quot;TiaMercy&quot;: &quot;Club-2&quot;, &quot;ElCapitan&quot;: &quot;Expert-2&quot;, &quot;Pepito305&quot;: &quot;Rookie-1&quot;, &quot;LaReina&quot;: &quot;Expret-1&quot;, &quot;AbueloTito&quot;: &quot;Club-1&quot;, &quot;Chuchi&quot;: &quot;&quot;, &quot;MamaYoyo&quot;: &quot;Rookie-2&quot;, &quot;ElProfe&quot;: &quot;Expert-1&quot;, &quot;Fichita&quot;: &quot;club-2&quot;, &quot;Tranque&quot;: &quot;Club-2&quot;, &quot;Capicua&quot;: &quot;Rookie-1&quot;}   # Run as given
+
+# PLAN
+# 1. expert, club, rookie, errors all start at 0
+# 2. for each name, level in players.items():
+# 3.     if level is Expert-1 or Expert-2: expert += 1
+# 4.     elif Club-1 or Club-2: club += 1
+# 5.     elif Rookie-1 or Rookie-2: rookie += 1
+# 6.     elif level is &quot;&quot;: missing message, errors += 1
+# 7.     else: invalid message, errors += 1
+# 8. AFTER the loop: print the summary
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">LaReina&#x27;s level is invalid. Check for typos.
+Chuchi&#x27;s level is missing!
+Fichita&#x27;s level is invalid. Check for typos.
+
+Player level summary:
+
+Expert: 3
+Club: 3
+Rookie: 3
+Errors: 3</pre><details class="hint"><summary>Hint 1</summary><div><p>level in [&quot;Expert-1&quot;, &quot;Expert-2&quot;] is True for either one.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Check level == &quot;&quot; before the else, or a missing level gets the typo message.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>Both error branches print a message AND add 1 to errors.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">players = {&quot;DobleSeis&quot;: &quot;Expert-1&quot;, &quot;TiaMercy&quot;: &quot;Club-2&quot;, &quot;ElCapitan&quot;: &quot;Expert-2&quot;, &quot;Pepito305&quot;: &quot;Rookie-1&quot;, &quot;LaReina&quot;: &quot;Expret-1&quot;, &quot;AbueloTito&quot;: &quot;Club-1&quot;, &quot;Chuchi&quot;: &quot;&quot;, &quot;MamaYoyo&quot;: &quot;Rookie-2&quot;, &quot;ElProfe&quot;: &quot;Expert-1&quot;, &quot;Fichita&quot;: &quot;club-2&quot;, &quot;Tranque&quot;: &quot;Club-2&quot;, &quot;Capicua&quot;: &quot;Rookie-1&quot;}
+
+expert = 0
+club = 0
+rookie = 0
+errors = 0
+
+for name, level in players.items():
+    if level in [&quot;Expert-1&quot;, &quot;Expert-2&quot;]:
+        expert += 1
+    elif level in [&quot;Club-1&quot;, &quot;Club-2&quot;]:
+        club += 1
+    elif level in [&quot;Rookie-1&quot;, &quot;Rookie-2&quot;]:
+        rookie += 1
+    elif level == &quot;&quot;:
+        print(f&quot;{name}&#x27;s level is missing!&quot;)
+        errors += 1
+    else:
+        print(f&quot;{name}&#x27;s level is invalid. Check for typos.&quot;)
+        errors += 1
+
+print(&quot;\nPlayer level summary:\n&quot;)
+print(f&quot;Expert: {expert}&quot;)
+print(f&quot;Club: {club}&quot;)
+print(f&quot;Rookie: {rookie}&quot;)
+print(f&quot;Errors: {errors}&quot;)</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>&quot;club-2&quot; with a lowercase c is a typo here, because == and in are case sensitive. Check your counts: 3 + 3 + 3 + 3 = 12 players, so every player landed somewhere.</p></div></div></details></article>
+<article class="card" id="C2"><h3><label><input type="checkbox" class="tick" id="tick-C2" data-id="C2" data-sec="C"><span class="tag">C2</span>Food truck inspections</label></h3><p>A Wynwood food truck rally gets a health grade for each truck, in the dictionary in the plan. A+ and A count as A. B+ and B count as B. C is C. An empty grade means no grade on file. Anything else is invalid. Print each problem as you find it, add every problem truck to a reinspection list, then print the counts for A, B and C and the reinspection list.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Same skeleton as C1: a for loop over .items(), counters set to 0 first, and an if/elif/else ladder with one branch per group.</li><li>The new piece is a LIST of problem trucks. It starts empty before the loop, and both error branches append the truck&#x27;s name.</li><li>Since the list holds every problem truck, we don&#x27;t need an errors counter: len(reinspect) is the count.</li><li>C has only one spelling, so it&#x27;s a plain ==. The A and B groups use in with a list.</li></ol></div><h4>Think first</h4><ul><li>What starts before the loop: which counters, and what else?</li><li>What do the two error branches have in common? What&#x27;s different?</li><li>How can you print the number of problem trucks without a counter?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># C2 · Food truck inspections
+trucks = {&quot;Cubanito Express&quot;: &quot;A+&quot;, &quot;Arepa Corner&quot;: &quot;B&quot;, &quot;Mofongo Mobile&quot;: &quot;&quot;, &quot;Pastelito Pit Stop&quot;: &quot;A&quot;, &quot;Taco Tropical&quot;: &quot;C&quot;, &quot;Conch Shack&quot;: &quot;B+&quot;, &quot;Jerk Hut&quot;: &quot;A-&quot;, &quot;Empanada Wheels&quot;: &quot;A&quot;, &quot;Churro Loco&quot;: &quot;&quot;, &quot;Batido Bus&quot;: &quot;B&quot;}   # Run as given
+
+# PLAN
+# 1. a_count, b_count, c_count start at 0; reinspect starts as an empty list
+# 2. for each truck, grade in trucks.items():
+# 3.     A+ or A: a_count += 1 / B+ or B: b_count += 1 / C: c_count += 1
+# 4.     elif grade is &quot;&quot;: &#x27;No grade on file&#x27; message, append the truck
+# 5.     else: invalid grade message, append the truck
+# 6. AFTER: print the three counts, how many to reinspect, and the list
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">No grade on file for Mofongo Mobile.
+Jerk Hut has an invalid grade: A-
+No grade on file for Churro Loco.
+
+Inspection summary:
+A: 3
+B: 3
+C: 1
+Reinspect (3): [&#x27;Mofongo Mobile&#x27;, &#x27;Jerk Hut&#x27;, &#x27;Churro Loco&#x27;]</pre><details class="hint"><summary>Hint 1</summary><div><p>reinspect = [] before the loop, reinspect.append(truck) in both error branches.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>grade in [&quot;A+&quot;, &quot;A&quot;] covers both A grades. &quot;A-&quot; is not in that list, so it falls to the else.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>len(reinspect) is the number of problem trucks.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">trucks = {&quot;Cubanito Express&quot;: &quot;A+&quot;, &quot;Arepa Corner&quot;: &quot;B&quot;, &quot;Mofongo Mobile&quot;: &quot;&quot;, &quot;Pastelito Pit Stop&quot;: &quot;A&quot;, &quot;Taco Tropical&quot;: &quot;C&quot;, &quot;Conch Shack&quot;: &quot;B+&quot;, &quot;Jerk Hut&quot;: &quot;A-&quot;, &quot;Empanada Wheels&quot;: &quot;A&quot;, &quot;Churro Loco&quot;: &quot;&quot;, &quot;Batido Bus&quot;: &quot;B&quot;}
+
+a_count = 0
+b_count = 0
+c_count = 0
+reinspect = []
+
+for truck, grade in trucks.items():
+    if grade in [&quot;A+&quot;, &quot;A&quot;]:
+        a_count += 1
+    elif grade in [&quot;B+&quot;, &quot;B&quot;]:
+        b_count += 1
+    elif grade == &quot;C&quot;:
+        c_count += 1
+    elif grade == &quot;&quot;:
+        print(f&quot;No grade on file for {truck}.&quot;)
+        reinspect.append(truck)
+    else:
+        print(f&quot;{truck} has an invalid grade: {grade}&quot;)
+        reinspect.append(truck)
+
+print(&quot;\nInspection summary:&quot;)
+print(f&quot;A: {a_count}&quot;)
+print(f&quot;B: {b_count}&quot;)
+print(f&quot;C: {c_count}&quot;)
+print(f&quot;Reinspect ({len(reinspect)}): {reinspect}&quot;)</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>A- is not one of the listed grades, so it&#x27;s invalid even though it looks like an A. The rules in the story decide, not what looks reasonable.</p></div></div></details></article>
+<h2 id="rate">Rate yourself</h2><p>Give each section a 1 (shaky), 2 (okay) or 3 (solid). Your ratings save with your progress. Any 1s? Redo that section's last exercise tomorrow from a blank cell, without the plan. That's the real test, and those are the sections to bring questions about to the Exam 2 review.</p>
+<div class="tablewrap"><table><thead><tr><th>Section</th><th>Topic</th><th>Your rating</th></tr></thead><tbody><tr><td><b>A</b></td><td>Validate, then count down</td><td><div class="rate" role="radiogroup" aria-label="Rating for section A"><input type="radio" name="rate-A" id="rate-A-1" value="1" data-sec="A"><label for="rate-A-1">1</label><input type="radio" name="rate-A" id="rate-A-2" value="2" data-sec="A"><label for="rate-A-2">2</label><input type="radio" name="rate-A" id="rate-A-3" value="3" data-sec="A"><label for="rate-A-3">3</label></div></td></tr><tr><td><b>B</b></td><td>Build a list until the user is done</td><td><div class="rate" role="radiogroup" aria-label="Rating for section B"><input type="radio" name="rate-B" id="rate-B-1" value="1" data-sec="B"><label for="rate-B-1">1</label><input type="radio" name="rate-B" id="rate-B-2" value="2" data-sec="B"><label for="rate-B-2">2</label><input type="radio" name="rate-B" id="rate-B-3" value="3" data-sec="B"><label for="rate-B-3">3</label></div></td></tr><tr><td><b>C</b></td><td>Summarize given data</td><td><div class="rate" role="radiogroup" aria-label="Rating for section C"><input type="radio" name="rate-C" id="rate-C-1" value="1" data-sec="C"><label for="rate-C-1">1</label><input type="radio" name="rate-C" id="rate-C-2" value="2" data-sec="C"><label for="rate-C-2">2</label><input type="radio" name="rate-C" id="rate-C-3" value="3" data-sec="C"><label for="rate-C-3">3</label></div></td></tr></tbody></table></div>
+<div class="box why"><p class="boxlbl">Before the exam</p><ul><li>Redo any exercise you rated a 1, from a blank cell.</li><li>Say the thinking order out loud on every problem: restate, plan, imports and constants, inputs, structure, body, after the loop, test.</li><li>Know the traps: = vs ==, elif order, forgetting int(), the loop's CHANGE line, range()'s stop value, and resetting inner counters.</li></ul></div>
+<p><button class="reset" id="reset" type="button">Reset my progress</button></p>
+<p class="sub">Progress is stored only in this browser on this device. A different browser, a private window or clearing your browsing data starts fresh.</p></main><script>
+(function(){
+const KEY="cop1047c-exam2-study-v1";
+const ticks=[...document.querySelectorAll('.tick')];
+const radios=[...document.querySelectorAll('.rate input')];
+const saveEl=document.getElementById('save');
+let state={done:{},ratings:{}}, canSave=false;
+function setStatus(s,m){saveEl.dataset.s=s;saveEl.textContent=m;}
+function render(){
+  ticks.forEach(t=>{t.checked=!!state.done[t.dataset.id];t.closest('.card').classList.toggle('is-done',t.checked);});
+  radios.forEach(r=>{r.checked=String(state.ratings[r.dataset.sec]||'')===r.value;});
+  const n=ticks.filter(t=>t.checked).length;
+  document.getElementById('done').textContent=n;
+  document.getElementById('barfill').style.width=(100*n/ticks.length)+'%';
+  document.querySelectorAll('.jump a').forEach(a=>{const ts=ticks.filter(t=>t.dataset.sec===a.dataset.sec);a.classList.toggle('full',ts.length>0&&ts.every(t=>t.checked));});
+}
+function save(){
+  render();
+  if(!canSave) return;
+  try{localStorage.setItem(KEY,JSON.stringify(state));setStatus('saved','Saved in this browser');}
+  catch(e){canSave=false;setStatus('error','This browser stopped saving. Your checkmarks last until you close the page.');}
+}
+try{
+  const raw=localStorage.getItem(KEY);
+  if(raw){const d=JSON.parse(raw);state={done:Object.assign({},d.done||{}),ratings:Object.assign({},d.ratings||{})};}
+  localStorage.setItem(KEY+'-test','1');localStorage.removeItem(KEY+'-test');
+  canSave=true;setStatus('saved',raw?'Progress loaded from this browser':'Progress saves in this browser');
+}catch(e){setStatus('local','This browser is blocking saving (private window?). Your checkmarks last until you close the page.');}
+ticks.forEach(t=>t.addEventListener('change',()=>{if(t.checked) state.done[t.dataset.id]=true; else delete state.done[t.dataset.id]; save();}));
+radios.forEach(r=>r.addEventListener('change',()=>{state.ratings[r.dataset.sec]=Number(r.value);save();}));
+const btn=document.getElementById('reset');let armed=false;
+btn.addEventListener('click',()=>{
+  if(!armed){armed=true;btn.classList.add('armed');btn.textContent='Tap again to clear every checkmark and rating';setTimeout(()=>{armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';},4000);return;}
+  armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';state={done:{},ratings:{}};save();
+});
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
+  const pre=b.parentElement.querySelector('pre');const t=pre.innerText;
+  const done=m=>{b.textContent=m;setTimeout(()=>b.textContent='Copy',1400);};
+  const sel=()=>{const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);done('Selected: press Ctrl+C');};
+  try{navigator.clipboard.writeText(t).then(()=>done('Copied'),sel);}catch(e){sel();}
+}));
+render();
+})();
+</script></body></html>
