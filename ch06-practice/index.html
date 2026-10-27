@@ -92,8 +92,8 @@ details>div{padding:4px 4px 4px 12px}
 @media (prefers-reduced-motion: reduce){.bar i{transition:none}}
 @media (max-width:480px){body{font-size:16px} pre{font-size:13px}}
 body{margin:0}</style></head><body><main class="wrap"><div class="prog" role="region" aria-label="Progress"><span class="count"><span id="done">0</span> / 4 done</span><div class="bar" aria-hidden="true"><i id="barfill"></i></div><nav class="jump" aria-label="Jump to section"><a href="#secA" data-sec="A">A</a></nav><span class="save" id="save" data-s="wait">Checking whether this browser can save your progress…</span></div>
-<h1>Chapter 6 Practice Enhancements: Functions, Part 1</h1><p class="sub">COP1047C Intro to Python · Miami Dade College · Optional · 4 short exercises on def, calling, return, and parameters. Every sample run and solution here was produced by running the code on Python 3.12, the version Google Colab uses. Your checkmarks and self-ratings save in this browser.</p>
-<h2>What's covered</h2><div class="map"><span>A · Ch 6 Part 1 · zyBooks 6.1, 6.2, 6.5</span></div><div class="box go"><p class="boxlbl">Optional · on your own time</p><p><b>Your zyBooks labs and homework come first.</b> This page is extra practice if you want more reps on what we did in class. It is not graded and nothing here is due. Do one exercise or all four, whenever it works for you.</p></div><p>A1 to A3 practice the core skills from class. A4 is a stretch that brings back the Chapter 4 hurricane ladder inside a function. For every exercise, put the function at the top of the cell and the main program underneath it.</p><p>Need loop practice? See <a href="../exam2-practice/">Exam 2 Practice</a>.</p></p>
+<p class="sub"><a href="../">&larr; All COP1047C practice pages</a></p><h1>Chapter 6 Practice Enhancements: Functions, Part 1</h1><p class="sub">COP1047C Intro to Python · Miami Dade College · Optional · 4 short exercises on def, calling, return, and parameters. Every sample run and solution here was produced by running the code on Python 3.12, the version Google Colab uses. Your checkmarks and self-ratings save in this browser.</p>
+<h2>What's covered</h2><div class="map"><span>A · Ch 6 Part 1 · zyBooks 6.1, 6.2, 6.5</span></div><div class="box go"><p class="boxlbl">Optional · on your own time</p><p><b>Your zyBooks labs and homework come first.</b> This page is extra practice if you want more reps on what we did in class. It is not graded and nothing here is due. Do one exercise or all four, whenever it works for you.</p></div><p>A1 to A3 practice the core skills from class. A4 is a stretch that brings back the Chapter 4 hurricane ladder inside a function. For every exercise, put the function at the top of the cell and the main program underneath it.</p><p>Need loop practice? See <a href="../exam2-practice/">Exam 2 Practice</a>.</p>
 <h2>How to use this practice set</h2><div class="box go"><p class="boxlbl">Do this in Colab</p><ol><li>Open a new notebook at colab.new. Use one code cell per exercise.</li><li>Read the story and answer the <b>Think first</b> questions out loud, or as a comment, before writing code.</li><li>Copy <b>Your plan</b> into the cell. The plan is the program, written as comments.</li><li>Build one plan line at a time. Type the code under its comment and run the cell after each piece.</li><li>Compare with the <b>Target</b> run. Type the same inputs: the logic and the numbers should match. Your messages can be worded your own way unless the story quotes them exactly.</li><li>Stuck? Open Hint 1. Still stuck after a couple of minutes? Hint 2, then Hint 3.</li><li>Open the solution last. Compare it to yours, then try the edge cases it lists.</li><li>Tick the box beside the title. Your progress saves in this browser.</li></ol></div><div class="box why"><p class="boxlbl">Why plan in comments first?</p><p>It's the order experienced programmers think in, and the same order we use when we build exercises live in class. A blank cell is hard. A to-do list is easy: each comment becomes one or two lines of code.</p></div><div class="box warn"><p class="boxlbl">Use the solutions honestly</p><p>The solutions are here so you can check your thinking, not skip it. If you open a solution before trying, close it, wait a day, and redo that exercise from a blank cell. That's what the exam will feel like.</p></div>
 <h3>The thinking order, for every exercise</h3><div class="tablewrap"><table><thead><tr><th></th><th>Step</th><th>Ask yourself</th></tr></thead><tbody><tr><td class="n">1</td><td><b>Restate</b></td><td>What goes in, what comes out, what are the rules? Look at the target run.</td></tr><tr><td class="n">2</td><td><b>Plan in comments</b></td><td>3 to 6 # lines, in order. Imports go first.</td></tr><tr><td class="n">3</td><td><b>Imports and constants</b></td><td>import random? Fixed values in ALL_CAPS?</td></tr><tr><td class="n">4</td><td><b>Inputs and starting variables</b></td><td>int, float or text? Counters and totals start at 0 before the loop.</td></tr><tr><td class="n">5</td><td><b>Pick the structure</b></td><td>One decision (if), repeat an unknown number of times (while), or a known number (for)?</td></tr><tr><td class="n">6</td><td><b>Body, one line at a time</b></td><td>What happens on each pass? What changes so the loop can end?</td></tr><tr><td class="n">7</td><td><b>After the loop</b></td><td>Summaries print once, at the left edge.</td></tr><tr><td class="n">8</td><td><b>Test</b></td><td>The sample input first, then an edge case: 0, the boundary, an empty entry.</td></tr></tbody></table></div>
 <section class="sec" id="secA"><h2>A · Define, call, return, pass in</h2><p>Ch 6 Part 1 · zyBooks 6.1, 6.2, 6.5 · Write a function once, call it as many times as you need, send values in, and get a value back.</p></section>
@@ -110,10 +110,11 @@ print(total)</pre></div></div>
 #     print(f&quot;{cups} cafecitos = ${cups * price:.2f}&quot;)
 
 # PLAN
-# 1. def cafecito_order(): header with a colon
-# 2.     inside (indented): cups = 3, price = 1.50, print the order line
-# 3. main program (left edge): print the heading
-# 4. call cafecito_order()
+# 1. imports: none needed
+# 2. def cafecito_order(): header with a colon
+# 3.     inside (indented): cups = 3, price = 1.50, print the order line
+# 4. main program (left edge): print the heading
+# 5. call cafecito_order()
 # YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">Ventanita receipt:
 3 cafecitos = $4.50</pre><details class="hint"><summary>Hint 1</summary><div><p>The header is def cafecito_order(): with the colon at the end.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Indent cups, price and the order print under the header. The heading print stays at the left edge.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>After the heading, call the function: cafecito_order()  (with the parentheses).</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">def cafecito_order():
     cups = 3
@@ -124,11 +125,12 @@ print(&quot;Ventanita receipt:&quot;)
 cafecito_order()</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>Typing cafecito_order without the () doesn&#x27;t call it. And if you call the function ABOVE its def, Python stops with NameError: name &#x27;cafecito_order&#x27; is not defined. In Colab that error can hide if you ran an earlier version of the cell, so restart the runtime to be sure.</p></div></div></details></article>
 <article class="card" id="A2"><h3><label><input type="checkbox" class="tick" id="tick-A2" data-id="A2" data-sec="A"><span class="tag">A2</span>Two prices, one function</label></h3><p>At Sedano&#x27;s, a shopper buys two items. Write a function named get_price() that asks for a price as a float and returns it. In the main program, call it twice, store each result in its own variable, then print the total with 2 decimals.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>The task repeats the same step twice: ask for a price. Any time code repeats, a function can do it once and be called twice.</li><li>The function&#x27;s job is to ASK and hand back the number. It shouldn&#x27;t print the total. That&#x27;s the main program&#x27;s job.</li><li>return is how the number gets out of the function. Without it, the function hands back None.</li><li>Each call gives back one number, so catch each one in its own variable: price1 = get_price().</li></ol></div><h4>Think first</h4><ul><li>What does the function need to do, and what should it give back?</li><li>How do you get the number from inside the function to the main program?</li><li>How many times do you call it, and where does each result go?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># A2 · Two prices, one function
 # PLAN
-# 1. def get_price():
-# 2.     ask for a price as a float
-# 3.     return it
-# 4. main program: price1 = get_price(), price2 = get_price()
-# 5. print the total with 2 decimals
+# 1. imports: none needed
+# 2. def get_price():
+# 3.     ask for a price as a float
+# 4.     return it
+# 5. main program: price1 = get_price(), price2 = get_price()
+# 6. print the total with 2 decimals
 # YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 3.49 | 12.99</div><pre class="out">Item price: $3.49
 Item price: $12.99
 Total: $16.48</pre><details class="hint"><summary>Hint 1</summary><div><p>Inside the function: price = float(input(&quot;Item price: $&quot;)) then return price.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>In the main program: price1 = get_price() and price2 = get_price().</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>print(f&quot;Total: ${price1 + price2:.2f}&quot;)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">def get_price():
@@ -142,11 +144,12 @@ Item price: $0.5
 Total: $5.50</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Forget the return and both variables hold None. Then the addition fails with TypeError: unsupported operand type(s) for +: &#x27;NoneType&#x27; and &#x27;NoneType&#x27;.</p></div></div></details></article>
 <article class="card" id="A3"><h3><label><input type="checkbox" class="tick" id="tick-A3" data-id="A3" data-sec="A"><span class="tag">A3</span>Fahrenheit to Celsius</label></h3><p>A Miami weather app shows temperatures to visitors from abroad. Write a function named to_celsius() with one parameter, the temperature in °F. It returns the temperature in °C using (F - 32) * 5 / 9. In the main program, ask for a temperature in °F and print the result with 1 decimal.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Now the function needs something FROM us: the °F temperature. That&#x27;s a parameter, a name inside the parentheses in the header.</li><li>When we call it, we pass a value in. That value is the argument. The names don&#x27;t have to match: the argument can be temp_f, the parameter fahrenheit.</li><li>The function returns the answer instead of printing it, so the main program decides how to show it.</li><li>Plan the main program in order: ask, call, print.</li></ol></div><h4>Think first</h4><ul><li>What goes in the parentheses in the header? What goes in the parentheses in the call?</li><li>Why return the Celsius value instead of printing it inside the function?</li><li>What is 95°F in Celsius? Work it out before you run the code.</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># A3 · Fahrenheit to Celsius
 # PLAN
-# 1. def to_celsius(fahrenheit):   (one parameter)
-# 2.     return (fahrenheit - 32) * 5 / 9
-# 3. main program: ask for the temperature in °F, as a float
-# 4. call to_celsius() with it and store the result
-# 5. print the result with 1 decimal
+# 1. imports: none needed
+# 2. def to_celsius(fahrenheit):   (one parameter)
+# 3.     return (fahrenheit - 32) * 5 / 9
+# 4. main program: ask for the temperature in °F, as a float
+# 5. call to_celsius() with it and store the result
+# 6. print the result with 1 decimal
 # YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 95</div><pre class="out">Temperature in °F: 95
 95.0°F is 35.0°C</pre><details class="hint"><summary>Hint 1</summary><div><p>Header: def to_celsius(fahrenheit):  The body is one line: return (fahrenheit - 32) * 5 / 9</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>In the main program: temp_f = float(input(...)), then temp_c = to_celsius(temp_f).</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>print(f&quot;{temp_f}°F is {temp_c:.1f}°C&quot;)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">def to_celsius(fahrenheit):
     return (fahrenheit - 32) * 5 / 9
@@ -160,10 +163,11 @@ print(f&quot;{temp_f}°F is {temp_c:.1f}°C&quot;)</pre></div><div class="lbl">E
 speeds = [120, 70, 160]   # Run as given
 
 # PLAN
-# 1. def category(wind):
-# 2.     if/elif ladder, highest category first; each branch RETURNS its message
-# 3. main program: for each speed in speeds:
-# 4.     print the speed and category(speed)
+# 1. imports: none needed
+# 2. def category(wind):
+# 3.     if/elif ladder, highest category first; each branch RETURNS its message
+# 4. main program: for each speed in speeds:
+# 5.     print the speed and category(speed)
 # YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">120 mph: Category 3
 70 mph: Not a hurricane
 160 mph: Category 5</pre><details class="hint"><summary>Hint 1</summary><div><p>Each branch is one return line, for example: if wind &gt;= 157: return &quot;Category 5&quot;</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>The last line is a plain return &quot;Not a hurricane&quot; (or an else). If nothing above returned, it runs.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>for speed in speeds: print(f&quot;{speed} mph: {category(speed)}&quot;)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">speeds = [120, 70, 160]
