@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found · COP1047C</title><meta name="robots" content="noindex">
+<script>
+(function () {
+  var base = "/cop1047c-python/";
+  var moved = {
+    "exam2-practice": "part-2-decisions-and-loops/exam-2-practice/",
+    "exam2-study": "part-2-decisions-and-loops/exam-2-study-set/",
+    "ch06-practice": "part-3-functions-strings-exceptions/chapter-06-functions-part-1-practice/",
+    "ch06-part2-practice": "part-3-functions-strings-exceptions/chapter-06-functions-part-2-practice/",
+    "ch06-part3-practice": "part-3-functions-strings-exceptions/chapter-06-functions-part-3-practice/"
+  };
+  var path = location.pathname;
+  var rest = path.indexOf(base) === 0 ? path.slice(base.length) : path.replace(/^\//, "");
+  var first = rest.split("/")[0];
+  if (moved[first]) { location.replace(base + moved[first] + location.hash); }
+})();
+</script></head>
+<body style="font-family:system-ui,sans-serif;max-width:640px;margin:40px auto;padding:0 16px;line-height:1.5">
+<h1 style="font-size:1.4em">Page not found</h1>
+<p>This page may have moved. <a href="/cop1047c-python/">See all COP1047C practice pages</a>.</p>
+</body></html>

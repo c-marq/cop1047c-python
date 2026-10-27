@@ -41,10 +41,10 @@ The site follows the four Parts of the course.
 
 | Folder | What's Inside | When to Use It |
 |--------|--------------|----------------|
+| [`part-1-python-basics/`](part-1-python-basics/) | Chapters 1 to 3 (pages coming later) | Before Exam 1 |
 | [`part-2-decisions-and-loops/`](part-2-decisions-and-loops/) | Exam 2 Practice and the Exam 2 Study Set | Before Exam 2 |
 | [`part-3-functions-strings-exceptions/`](part-3-functions-strings-exceptions/) | Chapter 6 Practice Enhancements (Parts 1 to 3) | After each class, on your own time |
-
-Part 1 and Part 4 pages will be added as they are built.
+| [`part-4-final-chapters-and-cert-prep/`](part-4-final-chapters-and-cert-prep/) | Chapters 9 to 13 and Knowledge Pillars cert prep (pages coming later) | Before the certification exam |
 
 ---
 
