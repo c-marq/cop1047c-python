@@ -43,7 +43,7 @@ The site follows the four Parts of the course.
 |--------|--------------|----------------|
 | [`part-1-python-basics/`](part-1-python-basics/) | Chapters 1 to 3 (pages coming later) | Before Exam 1 |
 | [`part-2-decisions-and-loops/`](part-2-decisions-and-loops/) | Exam 2 Practice and the Exam 2 Study Set | Before Exam 2 |
-| [`part-3-functions-strings-exceptions/`](part-3-functions-strings-exceptions/) | Chapter 6 Practice Enhancements (Parts 1 to 3) | After each class, on your own time |
+| [`part-3-functions-strings-exceptions/`](part-3-functions-strings-exceptions/) | Chapter 6 Practice Enhancements (Parts 1 to 3) and Chapter 7 Practice Enhancements | After each class, on your own time |
 | [`part-4-final-chapters-and-cert-prep/`](part-4-final-chapters-and-cert-prep/) | Chapters 9 to 13 and Knowledge Pillars cert prep (pages coming later) | Before the certification exam |
 
 ---
@@ -54,7 +54,7 @@ The site follows the four Parts of the course.
 |------|----------|--------------------|
 | 1 · Python Basics | 1 Intro, 2 Variables and Expressions, 3 Types | Coming later |
 | 2 · Decisions and Loops | 4 Branching (if-else), 5 Loops | [Exam 2 Practice](https://c-marq.github.io/cop1047c-python/part-2-decisions-and-loops/exam-2-practice/) · [Exam 2 Study Set](https://c-marq.github.io/cop1047c-python/part-2-decisions-and-loops/exam-2-study-set/) |
-| 3 · Functions, Strings, Exceptions | 6 Functions, 7 Strings, 8 Exceptions | [Chapter 6 Part 1](https://c-marq.github.io/cop1047c-python/part-3-functions-strings-exceptions/chapter-06-functions-part-1-practice/) · [Chapter 6 Part 2](https://c-marq.github.io/cop1047c-python/part-3-functions-strings-exceptions/chapter-06-functions-part-2-practice/) · [Chapter 6 Part 3](https://c-marq.github.io/cop1047c-python/part-3-functions-strings-exceptions/chapter-06-functions-part-3-practice/) |
+| 3 · Functions, Strings, Exceptions | 6 Functions, 7 Strings, 8 Exceptions | [Chapter 6 Part 1](https://c-marq.github.io/cop1047c-python/part-3-functions-strings-exceptions/chapter-06-functions-part-1-practice/) · [Chapter 6 Part 2](https://c-marq.github.io/cop1047c-python/part-3-functions-strings-exceptions/chapter-06-functions-part-2-practice/) · [Chapter 6 Part 3](https://c-marq.github.io/cop1047c-python/part-3-functions-strings-exceptions/chapter-06-functions-part-3-practice/) · [Chapter 7](https://c-marq.github.io/cop1047c-python/part-3-functions-strings-exceptions/chapter-07-strings-practice/) |
 | 4 · Final Chapters and Cert Prep | 9 Lists and Dictionaries, 12 Files, 10 Classes, 11 Modules, 13 Plotting lab | Coming later |
 | Final | Knowledge Pillars Python Coding Specialist certification | |
 

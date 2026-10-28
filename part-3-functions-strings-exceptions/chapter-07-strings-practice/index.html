@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Chapter 7 Practice · COP1047C</title><meta name="description" content="Optional practice enhancements for COP1047C Chapter 7: slicing, tables with f-strings, string methods, split and join."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:wght@400;600;700&display=swap"><style>
+/* Layout: one reading column; sticky progress strip; each exercise is a worksheet card with plan, target, hints, solution */
+:root{
+ --bg:#F6F7F9; --surface:#FFFFFF; --fg:#1C2433; --muted:#5A6577; --line:#DCE1E8;
+ --brand:#1B2A41; --brand-fg:#FFFFFF; --accent:#F5B82E; --accent-ink:#1B2A41; --link:#2F5F98;
+ --code-bg:#22272E; --code-fg:#E6EDF3; --out-bg:#EEF1F5; --out-fg:#1D232B;
+ --go-bg:#DDF3E6; --go-fg:#17663A; --why-bg:#DCEAF7; --why-fg:#1A4C78;
+ --hint-bg:#FCF3D9; --hint-fg:#6E5606; --stop-bg:#F8DDDA; --stop-fg:#8E2A20;
+ --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+ --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+ --f-mono:"JetBrains Mono", ui-monospace, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}}
+:root[data-theme="dark"]{
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:17px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding-inline:18px;padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.2}
+h1{font-size:clamp(28px,5vw,40px);margin:26px 0 6px;font-weight:700}
+h2{font-size:24px;margin:38px 0 10px}
+h4{font-size:16px;margin:16px 0 6px;font-family:var(--f-body);font-weight:700;letter-spacing:.02em}
+a{color:var(--link)}
+p{margin:8px 0}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--out-bg);color:var(--out-fg);padding:1px 6px;border-radius:4px;white-space:pre-wrap}
+.sub{color:var(--muted);font-size:15px;max-width:65ch}
+.prog{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:2px solid var(--accent);padding-block:10px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.prog .count{font-weight:700;font-variant-numeric:tabular-nums}
+.bar{flex:1 1 140px;height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--go-fg);transition:width .3s}
+.jump{display:flex;gap:4px;flex-wrap:wrap}
+.jump a{font-size:13px;text-decoration:none;color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:1px 9px;font-variant-numeric:tabular-nums}
+.jump a.full{background:var(--go-bg);color:var(--go-fg);border-color:transparent}
+.save{font-size:13px;color:var(--muted);flex-basis:100%}
+.save[data-s="saved"]{color:var(--go-fg)} .save[data-s="error"]{color:var(--stop-fg)}
+.map{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.map span{padding:5px 11px;border-radius:14px;font-size:14px;border:1px solid var(--line)}
+.map .done{background:var(--go-bg);color:var(--go-fg);border-color:transparent;font-weight:600}
+.map .now{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.box{border-radius:8px;padding:12px 16px;margin:12px 0}
+.box .boxlbl{font-weight:700;margin:0 0 4px;letter-spacing:.03em;font-size:14px;text-transform:uppercase}
+.go{background:var(--go-bg);color:var(--fg)} .go .boxlbl{color:var(--go-fg)}
+.why{background:var(--why-bg);color:var(--fg)} .why .boxlbl{color:var(--why-fg)}
+.warn{background:var(--hint-bg);color:var(--fg)} .warn .boxlbl{color:var(--hint-fg)}
+.stop{background:var(--stop-bg);color:var(--fg)} .stop .boxlbl{color:var(--stop-fg)}
+.box ol,.box ul{margin:4px 0;padding-left:22px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15.5px;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-family:var(--f-body);font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+td.n{font-variant-numeric:tabular-nums;color:var(--muted);width:2em}
+.codewrap{position:relative;margin:8px 0;min-width:0}
+pre{margin:0;overflow-x:auto;white-space:pre;font-family:var(--f-mono);font-size:14px;line-height:1.5;border-radius:8px;padding:12px 14px}
+pre.code{background:var(--code-bg);color:var(--code-fg);padding-right:72px}
+pre.out{background:var(--out-bg);color:var(--out-fg);margin-bottom:10px}
+.lbl{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:8px}
+.copy{position:absolute;top:8px;right:8px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:5px;padding:4px 10px;font:600 13px var(--f-body);cursor:pointer}
+.copy:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.sec{background:var(--brand);color:var(--brand-fg);border-radius:10px;padding:14px 18px;margin:40px 0 12px;scroll-margin-top:70px}
+.sec h2{margin:0;color:var(--accent);font-size:22px}
+.sec p{margin:4px 0 0;opacity:.85;font-size:15px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:16px 0;scroll-margin-top:70px}
+.card.is-done{border-color:var(--go-fg)}
+.card h3{margin:0 0 6px;display:flex;gap:10px;align-items:center;font-size:20px}
+.card h3 label{display:flex;gap:10px;align-items:center;cursor:pointer}
+.tick{width:20px;height:20px;accent-color:var(--go-fg);flex:none}
+.tag{font-family:var(--f-mono);font-size:13px;background:var(--brand);color:var(--brand-fg);border-radius:5px;padding:1px 7px}
+details{margin:6px 0}
+summary{cursor:pointer;font-weight:700;padding:8px 12px;border-radius:6px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ "} details[open]>summary::before{content:"▾ "}
+details.hint>summary{background:var(--hint-bg);color:var(--hint-fg)}
+details.sol>summary{background:var(--stop-bg);color:var(--stop-fg)}
+details>div{padding:4px 4px 4px 12px}
+.rate{display:flex;gap:6px;flex-wrap:wrap}
+.rate input{position:absolute;opacity:0;pointer-events:none}
+.rate label{border:1px solid var(--line);border-radius:6px;padding:4px 12px;cursor:pointer;font-variant-numeric:tabular-nums;background:var(--surface)}
+.rate input:checked+label{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.rate input:focus-visible+label{outline:3px solid var(--link);outline-offset:2px}
+.reset{background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.reset.armed{border-color:var(--stop-fg);color:var(--stop-fg)}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+@media (max-width:480px){body{font-size:16px} pre{font-size:13px}}
+body{margin:0}</style></head><body><main class="wrap"><div class="prog" role="region" aria-label="Progress"><span class="count"><span id="done">0</span> / 4 done</span><div class="bar" aria-hidden="true"><i id="barfill"></i></div><nav class="jump" aria-label="Jump to section"><a href="#secD" data-sec="D">D</a></nav><span class="save" id="save" data-s="wait">Checking whether this browser can save your progress…</span></div>
+<p class="sub"><a href="../../">&larr; All COP1047C practice pages</a></p><h1>Chapter 7 Practice Enhancements: Strings</h1><p class="sub">COP1047C Intro to Python · Miami Dade College · Optional · 4 short exercises on slicing, tables with f-strings, string methods, and split and join. Every sample run and solution here was produced by running the code on Python 3.12. Your checkmarks and self-ratings save in this browser.</p><h2>What's covered</h2><div class="map"><span>D · Ch 7 · zyBooks 7.1, 7.2, 7.3, 7.4</span></div><div class="box go"><p class="boxlbl">Optional · on your own time</p><p><b>Your zyBooks labs and homework come first.</b> This page is extra practice if you want more reps on what we did in class. It is not graded and nothing here is due. Do one exercise or all four, whenever it works for you.</p></div><p>D1 practices slicing. D2 builds a table with field widths and alignment. D3 uses count, find and replace. D4 splits what someone types into a list, joins it back, and cleans a yes-or-no answer.</p><p>Want more first? See the Chapter 6 Practice Enhancements: <a href="../chapter-06-functions-part-1-practice/">Part 1</a>, <a href="../chapter-06-functions-part-2-practice/">Part 2</a> and <a href="../chapter-06-functions-part-3-practice/">Part 3</a>.</p><h2>How to use this practice set</h2><div class="box go"><p class="boxlbl">Do this in Colab</p><ol><li>Open a new notebook at colab.new. Use one code cell per exercise.</li><li>Read the story and answer the <b>Think first</b> questions out loud, or as a comment, before writing code.</li><li>Copy <b>Your plan</b> into the cell. The plan is the program, written as comments.</li><li>Build one plan line at a time. Type the code under its comment and run the cell after each piece.</li><li>Compare with the <b>Target</b> run. Type the same inputs: the logic and the numbers should match. Your messages can be worded your own way unless the story quotes them exactly.</li><li>Stuck? Open Hint 1. Still stuck after a couple of minutes? Hint 2, then Hint 3.</li><li>Open the solution last. Compare it to yours, then try the edge cases it lists.</li><li>Tick the box beside the title. Your progress saves in this browser.</li></ol></div><div class="box why"><p class="boxlbl">Why plan in comments first?</p><p>It's the order experienced programmers think in, and the same order we use when we build exercises live in class. A blank cell is hard. A to-do list is easy: each comment becomes one or two lines of code.</p></div><div class="box warn"><p class="boxlbl">Use the solutions honestly</p><p>The solutions are here so you can check your thinking, not skip it. If you open a solution before trying, close it, wait a day, and redo that exercise from a blank cell. That's what the exam will feel like.</p></div>
+<h3>The thinking order, for every exercise</h3><div class="tablewrap"><table><thead><tr><th></th><th>Step</th><th>Ask yourself</th></tr></thead><tbody><tr><td class="n">1</td><td><b>Restate</b></td><td>What goes in, what comes out, what are the rules? Look at the target run.</td></tr><tr><td class="n">2</td><td><b>Plan in comments</b></td><td>3 to 6 # lines, in order. Imports go first.</td></tr><tr><td class="n">3</td><td><b>Imports and constants</b></td><td>import random? Fixed values in ALL_CAPS?</td></tr><tr><td class="n">4</td><td><b>Inputs and starting variables</b></td><td>int, float or text? Counters and totals start at 0 before the loop.</td></tr><tr><td class="n">5</td><td><b>Pick the structure</b></td><td>One decision (if), repeat an unknown number of times (while), or a known number (for)?</td></tr><tr><td class="n">6</td><td><b>Body, one line at a time</b></td><td>What happens on each pass? What changes so the loop can end?</td></tr><tr><td class="n">7</td><td><b>After the loop</b></td><td>Summaries print once, at the left edge.</td></tr><tr><td class="n">8</td><td><b>Test</b></td><td>The sample input first, then an edge case: 0, the boundary, an empty entry.</td></tr></tbody></table></div>
+<section class="sec" id="secD"><h2>D · Slicing, tables, string methods, split and join</h2><p>Ch 7 · zyBooks 7.1, 7.2, 7.3, 7.4 · Cut pieces out of a string, line up columns, find and fix text, and turn a line of text into a list and back.</p></section><div class="box why"><p class="boxlbl">Quick refresher</p><p>A slice [start:end] starts at start and stops BEFORE end; a negative number counts from the right. In an f-string, {value:10} reserves 10 spaces; &lt; is left, &gt; is right, ^ is center, and the arrow goes before the width. count, find and replace search a string (find gives -1 when it's not there). Strings never change: methods return a NEW string, so save it. split() turns a string into a list of pieces; ", ".join(list) turns a list back into one string.</p><div class="codewrap"><pre class="code">word = &quot;Hialeah&quot;
+print(word[0:3], word[-3:])               # slicing
+print(f&quot;[{word:10}]&quot;, f&quot;[{word:&gt;10}]&quot;)    # width and alignment
+print(word.count(&quot;a&quot;), word.find(&quot;l&quot;))    # count and find
+print(&quot; y &quot;.strip().upper() == &quot;Y&quot;)       # clean, then compare
+print(&quot; + &quot;.join(&quot;a b c&quot;.split()))        # split, then join</pre></div><pre class="out">Hia eah
+[Hialeah   ] [   Hialeah]
+2 3
+True
+a + b + c</pre></div><article class="card" id="D1"><h3><label><input type="checkbox" class="tick" id="tick-D1" data-id="D1" data-sec="D"><span class="tag">D1</span>Read the flight code</label></h3><p>A departures screen at Miami International shows each flight as one string, like <code>AA1234 MIA to JFK</code>. Use slicing to pull out four pieces: the airline (the first 2 characters), the flight number (the next 4), where it leaves from (the 3 letters after the space), and where it's going (the last 3). Print each piece with a label.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Write the indexes under the string first. The first A is 0, and the space after 1234 is 6.</li><li>A slice [start:end] starts AT start and stops BEFORE end. So the first 2 characters are [0:2].</li><li>The origin starts right after the space, at 7. It's 3 letters long, so it stops before 10.</li><li>A negative start counts from the right: [-3:] is the last 3 characters, whatever the length.</li></ol></div><h4>Think first</h4><ul><li>What index is the space after 1234? What index is the M in MIA?</li><li>Why is the end number always one more than the last index you want?</li><li>Why is [-3:] safer than [14:17] for the destination?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># D1 · Read the flight code
+# Given data:
+flight = &quot;AA1234 MIA to JFK&quot;   # Run as given
+
+# PLAN
+# 1. imports: none needed
+# 2. count the indexes first: the first A is 0, and the space after 1234 is 6
+# 3. airline = the first 2 characters, number = the next 4
+# 4. origin = the 3 letters after that space, destination = the last 3 (a negative start)
+# 5. print each piece with a label: &quot;Airline:&quot;, &quot;Flight number:&quot;, &quot;From:&quot;, &quot;To:&quot;
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">Airline: AA
+Flight number: 1234
+From: MIA
+To: JFK</pre><details class="hint"><summary>Hint 1</summary><div><p>airline = flight[0:2] and number = flight[2:6]</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>origin = flight[7:10]. Count it: 7, 8, 9 are M, I, A, and 10 is the space before "to".</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>destination = flight[-3:], then print("To:", destination)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">flight = &quot;AA1234 MIA to JFK&quot;
+
+airline = flight[0:2]
+number = flight[2:6]
+origin = flight[7:10]
+destination = flight[-3:]
+
+print(&quot;Airline:&quot;, airline)
+print(&quot;Flight number:&quot;, number)
+print(&quot;From:&quot;, origin)
+print(&quot;To:&quot;, destination)</pre></div><div class="lbl">Edge case · change the given line to flight = &quot;DL0042 MIA to ATL&quot;</div><pre class="out">Airline: DL
+Flight number: 0042
+From: MIA
+To: ATL</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Off by one is the classic slip: <code>flight[7:9]</code> gives only <code>MI</code>, because 9 is where it stops. A single index past the end, like <code>flight[17]</code>, stops with <code>IndexError: string index out of range</code>. A slice past the end is fine.</p></div></div></details></article><article class="card" id="D2"><h3><label><input type="checkbox" class="tick" id="tick-D2" data-id="D2" data-sec="D"><span class="tag">D2</span>The bakery price board</label></h3><p>A Little Havana bakery wants its price board printed as a neat table. Make two columns: ITEM, 20 characters wide and left aligned, and PRICE ($), 10 characters wide and right aligned. Put a line of 30 dashes under the header. The items are Cafecito 1.50, Pastelito 1.25, Croqueta 1.00 and Cafe con leche 3.75. Show every price with 2 decimals.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Each row is one print with two f-string fields: the name, then the price.</li><li>The width is the column. Use the same widths on every row so the columns line up.</li><li>The alignment character goes BEFORE the width: :&lt;20 and :&gt;10.</li><li>For a number, add .2f after the width to show 2 decimals: :&gt;10.2f</li></ol></div><h4>Think first</h4><ul><li>Why do the header and every row need the same widths?</li><li>Where does the &gt; go: before or after the 10?</li><li>What happens to a name that&#x27;s longer than 20 characters?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># D2 · The bakery price board
+# PLAN
+# 1. imports: none needed
+# 2. header row: ITEM in 20 spaces, left aligned. PRICE ($) in 10 spaces, right aligned
+# 3. a line of 30 dashes under the header
+# 4. one row per item: the name in 20 (left), the price in 10 (right) with 2 decimals
+# 5. the items: Cafecito 1.50, Pastelito 1.25, Croqueta 1.00, Cafe con leche 3.75
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">ITEM                 PRICE ($)
+------------------------------
+Cafecito                  1.50
+Pastelito                 1.25
+Croqueta                  1.00
+Cafe con leche            3.75</pre><details class="hint"><summary>Hint 1</summary><div><p>The header: print(f"{'ITEM':&lt;20}{'PRICE ($)':&gt;10}")</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>The dashes: print("------------------------------") (30 dashes)</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>One row: print(f"{'Cafecito':&lt;20}{1.50:&gt;10.2f}")</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">print(f&quot;{&#x27;ITEM&#x27;:&lt;20}{&#x27;PRICE ($)&#x27;:&gt;10}&quot;)
+print(&quot;------------------------------&quot;)
+print(f&quot;{&#x27;Cafecito&#x27;:&lt;20}{1.50:&gt;10.2f}&quot;)
+print(f&quot;{&#x27;Pastelito&#x27;:&lt;20}{1.25:&gt;10.2f}&quot;)
+print(f&quot;{&#x27;Croqueta&#x27;:&lt;20}{1.00:&gt;10.2f}&quot;)
+print(f&quot;{&#x27;Cafe con leche&#x27;:&lt;20}{3.75:&gt;10.2f}&quot;)</pre></div><p>Add this row at the end and run it again:</p><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">print(f&quot;{&#x27;Guava and cheese pastelito tray&#x27;:&lt;20}{24.00:&gt;10.2f}&quot;)</pre></div><div class="lbl">Edge case · add a row for a long name: Guava and cheese pastelito tray at 24.00</div><pre class="out">ITEM                 PRICE ($)
+------------------------------
+Cafecito                  1.50
+Pastelito                 1.25
+Croqueta                  1.00
+Cafe con leche            3.75
+Guava and cheese pastelito tray     24.00</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Putting the arrow after a 2-digit width, like <code>{&#x27;ITEM&#x27;:20&lt;}</code>, stops with <code>ValueError: Unknown format code &#x27;&lt;&#x27; for object of type &#x27;str&#x27;</code>. And a number goes right even without the arrow (<code>[      1.50]</code>), while text goes left (<code>[1.50      ]</code>).</p></div></div></details></article><article class="card" id="D3"><h3><label><input type="checkbox" class="tick" id="tick-D3" data-id="D3" data-sec="D"><span class="tag">D3</span>Fix the typo</label></h3><p>A Miami Beach hotel's front-desk app fixes a common typo in guest messages: "teh" instead of "the". Ask for the guest's message. Print how many times "teh" appears, the index where the first one starts (find gives -1 if there isn't one), and the fixed message with every "teh" replaced by "the".</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>count, find and replace all take the text you're looking for, in quotes.</li><li>find gives the index where the first match STARTS, counting from 0, or -1 if it isn't there.</li><li>replace doesn't change the message. It gives back a new string, so save it in a variable.</li><li>All three are case sensitive: "Teh" with a capital T is a different string.</li></ol></div><h4>Think first</h4><ul><li>What does find give back when the typo isn&#x27;t there?</li><li>Why do we need a new variable for the fixed message?</li><li>Will &quot;Teh&quot; at the start of a sentence be caught?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># D3 · Fix the typo
+# PLAN
+# 1. imports: none needed
+# 2. message = input(&quot;Guest message: &quot;)
+# 3. count how many times &quot;teh&quot; appears, and find the index where the first one starts
+# 4. fixed = the message with every &quot;teh&quot; replaced by &quot;the&quot; (save it!)
+# 5. print them with the labels &quot;Typos found:&quot;, &quot;First typo at index:&quot; and &quot;Fixed:&quot;
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed Is teh pool open and teh bar too?</div><pre class="out">Guest message: Is teh pool open and teh bar too?
+Typos found: 2
+First typo at index: 3
+Fixed: Is the pool open and the bar too?</pre><details class="hint"><summary>Hint 1</summary><div><p>typo_count = message.count("teh")</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>first_spot = message.find("teh")</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>fixed = message.replace("teh", "the"), then print("Fixed:", fixed)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">message = input(&quot;Guest message: &quot;)
+
+typo_count = message.count(&quot;teh&quot;)
+first_spot = message.find(&quot;teh&quot;)
+fixed = message.replace(&quot;teh&quot;, &quot;the&quot;)
+
+print(&quot;Typos found:&quot;, typo_count)
+print(&quot;First typo at index:&quot;, first_spot)
+print(&quot;Fixed:&quot;, fixed)</pre></div><div class="lbl">Edge case · typed Teh pool is open</div><pre class="out">Guest message: Teh pool is open
+Typos found: 0
+First typo at index: -1
+Fixed: Teh pool is open</pre><div class="lbl">Edge case · typed See you at the beach</div><pre class="out">Guest message: See you at the beach
+Typos found: 0
+First typo at index: -1
+Fixed: See you at the beach</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>If you write <code>message.replace(&quot;teh&quot;, &quot;the&quot;)</code> without saving it, the line runs and the new string is thrown away. Printing message then shows <code>Fixed: Is teh pool open and teh bar too?</code>. Strings never change: save the new one.</p></div></div></details></article><article class="card" id="D4"><h3><label><input type="checkbox" class="tick" id="tick-D4" data-id="D4" data-sec="D"><span class="tag">D4</span>The cookout guest list</label></h3><p>You're planning a Sunday cookout in Kendall. Ask for the guest names with spaces between them. Split them into a list, print how many guests there are, then print the names joined with a comma and a space. Finally ask "Save this list? (y/n): " and print "Guest list saved." if the answer is y or Y (even with extra spaces), otherwise "Guest list not saved."</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>split() with NO argument splits on any number of spaces and ignores the ones at the ends. That's what you want when people type.</li><li>split gives a list. len(list) tells you how many pieces.</li><li>", ".join(list) glues the pieces back into one string. The separator goes in front of .join.</li><li>Clean the answer before you compare: answer.strip().upper() == "Y".</li></ol></div><h4>Think first</h4><ul><li>What&#x27;s the difference between split() and split(&quot; &quot;) when someone types two spaces?</li><li>Is the result of split a string or a list?</li><li>After upper(), should you compare to &quot;y&quot; or &quot;Y&quot;?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># D4 · The cookout guest list
+# PLAN
+# 1. imports: none needed
+# 2. names = input(&quot;Guest names (spaces between): &quot;)
+# 3. guests = names.split()   (no argument, so extra spaces don&#x27;t matter)
+# 4. print &quot;Guests:&quot; and how many there are, then the names joined with &quot;, &quot;
+# 5. answer = input(&quot;Save this list? (y/n): &quot;)
+# 6. if answer.strip().upper() == &quot;Y&quot;: print &quot;Guest list saved.&quot; Otherwise &quot;Guest list not saved.&quot;
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed Ana Luis Marta | y</div><pre class="out">Guest names (spaces between): Ana Luis Marta
+Guests: 3
+Ana, Luis, Marta
+Save this list? (y/n): y
+Guest list saved.</pre><details class="hint"><summary>Hint 1</summary><div><p>guests = names.split(), then print("Guests:", len(guests))</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>print(", ".join(guests))</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>if answer.strip().upper() == "Y": then the two prints with else</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">names = input(&quot;Guest names (spaces between): &quot;)
+guests = names.split()
+
+print(&quot;Guests:&quot;, len(guests))
+print(&quot;, &quot;.join(guests))
+
+answer = input(&quot;Save this list? (y/n): &quot;)
+if answer.strip().upper() == &quot;Y&quot;:
+    print(&quot;Guest list saved.&quot;)
+else:
+    print(&quot;Guest list not saved.&quot;)</pre></div><div class="lbl">Edge case · extra spaces around the names, and &quot; Y &quot; with spaces</div><pre class="out">Guest names (spaces between):   Ana   Luis  
+Guests: 2
+Ana, Luis
+Save this list? (y/n):  Y 
+Guest list saved.</pre><div class="lbl">Edge case · typed Ana Luis Marta | no</div><pre class="out">Guest names (spaces between): Ana Luis Marta
+Guests: 3
+Ana, Luis, Marta
+Save this list? (y/n): no
+Guest list not saved.</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>With <code>names.split(&quot; &quot;)</code> and two spaces after Ana, every single space is a cut: <code>Guests: 4</code> and <code>Ana, , Luis, Marta</code>. And comparing to a lowercase "y" after upper() is never true, so typing y prints <code>Guest list not saved.</code></p></div></div></details></article><h2 id="rate">Rate yourself</h2><p>Give each section a 1 (shaky), 2 (okay) or 3 (solid). Your ratings save with your progress. Any 1s? Redo that section's last exercise tomorrow from a blank cell, without the plan. That's the real test, and those are the ones to bring questions about next class.</p>
+<div class="tablewrap"><table><thead><tr><th>Section</th><th>Topic</th><th>Your rating</th></tr></thead><tbody><tr><td><b>D</b></td><td>Slicing, tables, string methods, split and join</td><td><div class="rate" role="radiogroup" aria-label="Rating for section D"><input type="radio" name="rate-D" id="rate-D-1" value="1" data-sec="D"><label for="rate-D-1">1</label><input type="radio" name="rate-D" id="rate-D-2" value="2" data-sec="D"><label for="rate-D-2">2</label><input type="radio" name="rate-D" id="rate-D-3" value="3" data-sec="D"><label for="rate-D-3">3</label></div></td></tr></tbody></table></div>
+<div class="box why"><p class="boxlbl">If you want more practice</p><ul><li>Redo any exercise you rated a 1, from a blank cell.</li><li>Say the thinking order out loud on every problem: restate, plan, imports and constants, inputs, structure, body, after the loop, test.</li><li>Know the traps: a slice end that's one off, an index past the end, calling replace() or upper() without saving the result, the alignment arrow after the width, split(" ") on doubled spaces, and calling join on the list instead of the separator.</li></ul></div>
+<p><button class="reset" id="reset" type="button">Reset my progress</button></p>
+<p class="sub">Progress is stored only in this browser on this device. A different browser, a private window or clearing your browsing data starts fresh.</p></main><script>
+(function(){
+const KEY="cop1047c-ch07-practice-v1";
+const ticks=[...document.querySelectorAll('.tick')];
+const radios=[...document.querySelectorAll('.rate input')];
+const saveEl=document.getElementById('save');
+let state={done:{},ratings:{}}, canSave=false;
+function setStatus(s,m){saveEl.dataset.s=s;saveEl.textContent=m;}
+function render(){
+  ticks.forEach(t=>{t.checked=!!state.done[t.dataset.id];t.closest('.card').classList.toggle('is-done',t.checked);});
+  radios.forEach(r=>{r.checked=String(state.ratings[r.dataset.sec]||'')===r.value;});
+  const n=ticks.filter(t=>t.checked).length;
+  document.getElementById('done').textContent=n;
+  document.getElementById('barfill').style.width=(100*n/ticks.length)+'%';
+  document.querySelectorAll('.jump a').forEach(a=>{const ts=ticks.filter(t=>t.dataset.sec===a.dataset.sec);a.classList.toggle('full',ts.length>0&&ts.every(t=>t.checked));});
+}
+function save(){
+  render();
+  if(!canSave) return;
+  try{localStorage.setItem(KEY,JSON.stringify(state));setStatus('saved','Saved in this browser');}
+  catch(e){canSave=false;setStatus('error','This browser stopped saving. Your checkmarks last until you close the page.');}
+}
+try{
+  const raw=localStorage.getItem(KEY);
+  if(raw){const d=JSON.parse(raw);state={done:Object.assign({},d.done||{}),ratings:Object.assign({},d.ratings||{})};}
+  localStorage.setItem(KEY+'-test','1');localStorage.removeItem(KEY+'-test');
+  canSave=true;setStatus('saved',raw?'Progress loaded from this browser':'Progress saves in this browser');
+}catch(e){setStatus('local','This browser is blocking saving (private window?). Your checkmarks last until you close the page.');}
+ticks.forEach(t=>t.addEventListener('change',()=>{if(t.checked) state.done[t.dataset.id]=true; else delete state.done[t.dataset.id]; save();}));
+radios.forEach(r=>r.addEventListener('change',()=>{state.ratings[r.dataset.sec]=Number(r.value);save();}));
+const btn=document.getElementById('reset');let armed=false;
+btn.addEventListener('click',()=>{
+  if(!armed){armed=true;btn.classList.add('armed');btn.textContent='Tap again to clear every checkmark and rating';setTimeout(()=>{armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';},4000);return;}
+  armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';state={done:{},ratings:{}};save();
+});
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
+  const pre=b.parentElement.querySelector('pre');const t=pre.innerText;
+  const done=m=>{b.textContent=m;setTimeout(()=>b.textContent='Copy',1400);};
+  const sel=()=>{const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);done('Selected: press Ctrl+C');};
+  try{navigator.clipboard.writeText(t).then(()=>done('Copied'),sel);}catch(e){sel();}
+}));
+render();
+})();
+</script></body></html>
