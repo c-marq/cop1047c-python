@@ -93,10 +93,10 @@ details>div{padding:4px 4px 4px 12px}
 @media (max-width:480px){body{font-size:16px} pre{font-size:13px}}
 body{margin:0}</style></head><body><main class="wrap"><div class="prog" role="region" aria-label="Progress"><span class="count"><span id="done">0</span> / 26 done</span><div class="bar" aria-hidden="true"><i id="barfill"></i></div><nav class="jump" aria-label="Jump to section"><a href="#secA" data-sec="A">A</a><a href="#secB" data-sec="B">B</a><a href="#secC" data-sec="C">C</a><a href="#secD" data-sec="D">D</a><a href="#secE" data-sec="E">E</a><a href="#secF" data-sec="F">F</a><a href="#secG" data-sec="G">G</a><a href="#secH" data-sec="H">H</a><a href="#secI" data-sec="I">I</a></nav><span class="save" id="save" data-s="wait">Checking whether this browser can save your progress…</span></div>
 <p class="sub"><a href="../../">&larr; All COP1047C practice pages</a></p><h1>Exam 2 Practice: Branching and Loops</h1><p class="sub">COP1047C Intro to Python · Miami Dade College · Chapters 4 and 5 · 26 exercises. Every sample run and solution here was produced by running the code on Python 3.12, the version Google Colab uses. Your checkmarks and self-ratings save in this browser, so you can close the page and pick up where you left off.</p>
-<h2>What's covered</h2><div class="map"><span>A · Ch 4 Part 1 · Sept 28</span><span>B · Ch 4 Part 2 · Sept 30</span><span>C · Ch 5 Part 1 · Oct 5</span><span>D · Ch 5 Part 1 · Oct 5</span><span>E · Ch 5 Part 1 · Oct 5</span><span>F · Ch 5 Part 2 · Oct 7</span><span>G · Ch 5 Part 2 · Oct 7</span><span>H · Ch 5 Part 2 · Oct 7</span><span>I · Ch 5 Part 3 · Oct 12</span></div><p>Each section matches one class session. Exercises get a little harder inside each section, and later sections reuse earlier skills, so going in order works best. Everything here is fair game for Exam 2.</p>
+<h2>What's covered</h2><div class="map"><span>A · Ch 4 Part 1</span><span>B · Ch 4 Part 2</span><span>C · Ch 5 Part 1</span><span>D · Ch 5 Part 1</span><span>E · Ch 5 Part 1</span><span>F · Ch 5 Part 2</span><span>G · Ch 5 Part 2</span><span>H · Ch 5 Part 2</span><span>I · Ch 5 Part 3</span></div><p>Each section matches one class session. Exercises get a little harder inside each section, and later sections reuse earlier skills, so going in order works best. Everything here is fair game for Exam 2.</p>
 <h2>How to use this practice set</h2><div class="box go"><p class="boxlbl">Do this in Colab</p><ol><li>Open a new notebook at colab.new. Use one code cell per exercise.</li><li>Read the story and answer the <b>Think first</b> questions out loud, or as a comment, before writing code.</li><li>Copy <b>Your plan</b> into the cell. The plan is the program, written as comments.</li><li>Build one plan line at a time. Type the code under its comment and run the cell after each piece.</li><li>Compare with the <b>Target</b> run. Type the same inputs: the logic and the numbers should match. Your messages can be worded your own way unless the story quotes them exactly.</li><li>Stuck? Open Hint 1. Still stuck after a couple of minutes? Hint 2, then Hint 3.</li><li>Open the solution last. Compare it to yours, then try the edge cases it lists.</li><li>Tick the box beside the title. Your progress saves in this browser.</li></ol></div><div class="box why"><p class="boxlbl">Why plan in comments first?</p><p>It's the order experienced programmers think in, and the same order we use when we build exercises live in class. A blank cell is hard. A to-do list is easy: each comment becomes one or two lines of code.</p></div><div class="box warn"><p class="boxlbl">Use the solutions honestly</p><p>The solutions are here so you can check your thinking, not skip it. If you open a solution before trying, close it, wait a day, and redo that exercise from a blank cell. That's what the exam will feel like.</p></div>
 <h3>The thinking order, for every exercise</h3><div class="tablewrap"><table><thead><tr><th></th><th>Step</th><th>Ask yourself</th></tr></thead><tbody><tr><td class="n">1</td><td><b>Restate</b></td><td>What goes in, what comes out, what are the rules? Look at the target run.</td></tr><tr><td class="n">2</td><td><b>Plan in comments</b></td><td>3 to 6 # lines, in order. Imports go first.</td></tr><tr><td class="n">3</td><td><b>Imports and constants</b></td><td>import random? Fixed values in ALL_CAPS?</td></tr><tr><td class="n">4</td><td><b>Inputs and starting variables</b></td><td>int, float or text? Counters and totals start at 0 before the loop.</td></tr><tr><td class="n">5</td><td><b>Pick the structure</b></td><td>One decision (if), repeat an unknown number of times (while), or a known number (for)?</td></tr><tr><td class="n">6</td><td><b>Body, one line at a time</b></td><td>What happens on each pass? What changes so the loop can end?</td></tr><tr><td class="n">7</td><td><b>After the loop</b></td><td>Summaries print once, at the left edge.</td></tr><tr><td class="n">8</td><td><b>Test</b></td><td>The sample input first, then an edge case: 0, the boundary, an empty entry.</td></tr></tbody></table></div>
-<section class="sec" id="secA"><h2>A · if, elif, else</h2><p>Ch 4 Part 1 · Sept 28 · One decision, or a ladder of decisions where the first True wins.</p></section>
+<section class="sec" id="secA"><h2>A · if, elif, else</h2><p>Ch 4 Part 1 · One decision, or a ladder of decisions where the first True wins.</p></section>
 <div class="box why"><p class="boxlbl">Quick refresher</p><p>One decision, or a ladder where the first True wins. = stores a value; == compares.</p><div class="codewrap"><pre class="code">if x &gt; 10:
     ...
 elif x &gt; 5:
@@ -164,7 +164,7 @@ print(f&quot;Suggested tip: ${tip:.2f}&quot;)
 print(f&quot;Total: ${total:.2f}&quot;)</pre></div><div class="lbl">Edge case · typed 100</div><pre class="out">Bill amount: $100
 Suggested tip: $20.00
 Total: $120.00</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Both rates live in constants, so if the restaurant changes its policy you edit one line at the top, not the logic.</p></div></div></details></article>
-<section class="sec" id="secB"><h2>B · and, or, not, nested if, flags, in</h2><p>Ch 4 Part 2 · Sept 30 · Combining conditions, decisions inside decisions, and True/False switches.</p></section>
+<section class="sec" id="secB"><h2>B · and, or, not, nested if, flags, in</h2><p>Ch 4 Part 2 · Combining conditions, decisions inside decisions, and True/False switches.</p></section>
 <div class="box why"><p class="boxlbl">Quick refresher</p><p>and needs both sides True; or needs one; not flips it. A flag is a True/False variable. in checks membership. A nested if lives inside another if&#x27;s block.</p><div class="codewrap"><pre class="code">if age &lt; 12 or age &gt;= 65:
     ...
 is_member = answer == &quot;Y&quot;
@@ -250,7 +250,7 @@ You pay: $42.00</pre><div class="lbl">Edge case · typed N, 50</div><pre class="
 Order total: $50
 Shipping: $0.00
 You pay: $50.00</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>You don&#x27;t need if is_member == True. The flag is already True or False, so if is_member reads like English.</p></div></div></details></article>
-<section class="sec" id="secC"><h2>C · while loops for input validation</h2><p>Ch 5 Part 1 · Oct 5 · Keep asking until the input is good. Start it, test it, change it.</p></section>
+<section class="sec" id="secC"><h2>C · while loops for input validation</h2><p>Ch 5 Part 1 · Keep asking until the input is good. Start it, test it, change it.</p></section>
 <div class="box why"><p class="boxlbl">Quick refresher</p><p>Start it (ask before the loop), test it (the condition), change it (ask again as the last line inside).</p><div class="codewrap"><pre class="code">value = int(input(&quot;...&quot;))
 while value &lt; 1:
     value = int(input(&quot;...&quot;))</pre></div></div>
@@ -303,8 +303,8 @@ Enter PIN: 2222
 Wrong PIN. Tries left: 1
 Enter PIN: 3333
 Card locked</pre><div class="lbl">Edge case · typed 2580</div><pre class="out">Enter PIN: 2580
-Access granted</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>This is the answer to Monday&#x27;s hook question, &#x27;what if we wanted 10 tries?&#x27; Change MAX_TRIES and nothing else.</p></div></div></details></article>
-<section class="sec" id="secD"><h2>D · Sentinels, counters, accumulators</h2><p>Ch 5 Part 1 · Oct 5 · Keep going until the &#x27;I&#x27;m done&#x27; value, counting and totaling along the way.</p></section>
+Access granted</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>This is the answer to the Chapter 5 Part 1 hook question, &#x27;what if we wanted 10 tries?&#x27; Change MAX_TRIES and nothing else.</p></div></div></details></article>
+<section class="sec" id="secD"><h2>D · Sentinels, counters, accumulators</h2><p>Ch 5 Part 1 · Keep going until the &#x27;I&#x27;m done&#x27; value, counting and totaling along the way.</p></section>
 <div class="box why"><p class="boxlbl">Quick refresher</p><p>A sentinel is the I&#x27;m-done value. Counter: count += 1. Accumulator: total += value. Set up before, update inside, report after.</p><div class="codewrap"><pre class="code">count = 0
 total = 0
 x = float(input())
@@ -324,7 +324,7 @@ while x != SENTINEL:
 Item price (0 to finish): $5.99
 Item price (0 to finish): $2.50
 Item price (0 to finish): $0
-3 items, total $11.98, average $3.99</pre><details class="hint"><summary>Hint 1</summary><div><p>Same shape as the weights cell from Monday: first input before the loop, next input as the last line inside.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>average = total / count only makes sense when count &gt; 0.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>if count &gt; 0: print(...) else: print(&quot;No items entered.&quot;)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">SENTINEL = 0
+3 items, total $11.98, average $3.99</pre><details class="hint"><summary>Hint 1</summary><div><p>Same shape as the weights cell from Chapter 5 Part 1: first input before the loop, next input as the last line inside.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>average = total / count only makes sense when count &gt; 0.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>if count &gt; 0: print(...) else: print(&quot;No items entered.&quot;)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">SENTINEL = 0
 count = 0
 total = 0
 
@@ -371,7 +371,7 @@ while steps != SENTINEL:
     steps = int(input(f&quot;Steps today ({SENTINEL} to stop): &quot;))
 
 print(f&quot;{days} days logged, {total} total steps, goal hit on {goal_days} days&quot;)</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>The goal counter lives INSIDE an if inside the loop, so it only counts the days that qualify. 10,000 exactly counts, because the test is &gt;=.</p></div></div></details></article>
-<section class="sec" id="secE"><h2>E · for loops over collections</h2><p>Ch 5 Part 1 · Oct 5 · Once per item in a string, list or dictionary.</p></section>
+<section class="sec" id="secE"><h2>E · for loops over collections</h2><p>Ch 5 Part 1 · Once per item in a string, list or dictionary.</p></section>
 <div class="box why"><p class="boxlbl">Quick refresher</p><p>Once per item. No start or change line needed. Dictionaries: .items() gives key and value.</p><div class="codewrap"><pre class="code">for temp in highs:
     ...
 for name, price in menu.items():
@@ -437,7 +437,7 @@ for letter in word.lower():
 
 print(f&quot;{word} has {vowel_count} vowels&quot;)</pre></div><div class="lbl">Edge case · typed Rhythm</div><pre class="out">Enter a word: Rhythm
 Rhythm has 0 vowels</pre></div></details></article>
-<section class="sec" id="secF"><h2>F · range()</h2><p>Ch 5 Part 2 · Oct 7 · A for loop that runs a set number of times. Stop is never included.</p></section>
+<section class="sec" id="secF"><h2>F · range()</h2><p>Ch 5 Part 2 · A for loop that runs a set number of times. Stop is never included.</p></section>
 <div class="box why"><p class="boxlbl">Quick refresher</p><p>range(start, stop, step): stop is never included. range(n) runs n times, 0 to n-1.</p><div class="codewrap"><pre class="code">for i in range(1, 11):     # 1 to 10
 for i in range(10, 0, -1): # 10 down to 1</pre></div></div>
 <article class="card" id="F1"><h3><label><input type="checkbox" class="tick" id="tick-F1" data-id="F1" data-sec="F"><span class="tag">F1</span>New Year&#x27;s countdown</label></h3><p>Print a countdown from 10 down to 1, all on one line, then &#x27;¡Feliz Año Nuevo!&#x27; on the next line.</p><h4>Think first</h4><ul><li>Which range() walks backwards? What are start, stop and step?</li><li>Stop is never included. To end at 1, what must the stop be?</li><li>How do you keep numbers on one line?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># F1 · Countdown
@@ -484,7 +484,7 @@ for n in range(2, 101, 2):
     total += n
 
 print(f&quot;Sum of the even numbers from 2 to 100: {total}&quot;)</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>Check: 50 even numbers averaging 51 should give 50 × 51 = 2,550.</p></div></div></details></article>
-<section class="sec" id="secG"><h2>G · While vs for, and loops in sequence</h2><p>Ch 5 Part 2 · Oct 7 · Choosing the right loop, and putting one loop after another.</p></section>
+<section class="sec" id="secG"><h2>G · While vs for, and loops in sequence</h2><p>Ch 5 Part 2 · Choosing the right loop, and putting one loop after another.</p></section>
 <div class="box why"><p class="boxlbl">Quick refresher</p><p>Don&#x27;t know how many times before the loop starts? while. Know (a collection, a range, a number already typed)? for. One loop needs another&#x27;s result first? Put them in sequence.</p></div>
 <article class="card" id="G1"><h3><label><input type="checkbox" class="tick" id="tick-G1" data-id="G1" data-sec="G"><span class="tag">G1</span>Pick the loop (no code)</label></h3><p>For each situation, decide: while or for? Write your answer and a one-line reason, then reveal.</p><h4>Think first</h4><ul><li>Ask the one question: do we know how many times BEFORE the loop starts?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># G1 · Pick the loop: write while or for, plus why
 # a) Keep asking for an email until it contains &quot;@&quot;
@@ -521,7 +521,7 @@ for i in range(count):
 
 print(f&quot;Total hours: {total_hours}&quot;)
 print(f&quot;Payroll: ${total_hours * RATE:.2f}&quot;)</pre></div></div></details></article>
-<section class="sec" id="secH"><h2>H · Nested loops</h2><p>Ch 5 Part 2 · Oct 7 · A loop inside a loop. The inner one finishes every lap first.</p></section>
+<section class="sec" id="secH"><h2>H · Nested loops</h2><p>Ch 5 Part 2 · A loop inside a loop. The inner one finishes every lap first.</p></section>
 <div class="box why"><p class="boxlbl">Quick refresher</p><p>The inner loop finishes every lap before the outer loop takes one step. Inner counters and accumulators reset inside the outer loop.</p><div class="codewrap"><pre class="code">for row in &quot;ABC&quot;:
     for seat in range(1, 5):
         ...
@@ -581,7 +581,7 @@ Student #3 name: Luis
   Quiz 1 score for Luis: 88
   Quiz 2 score for Luis: 92
   Quiz 3 score for Luis: 95
-Luis&#x27;s average: 91.7</pre><details class="hint"><summary>Hint 1</summary><div><p>The reset goes INSIDE the outer loop, before the inner loop. Same lesson as guess_count and password = &quot;&quot; on Wednesday.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Quiz numbers for people: range(QUIZZES) with q + 1 in the prompt.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>average = total / QUIZZES, printed at the outer loop&#x27;s indent level, after the inner loop.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">STUDENTS = 3
+Luis&#x27;s average: 91.7</pre><details class="hint"><summary>Hint 1</summary><div><p>The reset goes INSIDE the outer loop, before the inner loop. Same lesson as guess_count and password = &quot;&quot; in Chapter 5 Part 2.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Quiz numbers for people: range(QUIZZES) with q + 1 in the prompt.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>average = total / QUIZZES, printed at the outer loop&#x27;s indent level, after the inner loop.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">STUDENTS = 3
 QUIZZES = 3
 
 for s in range(STUDENTS):
@@ -591,7 +591,7 @@ for s in range(STUDENTS):
         score = float(input(f&quot;  Quiz {q + 1} score for {name}: &quot;))
         total += score
     print(f&quot;{name}&#x27;s average: {total / QUIZZES:.1f}&quot;)</pre></div><div class="box warn"><p class="boxlbl">Watch out</p><p>Move total = 0 above the outer loop and Jean&#x27;s average includes Maria&#x27;s scores.</p></div></div></details></article>
-<section class="sec" id="secI"><h2>I · break, continue, enumerate, unpacking</h2><p>Ch 5 Part 3 · Oct 12 · Leaving a loop early, skipping one pass, numbering items, and assigning several variables at once.</p></section>
+<section class="sec" id="secI"><h2>I · break, continue, enumerate, unpacking</h2><p>Ch 5 Part 3 · Leaving a loop early, skipping one pass, numbering items, and assigning several variables at once.</p></section>
 <div class="box why"><p class="boxlbl">Quick refresher</p><p>break leaves the loop immediately. continue skips the rest of this pass and jumps to the next one. enumerate() hands you the position and the item together. Unpacking assigns several variables in one line, and a, b = b, a swaps them. Build every program incrementally: one small piece, run, then the next.</p><div class="codewrap"><pre class="code">for i, item in enumerate(items):
     if item == target:
         break          # stop the whole loop
