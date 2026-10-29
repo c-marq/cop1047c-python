@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Chapter 8 Practice · COP1047C</title><meta name="description" content="Optional practice enhancements for COP1047C Chapter 8: try and except, several handlers, raise, and exceptions in functions."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:wght@400;600;700&display=swap"><style>
+/* Layout: one reading column; sticky progress strip; each exercise is a worksheet card with plan, target, hints, solution */
+:root{
+ --bg:#F6F7F9; --surface:#FFFFFF; --fg:#1C2433; --muted:#5A6577; --line:#DCE1E8;
+ --brand:#1B2A41; --brand-fg:#FFFFFF; --accent:#F5B82E; --accent-ink:#1B2A41; --link:#2F5F98;
+ --code-bg:#22272E; --code-fg:#E6EDF3; --out-bg:#EEF1F5; --out-fg:#1D232B;
+ --go-bg:#DDF3E6; --go-fg:#17663A; --why-bg:#DCEAF7; --why-fg:#1A4C78;
+ --hint-bg:#FCF3D9; --hint-fg:#6E5606; --stop-bg:#F8DDDA; --stop-fg:#8E2A20;
+ --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+ --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+ --f-mono:"JetBrains Mono", ui-monospace, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}}
+:root[data-theme="dark"]{
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:17px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding-inline:18px;padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.2}
+h1{font-size:clamp(28px,5vw,40px);margin:26px 0 6px;font-weight:700}
+h2{font-size:24px;margin:38px 0 10px}
+h4{font-size:16px;margin:16px 0 6px;font-family:var(--f-body);font-weight:700;letter-spacing:.02em}
+a{color:var(--link)}
+p{margin:8px 0}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--out-bg);color:var(--out-fg);padding:1px 6px;border-radius:4px;white-space:pre-wrap}
+.sub{color:var(--muted);font-size:15px;max-width:65ch}
+.prog{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:2px solid var(--accent);padding-block:10px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.prog .count{font-weight:700;font-variant-numeric:tabular-nums}
+.bar{flex:1 1 140px;height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--go-fg);transition:width .3s}
+.jump{display:flex;gap:4px;flex-wrap:wrap}
+.jump a{font-size:13px;text-decoration:none;color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:1px 9px;font-variant-numeric:tabular-nums}
+.jump a.full{background:var(--go-bg);color:var(--go-fg);border-color:transparent}
+.save{font-size:13px;color:var(--muted);flex-basis:100%}
+.save[data-s="saved"]{color:var(--go-fg)} .save[data-s="error"]{color:var(--stop-fg)}
+.map{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.map span{padding:5px 11px;border-radius:14px;font-size:14px;border:1px solid var(--line)}
+.map .done{background:var(--go-bg);color:var(--go-fg);border-color:transparent;font-weight:600}
+.map .now{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.box{border-radius:8px;padding:12px 16px;margin:12px 0}
+.box .boxlbl{font-weight:700;margin:0 0 4px;letter-spacing:.03em;font-size:14px;text-transform:uppercase}
+.go{background:var(--go-bg);color:var(--fg)} .go .boxlbl{color:var(--go-fg)}
+.why{background:var(--why-bg);color:var(--fg)} .why .boxlbl{color:var(--why-fg)}
+.warn{background:var(--hint-bg);color:var(--fg)} .warn .boxlbl{color:var(--hint-fg)}
+.stop{background:var(--stop-bg);color:var(--fg)} .stop .boxlbl{color:var(--stop-fg)}
+.box ol,.box ul{margin:4px 0;padding-left:22px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15.5px;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-family:var(--f-body);font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+td.n{font-variant-numeric:tabular-nums;color:var(--muted);width:2em}
+.codewrap{position:relative;margin:8px 0;min-width:0}
+pre{margin:0;overflow-x:auto;white-space:pre;font-family:var(--f-mono);font-size:14px;line-height:1.5;border-radius:8px;padding:12px 14px}
+pre.code{background:var(--code-bg);color:var(--code-fg);padding-right:72px}
+pre.out{background:var(--out-bg);color:var(--out-fg);margin-bottom:10px}
+.lbl{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:8px}
+.copy{position:absolute;top:8px;right:8px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:5px;padding:4px 10px;font:600 13px var(--f-body);cursor:pointer}
+.copy:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.sec{background:var(--brand);color:var(--brand-fg);border-radius:10px;padding:14px 18px;margin:40px 0 12px;scroll-margin-top:70px}
+.sec h2{margin:0;color:var(--accent);font-size:22px}
+.sec p{margin:4px 0 0;opacity:.85;font-size:15px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:16px 0;scroll-margin-top:70px}
+.card.is-done{border-color:var(--go-fg)}
+.card h3{margin:0 0 6px;display:flex;gap:10px;align-items:center;font-size:20px}
+.card h3 label{display:flex;gap:10px;align-items:center;cursor:pointer}
+.tick{width:20px;height:20px;accent-color:var(--go-fg);flex:none}
+.tag{font-family:var(--f-mono);font-size:13px;background:var(--brand);color:var(--brand-fg);border-radius:5px;padding:1px 7px}
+details{margin:6px 0}
+summary{cursor:pointer;font-weight:700;padding:8px 12px;border-radius:6px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ "} details[open]>summary::before{content:"▾ "}
+details.hint>summary{background:var(--hint-bg);color:var(--hint-fg)}
+details.sol>summary{background:var(--stop-bg);color:var(--stop-fg)}
+details>div{padding:4px 4px 4px 12px}
+.rate{display:flex;gap:6px;flex-wrap:wrap}
+.rate input{position:absolute;opacity:0;pointer-events:none}
+.rate label{border:1px solid var(--line);border-radius:6px;padding:4px 12px;cursor:pointer;font-variant-numeric:tabular-nums;background:var(--surface)}
+.rate input:checked+label{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.rate input:focus-visible+label{outline:3px solid var(--link);outline-offset:2px}
+.reset{background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.reset.armed{border-color:var(--stop-fg);color:var(--stop-fg)}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+@media (max-width:480px){body{font-size:16px} pre{font-size:13px}}
+body{margin:0}</style></head><body><main class="wrap"><div class="prog" role="region" aria-label="Progress"><span class="count"><span id="done">0</span> / 4 done</span><div class="bar" aria-hidden="true"><i id="barfill"></i></div><nav class="jump" aria-label="Jump to section"><a href="#secE" data-sec="E">E</a></nav><span class="save" id="save" data-s="wait">Checking whether this browser can save your progress…</span></div>
+<p class="sub"><a href="../../">&larr; All COP1047C practice pages</a></p><h1>Chapter 8 Practice Enhancements: Exceptions</h1><p class="sub">COP1047C Intro to Python · Miami Dade College · Optional · 4 short exercises on try and except, several handlers, raise, and exceptions in functions. Every sample run and solution here was produced by running the code on Python 3.12. Your checkmarks and self-ratings save in this browser.</p><h2>What's covered</h2><div class="map"><span>E · Ch 8 · zyBooks Chapter 8</span></div><div class="box go"><p class="boxlbl">Optional · on your own time</p><p><b>Your zyBooks labs and homework come first.</b> This page is extra practice if you want more reps on what we did in class. It is not graded and nothing here is due. Do one exercise or all four, whenever it works for you.</p></div><p>E1 keeps asking until someone types a whole number. E2 catches two different errors with two except clauses. E3 raises your own error inside a function and catches it outside. E4 catches a KeyError when a dictionary lookup fails.</p><p>Want more first? See the <a href="../chapter-07-strings-practice/">Chapter 7 Practice Enhancements</a>.</p><h2>How to use this practice set</h2><div class="box go"><p class="boxlbl">Do this in Colab</p><ol><li>Open a new notebook at colab.new. Use one code cell per exercise.</li><li>Read the story and answer the <b>Think first</b> questions out loud, or as a comment, before writing code.</li><li>Copy <b>Your plan</b> into the cell. The plan is the program, written as comments.</li><li>Build one plan line at a time. Type the code under its comment and run the cell after each piece.</li><li>Compare with the <b>Target</b> run. Type the same inputs: the logic and the numbers should match. Your messages can be worded your own way unless the story quotes them exactly.</li><li>Stuck? Open Hint 1. Still stuck after a couple of minutes? Hint 2, then Hint 3.</li><li>Open the solution last. Compare it to yours, then try the edge cases it lists.</li><li>Tick the box beside the title. Your progress saves in this browser.</li></ol></div><div class="box why"><p class="boxlbl">Why plan in comments first?</p><p>It's the order experienced programmers think in, and the same order we use when we build exercises live in class. A blank cell is hard. A to-do list is easy: each comment becomes one or two lines of code.</p></div><div class="box warn"><p class="boxlbl">Use the solutions honestly</p><p>The solutions are here so you can check your thinking, not skip it. If you open a solution before trying, close it, wait a day, and redo that exercise from a blank cell. That's what the exam will feel like.</p></div>
+<h3>The thinking order, for every exercise</h3><div class="tablewrap"><table><thead><tr><th></th><th>Step</th><th>Ask yourself</th></tr></thead><tbody><tr><td class="n">1</td><td><b>Restate</b></td><td>What goes in, what comes out, what are the rules? Look at the target run.</td></tr><tr><td class="n">2</td><td><b>Plan in comments</b></td><td>3 to 6 # lines, in order. Imports go first.</td></tr><tr><td class="n">3</td><td><b>Imports and constants</b></td><td>import random? Fixed values in ALL_CAPS?</td></tr><tr><td class="n">4</td><td><b>Inputs and starting variables</b></td><td>int, float or text? Counters and totals start at 0 before the loop.</td></tr><tr><td class="n">5</td><td><b>Pick the structure</b></td><td>One decision (if), repeat an unknown number of times (while), or a known number (for)?</td></tr><tr><td class="n">6</td><td><b>Body, one line at a time</b></td><td>What happens on each pass? What changes so the loop can end?</td></tr><tr><td class="n">7</td><td><b>After the loop</b></td><td>Summaries print once, at the left edge.</td></tr><tr><td class="n">8</td><td><b>Test</b></td><td>The sample input first, then an edge case: 0, the boundary, an empty entry.</td></tr></tbody></table></div>
+<section class="sec" id="secE"><h2>E · try and except, several handlers, raise, exceptions in functions</h2><p>Ch 8 · zyBooks Chapter 8 · Catch the errors you expect, give each one its own message, and raise your own when a rule is broken.</p></section><div class="box why"><p class="boxlbl">Quick refresher</p><p>try holds the line that might fail; except runs only if it does. Name the error you expect: except ValueError, not a bare except, which also hides typos. One try can have several excepts, and the first match wins. raise ValueError("message") stops the program on purpose; except ValueError as err catches it, and print(err) shows the message. When a function raises, it ends right there, and the code that called it does the catching.</p><div class="codewrap"><pre class="code">try:
+    n = int(&quot;ten&quot;)
+except ValueError as err:
+    print(&quot;Caught:&quot;, err)</pre></div><pre class="out">Caught: invalid literal for int() with base 10: &#x27;ten&#x27;</pre></div><article class="card" id="E1"><h3><label><input type="checkbox" class="tick" id="tick-E1" data-id="E1" data-sec="E"><span class="tag">E1</span>Beach chair rentals</label></h3><p>A beach chair stand on South Beach rents chairs for $10 each. Ask <code>How many beach chairs? </code> until the customer types a whole number. For a word, a decimal or a blank, print <code>Whole numbers only, like 3.</code> and ask again. For a good number, print it like <code>3 chairs cost $30</code> and stop asking.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>int() fails with a ValueError on a word, a decimal or a blank. That's the one error to catch.</li><li>A flag keeps the loop going: chairs_ok starts False, and the loop runs while not chairs_ok.</li><li>Put the int() line and the print inside try. The last line of the try sets the flag to True.</li><li>Name the error: except ValueError, not a bare except.</li></ol></div><h4>Think first</h4><ul><li>Which line can fail, and what&#x27;s the name of the error it raises?</li><li>Where does the flag change, and why at the end of the try?</li><li>What should happen when someone types 2.5?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># E1 · Beach chair rentals
+# PLAN
+# 1. imports: none needed
+# 2. a flag: chairs_ok = False means &quot;we don&#x27;t have a good number yet&quot;
+# 3. while not chairs_ok: keep asking &quot;How many beach chairs? &quot;
+# 4. try: turn the answer into an int, print how many chairs and the cost at $10 each, then chairs_ok = True
+# 5. except ValueError: print &quot;Whole numbers only, like 3.&quot;
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed &quot;three&quot;, then &quot;2.5&quot;, then &quot;3&quot;</div><pre class="out">How many beach chairs? three
+Whole numbers only, like 3.
+How many beach chairs? 2.5
+Whole numbers only, like 3.
+How many beach chairs? 3
+3 chairs cost $30</pre><details class="hint"><summary>Hint 1</summary><div><p>chairs_ok = False, then while not chairs_ok:</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Inside the loop: try:, then chairs = int(input(&quot;How many beach chairs? &quot;))</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>print(f&quot;{chairs} chairs cost ${chairs * 10}&quot;), then chairs_ok = True, then except ValueError: and the message</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">chairs_ok = False
+while not chairs_ok:
+    try:
+        chairs = int(input(&quot;How many beach chairs? &quot;))
+        print(f&quot;{chairs} chairs cost ${chairs * 10}&quot;)
+        chairs_ok = True
+    except ValueError:
+        print(&quot;Whole numbers only, like 3.&quot;)</pre></div><div class="lbl">Edge case · typed a blank entry, then  4  with spaces</div><pre class="out">How many beach chairs? 
+Whole numbers only, like 3.
+How many beach chairs?  4 
+4 chairs cost $40</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>With a bare <code>except:</code> and a typo on the print line (<code>chair</code> for <code>chairs</code>), every good answer prints <code>Whole numbers only, like 3.</code> and the loop never ends. With <code>except ValueError:</code> the same typo stops right away with <code>NameError: name &#x27;chair&#x27; is not defined</code>, so you can see the real bug. (That's the line Colab shows. Python outside Colab may add a hint: Did you mean: 'chairs'?)</p></div></div></details></article><article class="card" id="E2"><h3><label><input type="checkbox" class="tick" id="tick-E2" data-id="E2" data-sec="E"><span class="tag">E2</span>Split the check</label></h3><p>Friends are splitting a $60 dinner check at a Cuban restaurant in Westchester. Ask how many people are splitting it and print each person's share with 2 decimals. A word gets <code>Type a whole number of people.</code> Zero people gets <code>Someone has to pay! Enter at least 1.</code></p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Two things can go wrong: the typing isn't a whole number (ValueError), or it's 0 and we divide by zero (ZeroDivisionError).</li><li>Both risky lines go inside one try: the int() line and the division.</li><li>Add one except for each problem, each with its own message.</li><li>Show money with 2 decimals: :.2f in the f-string.</li></ol></div><h4>Think first</h4><ul><li>Which line raises the ValueError, and which raises the ZeroDivisionError?</li><li>Does the order of the two excepts matter here?</li><li>What happens with -2? Is that an exception?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># E2 · Split the check
+# Given data:
+check = 60   # Run as given
+
+# PLAN
+# 1. imports: none needed
+# 2. try: people = int(input(&quot;How many people are splitting the $60 check? &quot;))
+# 3. still inside try: print each person&#x27;s share with 2 decimals: f&quot;Each person pays ${check / people:.2f}&quot;
+# 4. except ValueError: print &quot;Type a whole number of people.&quot;
+# 5. except ZeroDivisionError: print &quot;Someone has to pay! Enter at least 1.&quot;
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed &quot;4&quot;</div><pre class="out">How many people are splitting the $60 check? 4
+Each person pays $15.00</pre><details class="hint"><summary>Hint 1</summary><div><p>try:, then people = int(input(&quot;How many people are splitting the $60 check? &quot;))</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Still inside try: print(f&quot;Each person pays ${check / people:.2f}&quot;)</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>except ValueError: with its message, then except ZeroDivisionError: with its message</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">check = 60
+
+try:
+    people = int(input(&quot;How many people are splitting the $60 check? &quot;))
+    print(f&quot;Each person pays ${check / people:.2f}&quot;)
+except ValueError:
+    print(&quot;Type a whole number of people.&quot;)
+except ZeroDivisionError:
+    print(&quot;Someone has to pay! Enter at least 1.&quot;)</pre></div><div class="lbl">Edge case · typed 0</div><pre class="out">How many people are splitting the $60 check? 0
+Someone has to pay! Enter at least 1.</pre><div class="lbl">Edge case · typed four</div><pre class="out">How many people are splitting the $60 check? four
+Type a whole number of people.</pre><div class="lbl">Edge case · typed 7</div><pre class="out">How many people are splitting the $60 check? 7
+Each person pays $8.57</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Not every wrong answer is an exception. Typing -2 gives <code>Each person pays $-30.00</code>: no error at all. Catching that one would need your own check and a raise, like E3.</p></div></div></details></article><article class="card" id="E3"><h3><label><input type="checkbox" class="tick" id="tick-E3" data-id="E3" data-sec="E"><span class="tag">E3</span>Check the ZIP code</label></h3><p>A delivery app in Miami needs a 5-digit ZIP code. Write get_zip(): it asks <code>Enter a 5-digit ZIP code: </code>, strips the spaces, raises <code>A ZIP code has exactly 5 digits.</code> if it isn't 5 characters, raises <code>Digits only, please.</code> if it has anything but digits, and otherwise returns it. Below it, keep asking until a good one arrives, then print <code>Delivering to</code> and the ZIP code.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>The function's only job is to ask and check. It doesn't print the error: it raises it.</li><li>raise ValueError("message") ends the function right there. The return line only runs when every check passed.</li><li>The loop below calls the function inside try, and except ValueError as err prints the message.</li><li>strip() first, so spaces around the ZIP code don't count. isdigit() from Chapter 7 checks that it's all digits.</li></ol></div><h4>Think first</h4><ul><li>What&#x27;s the difference between raising the message and printing it?</li><li>Why does the try go around the function call, not inside the function?</li><li>Which check should come first, the length or the digits? Does it matter?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># E3 · Check the ZIP code
+# PLAN
+# 1. imports: none needed
+# 2. def get_zip(): ask &quot;Enter a 5-digit ZIP code: &quot; and strip() the answer
+# 3. not exactly 5 characters? raise ValueError(&quot;A ZIP code has exactly 5 digits.&quot;)
+# 4. not all digits? raise ValueError(&quot;Digits only, please.&quot;)
+# 5. return the ZIP code
+# 6. below the function: a flag loop. try: z = get_zip(), print &quot;Delivering to&quot; and z, end the loop
+# 7. except ValueError as err: print(err)
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed &quot;3313&quot;, then &quot;33A35&quot;, then &quot; 33135 &quot;</div><pre class="out">Enter a 5-digit ZIP code: 3313
+A ZIP code has exactly 5 digits.
+Enter a 5-digit ZIP code: 33A35
+Digits only, please.
+Enter a 5-digit ZIP code:  33135 
+Delivering to 33135</pre><details class="hint"><summary>Hint 1</summary><div><p>zip_code = input(&quot;Enter a 5-digit ZIP code: &quot;).strip(), then if len(zip_code) != 5: raise ValueError(...)</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>if not zip_code.isdigit(): raise ValueError(&quot;Digits only, please.&quot;), then return zip_code</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>Below: asking = True, while asking:, try: z = get_zip(), print, asking = False, except ValueError as err: print(err)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">def get_zip():
+    zip_code = input(&quot;Enter a 5-digit ZIP code: &quot;).strip()
+    if len(zip_code) != 5:
+        raise ValueError(&quot;A ZIP code has exactly 5 digits.&quot;)
+    if not zip_code.isdigit():
+        raise ValueError(&quot;Digits only, please.&quot;)
+    return zip_code
+
+asking = True
+while asking:
+    try:
+        z = get_zip()
+        print(&quot;Delivering to&quot;, z)
+        asking = False
+    except ValueError as err:
+        print(err)</pre></div><div class="lbl">Edge case · typed 331350 (6 digits), then 33135</div><pre class="out">Enter a 5-digit ZIP code: 331350
+A ZIP code has exactly 5 digits.
+Enter a 5-digit ZIP code: 33135
+Delivering to 33135</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Forget the <code>return zip_code</code> line and nothing crashes: a good ZIP code prints <code>Delivering to None</code>. A function with no return gives back None.</p></div></div></details></article><article class="card" id="E4"><h3><label><input type="checkbox" class="tick" id="tick-E4" data-id="E4" data-sec="E"><span class="tag">E4</span>The menu lookup</label></h3><p>A ventanita keeps its prices in a dictionary with uppercase names: CROQUETA $1, PASTELITO $2, CAFECITO $2. Ask <code>What would you like? </code>, clean the answer so it matches the keys, and print it like <code>PASTELITO costs $2</code>. If the item isn't on the menu, catch the KeyError and print <code>Sorry, we do not sell</code> and the item.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Looking up a key that isn't in a dictionary raises a KeyError.</li><li>The keys are uppercase, so clean the answer first: strip() the spaces, then upper().</li><li>Put the lookup inside try. One except: except KeyError.</li><li>The f-string can look up the price right inside the braces: {prices[item]}.</li></ol></div><h4>Think first</h4><ul><li>What does prices[&quot;EMPANADA&quot;] do when EMPANADA isn&#x27;t a key?</li><li>Why clean the answer before the lookup?</li><li>Which line needs to be inside the try?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># E4 · The menu lookup
+# Given data:
+prices = {&quot;CROQUETA&quot;: 1, &quot;PASTELITO&quot;: 2, &quot;CAFECITO&quot;: 2}   # Run as given
+
+# PLAN
+# 1. imports: none needed
+# 2. item = input(&quot;What would you like? &quot;), cleaned with strip() and upper() so it matches the keys
+# 3. try: print the item and its price: f&quot;{item} costs ${prices[item]}&quot;
+# 4. except KeyError: print &quot;Sorry, we do not sell&quot; and the item
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed &quot;Pastelito&quot;</div><pre class="out">What would you like? Pastelito
+PASTELITO costs $2</pre><details class="hint"><summary>Hint 1</summary><div><p>item = input(&quot;What would you like? &quot;).strip().upper()</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>try:, then print(f&quot;{item} costs ${prices[item]}&quot;)</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>except KeyError:, then print(&quot;Sorry, we do not sell&quot;, item)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">prices = {&quot;CROQUETA&quot;: 1, &quot;PASTELITO&quot;: 2, &quot;CAFECITO&quot;: 2}
+
+item = input(&quot;What would you like? &quot;).strip().upper()
+try:
+    print(f&quot;{item} costs ${prices[item]}&quot;)
+except KeyError:
+    print(&quot;Sorry, we do not sell&quot;, item)</pre></div><div class="lbl">Edge case · typed empanada</div><pre class="out">What would you like? empanada
+Sorry, we do not sell EMPANADA</pre><div class="lbl">Edge case · typed   cafecito  with spaces</div><pre class="out">What would you like?   cafecito 
+CAFECITO costs $2</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Skip <code>.strip().upper()</code> and Pastelito no longer matches the key PASTELITO: it prints <code>Sorry, we do not sell Pastelito</code>. Dictionary keys must match exactly, capitals included.</p></div></div></details></article><h2 id="rate">Rate yourself</h2><p>Give each section a 1 (shaky), 2 (okay) or 3 (solid). Your ratings save with your progress. Any 1s? Redo that section's last exercise tomorrow from a blank cell, without the plan. That's the real test, and those are the ones to bring questions about next class.</p>
+<div class="tablewrap"><table><thead><tr><th>Section</th><th>Topic</th><th>Your rating</th></tr></thead><tbody><tr><td><b>E</b></td><td>try and except, several handlers, raise, exceptions in functions</td><td><div class="rate" role="radiogroup" aria-label="Rating for section E"><input type="radio" name="rate-E" id="rate-E-1" value="1" data-sec="E"><label for="rate-E-1">1</label><input type="radio" name="rate-E" id="rate-E-2" value="2" data-sec="E"><label for="rate-E-2">2</label><input type="radio" name="rate-E" id="rate-E-3" value="3" data-sec="E"><label for="rate-E-3">3</label></div></td></tr></tbody></table></div>
+<div class="box why"><p class="boxlbl">If you want more practice</p><ul><li>Redo any exercise you rated a 1, from a blank cell.</li><li>Say the thinking order out loud on every problem: restate, plan, imports and constants, inputs, structure, body, after the loop, test.</li><li>Know the traps: a bare except that hides a typo, catching the wrong type, a flag that never changes, raising a plain string instead of a ValueError, a function with no return, and a dictionary key that doesn't match exactly.</li></ul></div>
+<p><button class="reset" id="reset" type="button">Reset my progress</button></p>
+<p class="sub">Progress is stored only in this browser on this device. A different browser, a private window or clearing your browsing data starts fresh.</p></main><script>
+(function(){
+const KEY="cop1047c-ch08-practice-v1";
+const ticks=[...document.querySelectorAll('.tick')];
+const radios=[...document.querySelectorAll('.rate input')];
+const saveEl=document.getElementById('save');
+let state={done:{},ratings:{}}, canSave=false;
+function setStatus(s,m){saveEl.dataset.s=s;saveEl.textContent=m;}
+function render(){
+  ticks.forEach(t=>{t.checked=!!state.done[t.dataset.id];t.closest('.card').classList.toggle('is-done',t.checked);});
+  radios.forEach(r=>{r.checked=String(state.ratings[r.dataset.sec]||'')===r.value;});
+  const n=ticks.filter(t=>t.checked).length;
+  document.getElementById('done').textContent=n;
+  document.getElementById('barfill').style.width=(100*n/ticks.length)+'%';
+  document.querySelectorAll('.jump a').forEach(a=>{const ts=ticks.filter(t=>t.dataset.sec===a.dataset.sec);a.classList.toggle('full',ts.length>0&&ts.every(t=>t.checked));});
+}
+function save(){
+  render();
+  if(!canSave) return;
+  try{localStorage.setItem(KEY,JSON.stringify(state));setStatus('saved','Saved in this browser');}
+  catch(e){canSave=false;setStatus('error','This browser stopped saving. Your checkmarks last until you close the page.');}
+}
+try{
+  const raw=localStorage.getItem(KEY);
+  if(raw){const d=JSON.parse(raw);state={done:Object.assign({},d.done||{}),ratings:Object.assign({},d.ratings||{})};}
+  localStorage.setItem(KEY+'-test','1');localStorage.removeItem(KEY+'-test');
+  canSave=true;setStatus('saved',raw?'Progress loaded from this browser':'Progress saves in this browser');
+}catch(e){setStatus('local','This browser is blocking saving (private window?). Your checkmarks last until you close the page.');}
+ticks.forEach(t=>t.addEventListener('change',()=>{if(t.checked) state.done[t.dataset.id]=true; else delete state.done[t.dataset.id]; save();}));
+radios.forEach(r=>r.addEventListener('change',()=>{state.ratings[r.dataset.sec]=Number(r.value);save();}));
+const btn=document.getElementById('reset');let armed=false;
+btn.addEventListener('click',()=>{
+  if(!armed){armed=true;btn.classList.add('armed');btn.textContent='Tap again to clear every checkmark and rating';setTimeout(()=>{armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';},4000);return;}
+  armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';state={done:{},ratings:{}};save();
+});
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
+  const pre=b.parentElement.querySelector('pre');const t=pre.innerText;
+  const done=m=>{b.textContent=m;setTimeout(()=>b.textContent='Copy',1400);};
+  const sel=()=>{const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);done('Selected: press Ctrl+C');};
+  try{navigator.clipboard.writeText(t).then(()=>done('Copied'),sel);}catch(e){sel();}
+}));
+render();
+})();
+</script></body></html>
