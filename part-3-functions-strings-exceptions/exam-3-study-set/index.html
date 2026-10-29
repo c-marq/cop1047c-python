@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Exam 3 Study Set · COP1047C</title><meta name="description" content="Lab-style study problems for COP1047C Exam 3."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:wght@400;600;700&display=swap"><style>
+/* Layout: one reading column; sticky progress strip; each exercise is a worksheet card with plan, target, hints, solution */
+:root{
+ --bg:#F6F7F9; --surface:#FFFFFF; --fg:#1C2433; --muted:#5A6577; --line:#DCE1E8;
+ --brand:#1B2A41; --brand-fg:#FFFFFF; --accent:#F5B82E; --accent-ink:#1B2A41; --link:#2F5F98;
+ --code-bg:#22272E; --code-fg:#E6EDF3; --out-bg:#EEF1F5; --out-fg:#1D232B;
+ --go-bg:#DDF3E6; --go-fg:#17663A; --why-bg:#DCEAF7; --why-fg:#1A4C78;
+ --hint-bg:#FCF3D9; --hint-fg:#6E5606; --stop-bg:#F8DDDA; --stop-fg:#8E2A20;
+ --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+ --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+ --f-mono:"JetBrains Mono", ui-monospace, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}}
+:root[data-theme="dark"]{
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:17px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding-inline:18px;padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.2}
+h1{font-size:clamp(28px,5vw,40px);margin:26px 0 6px;font-weight:700}
+h2{font-size:24px;margin:38px 0 10px}
+h4{font-size:16px;margin:16px 0 6px;font-family:var(--f-body);font-weight:700;letter-spacing:.02em}
+a{color:var(--link)}
+p{margin:8px 0}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--out-bg);color:var(--out-fg);padding:1px 6px;border-radius:4px}
+.sub{color:var(--muted);font-size:15px;max-width:65ch}
+.prog{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:2px solid var(--accent);padding-block:10px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.prog .count{font-weight:700;font-variant-numeric:tabular-nums}
+.bar{flex:1 1 140px;height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--go-fg);transition:width .3s}
+.jump{display:flex;gap:4px;flex-wrap:wrap}
+.jump a{font-size:13px;text-decoration:none;color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:1px 9px;font-variant-numeric:tabular-nums}
+.jump a.full{background:var(--go-bg);color:var(--go-fg);border-color:transparent}
+.save{font-size:13px;color:var(--muted);flex-basis:100%}
+.save[data-s="saved"]{color:var(--go-fg)} .save[data-s="error"]{color:var(--stop-fg)}
+.map{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.map span{padding:5px 11px;border-radius:14px;font-size:14px;border:1px solid var(--line)}
+.map .done{background:var(--go-bg);color:var(--go-fg);border-color:transparent;font-weight:600}
+.map .now{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.box{border-radius:8px;padding:12px 16px;margin:12px 0}
+.box .boxlbl{font-weight:700;margin:0 0 4px;letter-spacing:.03em;font-size:14px;text-transform:uppercase}
+.go{background:var(--go-bg);color:var(--fg)} .go .boxlbl{color:var(--go-fg)}
+.why{background:var(--why-bg);color:var(--fg)} .why .boxlbl{color:var(--why-fg)}
+.warn{background:var(--hint-bg);color:var(--fg)} .warn .boxlbl{color:var(--hint-fg)}
+.stop{background:var(--stop-bg);color:var(--fg)} .stop .boxlbl{color:var(--stop-fg)}
+.box ol,.box ul{margin:4px 0;padding-left:22px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15.5px;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-family:var(--f-body);font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+td.n{font-variant-numeric:tabular-nums;color:var(--muted);width:2em}
+.codewrap{position:relative;margin:8px 0;min-width:0}
+pre{margin:0;overflow-x:auto;white-space:pre;font-family:var(--f-mono);font-size:14px;line-height:1.5;border-radius:8px;padding:12px 14px}
+pre.code{background:var(--code-bg);color:var(--code-fg);padding-right:72px}
+pre.out{background:var(--out-bg);color:var(--out-fg);margin-bottom:10px}
+.lbl{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:8px}
+.copy{position:absolute;top:8px;right:8px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:5px;padding:4px 10px;font:600 13px var(--f-body);cursor:pointer}
+.copy:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.sec{background:var(--brand);color:var(--brand-fg);border-radius:10px;padding:14px 18px;margin:40px 0 12px;scroll-margin-top:70px}
+.sec h2{margin:0;color:var(--accent);font-size:22px}
+.sec p{margin:4px 0 0;opacity:.85;font-size:15px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:16px 0;scroll-margin-top:70px}
+.card.is-done{border-color:var(--go-fg)}
+.card h3{margin:0 0 6px;display:flex;gap:10px;align-items:center;font-size:20px}
+.card h3 label{display:flex;gap:10px;align-items:center;cursor:pointer}
+.tick{width:20px;height:20px;accent-color:var(--go-fg);flex:none}
+.tag{font-family:var(--f-mono);font-size:13px;background:var(--brand);color:var(--brand-fg);border-radius:5px;padding:1px 7px}
+details{margin:6px 0}
+summary{cursor:pointer;font-weight:700;padding:8px 12px;border-radius:6px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ "} details[open]>summary::before{content:"▾ "}
+details.hint>summary{background:var(--hint-bg);color:var(--hint-fg)}
+details.sol>summary{background:var(--stop-bg);color:var(--stop-fg)}
+details>div{padding:4px 4px 4px 12px}
+.rate{display:flex;gap:6px;flex-wrap:wrap}
+.rate input{position:absolute;opacity:0;pointer-events:none}
+.rate label{border:1px solid var(--line);border-radius:6px;padding:4px 12px;cursor:pointer;font-variant-numeric:tabular-nums;background:var(--surface)}
+.rate input:checked+label{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.rate input:focus-visible+label{outline:3px solid var(--link);outline-offset:2px}
+.reset{background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.reset.armed{border-color:var(--stop-fg);color:var(--stop-fg)}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+@media (max-width:480px){body{font-size:16px} pre{font-size:13px}}
+body{margin:0}</style></head><body><main class="wrap"><div class="prog" role="region" aria-label="Progress"><span class="count"><span id="done">0</span> / 6 done</span><div class="bar" aria-hidden="true"><i id="barfill"></i></div><nav class="jump" aria-label="Jump to section"><a href="#secA" data-sec="A">A</a><a href="#secB" data-sec="B">B</a><a href="#secC" data-sec="C">C</a></nav><span class="save" id="save" data-s="wait">Checking whether this browser can save your progress…</span></div>
+<p class="sub"><a href="../../">&larr; All COP1047C practice pages</a></p><h1>Exam 3 Study Set: Lab-Style Problems</h1><p class="sub">COP1047C Intro to Python · Miami Dade College · 6 exercises, two for each kind of lab problem on Exam 3. Each one is a new scenario that practices the same skills as the matching Exam 3 lab. Every sample run and solution here was produced by running the code on Python 3.12. Your checkmarks and self-ratings save in this browser, so you can close the page and pick up where you left off.</p>
+<h2>What's covered</h2><div class="map"><span>A · Split, convert and filter</span><span>B · A function and a Y/N loop</span><span>C · Validate with raise and except</span></div><p>Each section matches one kind of lab problem on Exam 3. The first exercise in each section follows that kind of lab closely. The second one changes a piece of it, so you practice the idea, not one exact program. Match the sample output: prompts are <code>print()</code> lines, so your typing goes on the line below, and the blank lines come from <code>\n</code> at the start of a string.</p><p>Want more practice by topic? See the practice pages for <a href="../chapter-06-functions-part-1-practice/">Chapter 6 Part 1</a>, <a href="../chapter-06-functions-part-2-practice/">Part 2</a> and <a href="../chapter-06-functions-part-3-practice/">Part 3</a>, <a href="../chapter-07-strings-practice/">Chapter 7</a> and <a href="../chapter-08-exceptions-practice/">Chapter 8</a>.</p>
+<h2>How to use this practice set</h2><div class="box go"><p class="boxlbl">Do this in Colab</p><ol><li>Open a new notebook at colab.new. Use one code cell per exercise.</li><li>Read the story and answer the <b>Think first</b> questions out loud, or as a comment, before writing code.</li><li>Copy <b>Your plan</b> into the cell. The plan is the program, written as comments. The output text is in the plan the same way the exam gives it to you.</li><li>Build one plan line at a time. Type the code under its comment and run the cell after each piece.</li><li>Compare with the <b>Target</b> run. Type the same inputs and match the output line for line, including the blank lines. Copy the output text exactly as the plan shows it.</li><li>Stuck? Open Hint 1. Still stuck after a couple of minutes? Hint 2, then Hint 3.</li><li>Open the solution last. Compare it to yours, then try the edge cases it lists.</li><li>Tick the box beside the title. Your progress saves in this browser.</li></ol></div><div class="box why"><p class="boxlbl">Why plan in comments first?</p><p>It's the order experienced programmers think in, and the same order we use when we build exercises live in class. A blank cell is hard. A to-do list is easy: each comment becomes one or two lines of code.</p></div><div class="box warn"><p class="boxlbl">Use the solutions honestly</p><p>The solutions are here so you can check your thinking, not skip it. If you open a solution before trying, close it, wait a day, and redo that exercise from a blank cell. That's what the exam will feel like.</p></div><div class="box why"><p class="boxlbl">Habits that match the exam</p><ul><li>A prompt is a <code>print()</code> line, and the <code>input()</code> right below it stays empty. Never put the prompt inside the parentheses.</li><li>The output text is given to you as comments. Copy each one exactly, and keep the <code>\n</code> at the start of a string. It prints a blank line first.</li><li>Read the Notes at the end of the story. They say what you do NOT have to handle, and sometimes they give a hint.</li><li>Use only what we learned in class and/or the covered portions of zyBooks Chapters 1 to 8. Everything in these solutions stays inside that.</li><li>Run your program on the sample input, then compare your output with the target one line at a time.</li></ul></div>
+<h3>The thinking order, for every exercise</h3><div class="tablewrap"><table><thead><tr><th></th><th>Step</th><th>Ask yourself</th></tr></thead><tbody><tr><td class="n">1</td><td><b>Restate</b></td><td>What goes in, what comes out, what are the rules? Look at the target run.</td></tr><tr><td class="n">2</td><td><b>Plan in comments</b></td><td>3 to 8 # lines, in order. Imports go first.</td></tr><tr><td class="n">3</td><td><b>Imports and constants</b></td><td>import random? Fixed values in ALL_CAPS?</td></tr><tr><td class="n">4</td><td><b>Inputs and starting variables</b></td><td>int, float or text? Counters and totals start at 0 before the loop.</td></tr><tr><td class="n">5</td><td><b>Pick the structure</b></td><td>One decision (if), repeat an unknown number of times (while), a known number (for)? Does the job belong in a function? Could a line fail, so it needs try and except?</td></tr><tr><td class="n">6</td><td><b>Body, one line at a time</b></td><td>What happens on each pass? What changes so the loop can end?</td></tr><tr><td class="n">7</td><td><b>After the loop</b></td><td>Summaries print once, at the left edge.</td></tr><tr><td class="n">8</td><td><b>Test</b></td><td>The sample input first, then an edge case: 0, the boundary, an empty entry.</td></tr></tbody></table></div>
+<section class="sec" id="secA"><h2>A · Split, convert and filter</h2><p>Turn one line of typed numbers into a list, convert each piece to an int, keep only the ones that pass a test, and print them on one line.</p></section>
+<div class="box why"><p class="boxlbl">Quick refresher</p><p>split(&quot;,&quot;) cuts one line of text into a list of strings. Strings are not numbers yet, so loop over the list and turn each piece into an int. After that, a for loop with an if keeps only the numbers that pass your test. print(x, end=&quot; &quot;) keeps the results on one line.</p><div class="codewrap"><pre class="code">numbers = []
+for piece in &quot;3,0,-4&quot;.split(&quot;,&quot;):    # split gives a list of strings
+    numbers.append(int(piece))       # each string becomes an int
+for n in numbers:
+    if n &gt; 0:                        # the filter
+        print(n, end=&quot; &quot;)</pre></div></div>
+<article class="card" id="A1"><h3><label><input type="checkbox" class="tick" id="tick-A1" data-id="A1" data-sec="A"><span class="tag">A1</span>Above sea level</label></h3><p>Miami sits low, so a Miami-Dade flood office tracks how high each spot is, in feet. A negative number is below sea level, and 0 is exactly at sea level. Ask for four heights separated by commas. Turn that one line of text into a list of separate strings, then turn each string into an integer. Print the height in INCHES (feet times 12) of only the spots that are ABOVE sea level, with a single space between the results. Notes: every entry will be a whole number, and no functions or exception handling are needed.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>The user types ONE line of text with the numbers hiding inside it. <code>split(&quot;,&quot;)</code> cuts that text at each comma and gives back a list of strings.</li><li>Strings are not numbers yet. Loop over the list, use <code>int()</code> on each piece, and save the results in a second list. Do the math only after that.</li><li>Two for loops, one after the other (not nested): one to convert, one to filter and print. We know how many items are in the list, so <code>for</code> is the right loop.</li><li>The filter is one <code>if</code>: <code>height &gt; 0</code>. Zero is AT sea level, not above it, so it is left out.</li><li><code>print(height * 12, end=&quot; &quot;)</code> keeps every result on one line with a single space between them. The heading starts with <code>\n</code>, so a blank line comes first.</li></ol></div><h4>Think first</h4><ul><li>What does <code>&quot;-3,0,4,8&quot;.split(&quot;,&quot;)</code> give you: a list of numbers, or a list of text?</li><li>Why do you need <code>int()</code> before you can ask whether a height is greater than 0?</li><li>Does 0 count as above sea level? Which comparison keeps it out?</li><li>Which print comes before the loop, and which one goes inside it?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># A1 · Above sea level
+# Output text is shown below as comments. Copy/paste to appropriate areas.
+
+    # &quot;Enter four heights in feet separated by commas (-3,0,4,8):&quot;
+    # &quot;\nSpots above sea level, in inches. Results below:&quot;
+
+# PLAN
+# 1. imports: none needed
+# 2. print the prompt line, then read the typed line and split it on commas: parts = input().split(&quot;,&quot;)
+# 3. heights = [], then for each part in the list: append int(part)
+# 4. print the heading line (it starts with \n)
+# 5. for each height in heights: if it is greater than 0, print height * 12 with end=&quot; &quot;
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed -3,0,4,8</div><pre class="out">Enter four heights in feet separated by commas (-3,0,4,8):
+-3,0,4,8
+
+Spots above sea level, in inches. Results below:
+48 96 </pre><details class="hint"><summary>Hint 1</summary><div><p><code>parts = input().split(&quot;,&quot;)</code> gives a list of strings. Make an empty list, loop over <code>parts</code>, and append <code>int(part)</code> to it.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Second loop: <code>for height in heights:</code> and then <code>if height &gt; 0:</code> so only the heights above sea level get printed.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p><code>print(height * 12, end=&quot; &quot;)</code> goes inside the if. The heading print goes BEFORE that loop and starts with <code>\n</code>.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">print(&quot;Enter four heights in feet separated by commas (-3,0,4,8):&quot;)
+parts = input().split(&quot;,&quot;)
+
+heights = []
+for part in parts:
+    heights.append(int(part))
+
+print(&quot;\nSpots above sea level, in inches. Results below:&quot;)
+for height in heights:
+    if height &gt; 0:
+        print(height * 12, end=&quot; &quot;)</pre></div><div class="lbl">Edge case · typed -5,0,-1,-8 · no spot is above sea level</div><pre class="out">Enter four heights in feet separated by commas (-3,0,4,8):
+-5,0,-1,-8
+
+Spots above sea level, in inches. Results below:</pre><div class="lbl">Edge case · typed 2, 0, -1, 7 · spaces after the commas still work, because int() ignores spaces around a number</div><pre class="out">Enter four heights in feet separated by commas (-3,0,4,8):
+2, 0, -1, 7
+
+Spots above sea level, in inches. Results below:
+24 84 </pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Convert before you compare. Skip the <code>int()</code> step and <code>height &gt; 0</code> stops with <code>TypeError: &#x27;&gt;&#x27; not supported between instances of &#x27;str&#x27; and &#x27;int&#x27;</code>. The test is <code>&gt; 0</code>, so a height of 0 is left out, which is what the story asks for. The target run also ends with a space after the last number, because <code>end=&quot; &quot;</code> adds one after every number.</p></div></div></details></article>
+<article class="card" id="A2"><h3><label><input type="checkbox" class="tick" id="tick-A2" data-id="A2" data-sec="A"><span class="tag">A2</span>Rain gauge log</label></h3><p>A weather club in Fort Lauderdale logs five daily rain gauge readings in millimeters, as whole numbers. A reading of 0 is a dry day, and -1 means the gauge was broken that day. This gauge reads 2 mm low, so for every RAINY day (a reading above 0) the club wants the corrected reading: the reading plus 2. Ask for the five readings separated by commas and convert them. Print the corrected readings of the rainy days on one line, separated by single spaces. Then, on the next line, print how many rainy days there were. Notes: every entry will be a whole number, and no functions or exception handling are needed.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>The first half is the same as A1: split the typed line on commas into strings, then convert each piece with <code>int()</code>. There are five readings this time, but the code doesn&#x27;t change, because the loops follow the list.</li><li>The new piece is a COUNT of the rainy days. A counter starts at 0 BEFORE the loop that finds them, goes up by 1 inside the <code>if</code>, and is reported AFTER the loop.</li><li>For each rainy day the <code>if</code> does two jobs: print the corrected reading, and add 1 to the counter. Both lines go inside the <code>if</code>.</li><li><code>print(reading + 2, end=&quot; &quot;)</code> leaves the cursor on the same line, so the count needs its own line. A plain <code>print()</code> after the loop ends the line of numbers.</li><li>Dry days (0) and broken-gauge days (-1) fail the test, so they are neither printed nor counted.</li></ol></div><h4>Think first</h4><ul><li>Where does the counter start, and which line adds to it?</li><li>What happens to the count if <code>rainy += 1</code> is lined up with the <code>if</code> instead of inside it?</li><li>Why do you need a plain <code>print()</code> after the loop?</li><li>What should print if there are no rainy days at all?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># A2 · Rain gauge log
+# Output text is shown below as comments. Copy/paste to appropriate areas.
+
+    # &quot;Enter five readings in mm separated by commas (0,12,-1,30,5):&quot;
+    # &quot;\nRainy days, corrected readings in mm. Results below:&quot;
+    # &quot;Rainy days:&quot;
+
+# PLAN
+# 1. imports: none needed
+# 2. print the prompt line, then read the typed line and split it on commas into a list of strings
+# 3. readings = [], then for each part in the list: append int(part)
+# 4. rainy = 0 before the loop, then print the heading line (it starts with \n)
+# 5. for each reading: if it is more than 0, print reading + 2 with end=&quot; &quot; and add 1 to rainy
+# 6. AFTER the loop: print() to end the line, then print the label and the count
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 0,12,-1,30,5</div><pre class="out">Enter five readings in mm separated by commas (0,12,-1,30,5):
+0,12,-1,30,5
+
+Rainy days, corrected readings in mm. Results below:
+14 32 7 
+Rainy days: 3</pre><details class="hint"><summary>Hint 1</summary><div><p>Use the same first half as A1: <code>parts = input().split(&quot;,&quot;)</code>, an empty list, and a loop that appends <code>int(part)</code>. Put <code>rainy = 0</code> right before the loop that prints.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Inside the <code>if reading &gt; 0:</code> you need two lines: <code>print(reading + 2, end=&quot; &quot;)</code> and <code>rainy += 1</code>.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>After the loop, <code>print()</code> ends the line of numbers. Then <code>print(&quot;Rainy days:&quot;, rainy)</code>.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">print(&quot;Enter five readings in mm separated by commas (0,12,-1,30,5):&quot;)
+parts = input().split(&quot;,&quot;)
+
+readings = []
+for part in parts:
+    readings.append(int(part))
+
+rainy = 0
+print(&quot;\nRainy days, corrected readings in mm. Results below:&quot;)
+for reading in readings:
+    if reading &gt; 0:
+        print(reading + 2, end=&quot; &quot;)
+        rainy += 1
+
+print()
+print(&quot;Rainy days:&quot;, rainy)</pre></div><div class="lbl">Edge case · typed -1,0,0,-1,0 · no rainy days</div><pre class="out">Enter five readings in mm separated by commas (0,12,-1,30,5):
+-1,0,0,-1,0
+
+Rainy days, corrected readings in mm. Results below:
+
+Rainy days: 0</pre><div class="lbl">Edge case · typed 9,9,9,9,9 · every day is rainy</div><pre class="out">Enter five readings in mm separated by commas (0,12,-1,30,5):
+9,9,9,9,9
+
+Rainy days, corrected readings in mm. Results below:
+11 11 11 11 11 
+Rainy days: 5</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Keep the counter update INSIDE the <code>if</code>. If <code>rainy += 1</code> is lined up with the <code>if</code> instead, it runs for every reading and the sample run ends with <code>Rainy days: 5</code>. And the plain <code>print()</code> is what puts the count on its own line.</p></div></div></details></article>
+<section class="sec" id="secB"><h2>B · A function that analyzes, and a Y/N loop</h2><p>The main program collects the text, a function analyzes it and prints, and a loop repeats while the answer is y or Y.</p></section>
+<div class="box why"><p class="boxlbl">Quick refresher</p><p>A function gets what it needs through a parameter, so input() stays in the main program. len() counts characters, a slice like word[0:3] stops BEFORE its end number, and isalnum() is True only when the text is all letters and numbers. input().strip().upper() cleans a typed answer so y, Y and &quot; y &quot; all become Y.</p><div class="codewrap"><pre class="code">def describe(word):                 # the word comes in as a parameter
+    print(len(word), word[0:3])     # length, then the first three characters
+    if not word.isalnum():          # isalnum() is True for ONLY letters and numbers
+        print(&quot;has symbols&quot;)
+
+describe(&quot;Hi5!&quot;)
+print(&quot;Keep going? (y or n)&quot;)
+answer = input().strip().upper()    # &quot; y &quot; becomes &quot;Y&quot;</pre></div></div>
+<article class="card" id="B1"><h3><label><input type="checkbox" class="tick" id="tick-B1" data-id="B1" data-sec="B"><span class="tag">B1</span>Username check</label></h3><p>A gym in Doral lets members pick a username at a kiosk. Write a function that takes ONE username and prints three things: how many characters it has, its first three characters (use slicing), and a warning if it contains any symbol. A symbol is anything that is not a letter or a number, and that includes a space. The main program asks for the username, sends it to the function, and then asks whether to check another one. Keep running as long as the answer is y or Y: convert the answer to uppercase so you only have to check for Y. Notes: collect the input in the main program, not in the function. Python can check whether text has only letters and numbers, and you want the opposite of that. All input is valid, with at least three characters, and no exception handling is needed.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Two jobs, so two places. The FUNCTION analyzes one username and prints. The MAIN program does the asking and the repeating.</li><li>The function gets the username through a parameter, so <code>input()</code> stays in main. It prints its own lines, so it doesn&#x27;t need a <code>return</code>.</li><li>The first three characters are the slice <code>[0:3]</code>: it starts at 0 and stops BEFORE 3.</li><li><code>isalnum()</code> is True when the text has ONLY letters and numbers. We want to warn about the opposite, so the test is <code>if not name.isalnum():</code>.</li><li>The repeat is the play-again loop from Part 2: <code>again = &quot;Y&quot;</code> before the while, and ask again as the last thing inside it. <code>input().strip().upper()</code> turns y, Y or &quot; y &quot; into Y.</li><li>Several text lines start with <code>\n</code>. Each one prints a blank line first, and that is where the blank lines in the target run come from, even the one at the very top.</li></ol></div><h4>Think first</h4><ul><li>Which lines belong to the function, and which stay in the main program?</li><li>What slice gives the first three characters of &quot;miami305&quot;? Where does the slice stop?</li><li><code>isalnum()</code> answers &quot;only letters and numbers?&quot; How do you flip that answer?</li><li>What value does <code>again</code> need before the loop, and why convert the answer to uppercase?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># B1 · Username check
+# Output text is shown below as comments. Copy/paste to appropriate areas.
+
+    # &quot;\nEnter a username:&quot;
+    # &quot;\nUsername length:&quot;
+    # &quot;Starts with:&quot;
+    # &quot;This username has symbols.&quot;
+    # &quot;\nCheck another username?&quot;
+
+# PLAN
+# 1. imports: none needed
+# 2. def check_username(name): print the length, then the first three characters (a slice), then the warning if name is NOT isalnum()
+# 3. main: again = &quot;Y&quot; so the loop runs the first time
+# 4. while again == &quot;Y&quot;: print the prompt line, username = input(), then call check_username(username)
+# 5.     print the question line, then again = input().strip().upper()
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed miami305 | y | sun&amp;sand | n</div><pre class="out">
+
+Enter a username:
+miami305
+
+Username length: 8
+Starts with: mia
+
+Check another username?
+y
+
+Enter a username:
+sun&amp;sand
+
+Username length: 8
+Starts with: sun
+This username has symbols.
+
+Check another username?
+n</pre><details class="hint"><summary>Hint 1</summary><div><p><code>def check_username(name):</code> and inside it <code>print(&quot;\nUsername length:&quot;, len(name))</code>. The username comes in as the parameter.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Next <code>print(&quot;Starts with:&quot;, name[0:3])</code>, then <code>if not name.isalnum():</code> with the warning inside it.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>Main: <code>again = &quot;Y&quot;</code>, <code>while again == &quot;Y&quot;:</code>, then the prompt print, <code>username = input()</code>, <code>check_username(username)</code>, the question print, and <code>again = input().strip().upper()</code> as the last line inside the loop.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">def check_username(name):
+    print(&quot;\nUsername length:&quot;, len(name))
+    print(&quot;Starts with:&quot;, name[0:3])
+    if not name.isalnum():
+        print(&quot;This username has symbols.&quot;)
+
+again = &quot;Y&quot;
+while again == &quot;Y&quot;:
+    print(&quot;\nEnter a username:&quot;)
+    username = input()
+    check_username(username)
+    print(&quot;\nCheck another username?&quot;)
+    again = input().strip().upper()</pre></div><div class="lbl">Edge case · typed key west | N · a space counts as a symbol, and a capital N ends the loop</div><pre class="out">
+
+Enter a username:
+key west
+
+Username length: 8
+Starts with: key
+This username has symbols.
+
+Check another username?
+N</pre><div class="lbl">Edge case · typed abc | yes · the word yes is not the letter y</div><pre class="out">
+
+Enter a username:
+abc
+
+Username length: 3
+Starts with: abc
+
+Check another username?
+yes</pre><div class="box warn"><p class="boxlbl">Watch out</p><p><code>isalnum()</code> is True for clean text, so the warning needs <code>not</code>. Without it, <code>miami305</code> gets the warning (<code>This username has symbols.</code>) and <code>sun&amp;sand</code> gets nothing. And if you skip <code>.upper()</code> on the answer, the check <code>again == &quot;Y&quot;</code> fails for a lowercase y: the sample run stops after the first username.</p></div></div></details></article>
+<article class="card" id="B2"><h3><label><input type="checkbox" class="tick" id="tick-B2" data-id="B2" data-sec="B"><span class="tag">B2</span>License plate check</label></h3><p>A parking app in Miami Beach checks license plates at a kiosk. Drivers type plates in all kinds of ways, so in the main program clean each plate first: remove the spaces at both ends and make it uppercase. Then send the cleaned plate to a function that prints the plate on file, how many characters it has, its LAST three characters, and a warning if it contains anything that is not a letter or a number. After each plate, ask whether to check another one. Keep running as long as the answer is y or Y: convert the answer to uppercase so you only have to check for Y. Notes: input stays in the main program, every plate will have at least three characters once it is cleaned, and no exception handling is needed.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Same shape as B1: a function that analyzes one value and prints, and a main loop that asks and repeats.</li><li>The new piece is cleaning on the way in. <code>input().strip().upper()</code> does both steps in one line: <code>strip()</code> removes spaces at the two ends, and <code>upper()</code> makes capitals. Clean BEFORE calling the function, so the function always gets tidy text.</li><li>A slice with a negative start counts from the right: <code>plate[-3:]</code> is the last three characters, however long the plate is.</li><li><code>strip()</code> only trims the two ends. A space in the MIDDLE of a plate is still a symbol, so <code>isalnum()</code> is False for it.</li><li>Everything else works like B1: the <code>not</code>, the <code>again</code> loop, and the question with <code>input().strip().upper()</code>.</li></ol></div><h4>Think first</h4><ul><li>What does <code>&quot;  gator1 &quot;.strip().upper()</code> give you? Should that happen in main or in the function?</li><li>How do you write &quot;the last three characters&quot; when you don&#x27;t know how long the plate is?</li><li>Will <code>strip()</code> remove a space in the middle of a plate? Will <code>isalnum()</code> notice it?</li><li>Which answers keep the loop going: y, Y, yes, &quot; y &quot;?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># B2 · License plate check
+# Output text is shown below as comments. Copy/paste to appropriate areas.
+
+    # &quot;\nEnter a license plate:&quot;
+    # &quot;\nPlate on file:&quot;
+    # &quot;Characters:&quot;
+    # &quot;Last three:&quot;
+    # &quot;Plate has symbols. Re-enter it at the kiosk.&quot;
+    # &quot;\nCheck another plate?&quot;
+
+# PLAN
+# 1. imports: none needed
+# 2. def check_plate(plate): print the plate, its length, the last three characters (a slice from the right), then the warning if plate is NOT isalnum()
+# 3. main: again = &quot;Y&quot; so the loop runs the first time
+# 4. while again == &quot;Y&quot;: print the prompt line, then plate = input().strip().upper() and call check_plate(plate)
+# 5.     print the question line, then again = input().strip().upper()
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed &quot; gator1 &quot; | y | mia 305 | n</div><pre class="out">
+
+Enter a license plate:
+ gator1 
+
+Plate on file: GATOR1
+Characters: 6
+Last three: OR1
+
+Check another plate?
+y
+
+Enter a license plate:
+mia 305
+
+Plate on file: MIA 305
+Characters: 7
+Last three: 305
+Plate has symbols. Re-enter it at the kiosk.
+
+Check another plate?
+n</pre><details class="hint"><summary>Hint 1</summary><div><p>In main: <code>plate = input().strip().upper()</code>, then <code>check_plate(plate)</code>. The function prints the plate it received.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p><code>print(&quot;Last three:&quot;, plate[-3:])</code>. After that, <code>if not plate.isalnum():</code> with the warning inside it.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>The loop is the same as B1: <code>again = &quot;Y&quot;</code>, <code>while again == &quot;Y&quot;:</code>, and <code>again = input().strip().upper()</code> as the last line inside it.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">def check_plate(plate):
+    print(&quot;\nPlate on file:&quot;, plate)
+    print(&quot;Characters:&quot;, len(plate))
+    print(&quot;Last three:&quot;, plate[-3:])
+    if not plate.isalnum():
+        print(&quot;Plate has symbols. Re-enter it at the kiosk.&quot;)
+
+again = &quot;Y&quot;
+while again == &quot;Y&quot;:
+    print(&quot;\nEnter a license plate:&quot;)
+    plate = input().strip().upper()
+    check_plate(plate)
+    print(&quot;\nCheck another plate?&quot;)
+    again = input().strip().upper()</pre></div><div class="lbl">Edge case · typed ab-123 | N · a hyphen is a symbol</div><pre class="out">
+
+Enter a license plate:
+ab-123
+
+Plate on file: AB-123
+Characters: 6
+Last three: 123
+Plate has symbols. Re-enter it at the kiosk.
+
+Check another plate?
+N</pre><div class="lbl">Edge case · typed abc | yes · the word yes is not the letter y</div><pre class="out">
+
+Enter a license plate:
+abc
+
+Plate on file: ABC
+Characters: 3
+Last three: ABC
+
+Check another plate?
+yes</pre><div class="box warn"><p class="boxlbl">Watch out</p><p><code>strip()</code> only trims the two ends, so &quot; gator1 &quot; comes out clean, but <code>mia 305</code> still has a space inside and gets the warning. Also, <code>plate[-3:]</code> counts from the right, while <code>plate[0:3]</code> would give the FIRST three. And only y or Y keep going: <code>yes</code> becomes <code>YES</code>, which is not <code>Y</code>, so the program ends (see the last edge case).</p></div></div></details></article>
+<section class="sec" id="secC"><h2>C · Validate in a function with raise, catch in main</h2><p>A function asks and checks, and raises your own ValueError for a bad value. The main program keeps asking until a good value comes back, then reports.</p></section>
+<div class="box why"><p class="boxlbl">Quick refresher</p><p>raise ValueError(&quot;message&quot;) ends the function on the spot, and the return line only runs when the check passed. The code that CALLED the function does the catching: try around the call, except ValueError as err, then print(err). int() raises its own ValueError on text, and the same except catches that one too.</p><div class="codewrap"><pre class="code">def get_age():
+    print(&quot;Enter an age:&quot;)
+    age = int(input())
+    if age &lt; 0:
+        raise ValueError(&quot;Age can&#x27;t be negative.&quot;)
+    return age
+
+try:
+    age = get_age()
+except ValueError as err:
+    print(err)</pre></div></div>
+<article class="card" id="C1"><h3><label><input type="checkbox" class="tick" id="tick-C1" data-id="C1" data-sec="C"><span class="tag">C1</span>Seat finder</label></h3><p>A community theater in Coral Gables has 30 seats in every row, numbered 1 to 30. The constant LAST_SEAT = 30 is given in the plan. Write a function that asks for a seat number and makes sure it is from 1 to LAST_SEAT. If it isn&#x27;t, raise a custom exception with the error text shown in the output. A valid seat is sent back to the main program. In the main program, keep calling the function while the user keeps typing bad seats, and print the right error message each time. When a good seat arrives, print how many seats are from your seat to the end of the row, two ways: first not counting your own seat, then counting it. Notes: the part of your program that catches your own exception also catches the error int() raises on text, because both are a ValueError. No other kinds of exceptions need to be checked.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Two parts, two jobs. The FUNCTION asks and checks. The MAIN program loops and reports. The function never prints the error: it RAISES it.</li><li><code>raise ValueError(&quot;text&quot;)</code> stops the function on the spot, so the line <code>return seat</code> only runs when the seat passed the check.</li><li>Typing letters makes <code>int()</code> raise a ValueError by itself, before your own check even runs. Your raise is also a ValueError, so ONE <code>except ValueError as err:</code> handles both, and <code>print(err)</code> shows whichever message it got.</li><li>The <code>try</code> goes around the CALL in main, inside a loop. A flag (<code>asking</code>) becomes False only AFTER the function returned, so a raise skips that line and the loop asks again.</li><li>Out of range means too small OR too big, so the check joins two tests with <code>or</code>.</li><li>After the loop: the first answer is <code>LAST_SEAT - seat</code> and the second is that number plus 1. The heading starts with <code>\n</code> for a blank line.</li></ol></div><h4>Think first</h4><ul><li>Which two kinds of bad input can reach your except? Where does each message come from?</li><li>Why does the <code>try</code> go around <code>get_seat()</code> in main, and not inside the function?</li><li>What does the loop do the moment the function raises?</li><li>Write &quot;outside 1 to LAST_SEAT&quot; in English first, then in Python.</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># C1 · Seat finder
+# Output text is shown below as comments. Copy/paste to appropriate areas.
+
+    # &quot;Enter your seat number (ex: 12):&quot;
+    # &quot;Error: Invalid Seat. Try again.&quot;
+    # &quot;\nSeats to the end of your row, two ways:&quot;
+
+# Given data:
+LAST_SEAT = 30   # Run as given
+
+# PLAN
+# 1. imports: none needed
+# 2. def get_seat(): print the prompt line, then seat = int(input())
+# 3.     if seat is below 1 or above LAST_SEAT: raise a ValueError with the error text
+# 4.     return seat
+# 5. main: asking = True, then while asking: try: seat = get_seat() and asking = False
+# 6.     except ValueError as err: print(err)
+# 7. AFTER the loop: print the heading line, then LAST_SEAT - seat, the word or, and that number plus 1
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 0 | 31 | twelve | 12</div><pre class="out">Enter your seat number (ex: 12):
+0
+Error: Invalid Seat. Try again.
+Enter your seat number (ex: 12):
+31
+Error: Invalid Seat. Try again.
+Enter your seat number (ex: 12):
+twelve
+invalid literal for int() with base 10: &#x27;twelve&#x27;
+Enter your seat number (ex: 12):
+12
+
+Seats to the end of your row, two ways:
+18 or 19</pre><details class="hint"><summary>Hint 1</summary><div><p><code>def get_seat():</code>, then the prompt print and <code>seat = int(input())</code>. Next <code>if seat &lt; 1 or seat &gt; LAST_SEAT:</code> with <code>raise ValueError(&quot;Error: Invalid Seat. Try again.&quot;)</code> inside it. The last line of the function is <code>return seat</code>.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>In main: <code>asking = True</code>, <code>while asking:</code>, then <code>try:</code> with <code>seat = get_seat()</code> and <code>asking = False</code> inside it. Then <code>except ValueError as err:</code> and <code>print(err)</code>.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>After the loop: print the heading, then <code>to_end = LAST_SEAT - seat</code> and <code>print(to_end, &quot;or&quot;, to_end + 1)</code>.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">LAST_SEAT = 30
+
+def get_seat():
+    print(&quot;Enter your seat number (ex: 12):&quot;)
+    seat = int(input())
+    if seat &lt; 1 or seat &gt; LAST_SEAT:
+        raise ValueError(&quot;Error: Invalid Seat. Try again.&quot;)
+    return seat
+
+asking = True
+while asking:
+    try:
+        seat = get_seat()
+        asking = False
+    except ValueError as err:
+        print(err)
+
+to_end = LAST_SEAT - seat
+print(&quot;\nSeats to the end of your row, two ways:&quot;)
+print(to_end, &quot;or&quot;, to_end + 1)</pre></div><div class="lbl">Edge case · typed 30 · the last seat is valid</div><pre class="out">Enter your seat number (ex: 12):
+30
+
+Seats to the end of your row, two ways:
+0 or 1</pre><div class="lbl">Edge case · typed 1 · the first seat is valid</div><pre class="out">Enter your seat number (ex: 12):
+1
+
+Seats to the end of your row, two ways:
+29 or 30</pre><div class="lbl">Edge case · typed (Enter on a blank line) | 12.5 | 7 · a blank entry, then a decimal, then a good seat</div><pre class="out">Enter your seat number (ex: 12):
+
+invalid literal for int() with base 10: &#x27;&#x27;
+Enter your seat number (ex: 12):
+12.5
+invalid literal for int() with base 10: &#x27;12.5&#x27;
+Enter your seat number (ex: 12):
+7
+
+Seats to the end of your row, two ways:
+23 or 24</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Join the two bad ranges with <code>or</code>. No seat is below 1 AND above <code>LAST_SEAT</code>, so <code>seat &lt; 1 and seat &gt; LAST_SEAT</code> is never true and bad seats slip through: typing 0 is accepted and the program prints <code>30 or 31</code>, with no error at all.</p></div></div></details></article>
+<article class="card" id="C2"><h3><label><input type="checkbox" class="tick" id="tick-C2" data-id="C2" data-sec="C"><span class="tag">C2</span>Airboat tour group</label></h3><p>An Everglades airboat company takes groups of 4 to 12 people, and a tour costs $35 per person. The three constants MIN_GROUP, MAX_GROUP and TOUR_PRICE are given in the plan. Write a function that asks for the number of people in the group. If the number is below the minimum, raise a custom exception with one message. If it is above the maximum, raise a custom exception with a different message. A valid group size is sent back to the main program. In the main program, keep calling the function until a valid size comes back, and print the message each time. Then print the group&#x27;s total price. Notes: your except block can print both your own messages and the error Python raises when int() gets text, because both are a ValueError. No other kinds of exceptions need to be checked.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Same shape as C1: the function asks, checks and raises, and main loops and reports. The new piece is TWO different messages, so the function has two checks.</li><li>Too small and too big each get their own <code>raise ValueError(...)</code> with their own text. An if / elif keeps them apart: below <code>MIN_GROUP</code>, or else above <code>MAX_GROUP</code>.</li><li><code>except ValueError as err:</code> plus <code>print(err)</code> prints whichever message was raised, and Python&#x27;s own message when someone types a word.</li><li>The given values are constants in ALL_CAPS, so the numbers aren&#x27;t scattered through your code. The price comes from <code>TOUR_PRICE</code>.</li><li>The total is the size times the price. The heading starts with <code>\n</code>, and the money line is an f-string with a dollar sign in front: <code>f&quot;${size * TOUR_PRICE}&quot;</code>.</li></ol></div><h4>Think first</h4><ul><li>How many different messages can the user see in one run? Where does each one come from?</li><li>Can one if / elif ladder hold both checks? Which test goes first?</li><li>What is different between <code>print(err)</code> and printing a message you typed in the except block?</li><li>What should the last line look like for a group of 8?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># C2 · Airboat tour group
+# Output text is shown below as comments. Copy/paste to appropriate areas.
+
+    # &quot;How many people are in your group (4 to 12)?&quot;
+    # &quot;Too small: a tour needs at least 4 people.&quot;
+    # &quot;Too big: a boat holds at most 12 people.&quot;
+    # &quot;\nYour group&#x27;s total price:&quot;
+
+# Given data:
+MIN_GROUP = 4   # Run as given
+MAX_GROUP = 12   # Run as given
+TOUR_PRICE = 35   # Run as given
+
+# PLAN
+# 1. imports: none needed
+# 2. def get_group_size(): print the prompt line, then size = int(input())
+# 3.     if size is below MIN_GROUP: raise a ValueError with the too small text
+# 4.     elif size is above MAX_GROUP: raise a ValueError with the too big text
+# 5.     return size
+# 6. main: asking = True, then while asking: try: size = get_group_size() and asking = False
+# 7.     except ValueError as err: print(err)
+# 8. AFTER the loop: print the heading line, then the total as an f-string with a $ in front
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed 2 | 20 | six | 8</div><pre class="out">How many people are in your group (4 to 12)?
+2
+Too small: a tour needs at least 4 people.
+How many people are in your group (4 to 12)?
+20
+Too big: a boat holds at most 12 people.
+How many people are in your group (4 to 12)?
+six
+invalid literal for int() with base 10: &#x27;six&#x27;
+How many people are in your group (4 to 12)?
+8
+
+Your group&#x27;s total price:
+$280</pre><details class="hint"><summary>Hint 1</summary><div><p><code>def get_group_size():</code>, then the prompt print and <code>size = int(input())</code>. First check: <code>if size &lt; MIN_GROUP:</code> with <code>raise ValueError(&quot;Too small: a tour needs at least 4 people.&quot;)</code> inside it.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p><code>elif size &gt; MAX_GROUP:</code> with the second message, then <code>return size</code> lined up with the <code>if</code>, not inside it.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>Main is the same flag loop as C1. After the loop: the heading, then <code>print(f&quot;${size * TOUR_PRICE}&quot;)</code>.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">MIN_GROUP = 4
+MAX_GROUP = 12
+TOUR_PRICE = 35
+
+def get_group_size():
+    print(&quot;How many people are in your group (4 to 12)?&quot;)
+    size = int(input())
+    if size &lt; MIN_GROUP:
+        raise ValueError(&quot;Too small: a tour needs at least 4 people.&quot;)
+    elif size &gt; MAX_GROUP:
+        raise ValueError(&quot;Too big: a boat holds at most 12 people.&quot;)
+    return size
+
+asking = True
+while asking:
+    try:
+        size = get_group_size()
+        asking = False
+    except ValueError as err:
+        print(err)
+
+print(&quot;\nYour group&#x27;s total price:&quot;)
+print(f&quot;${size * TOUR_PRICE}&quot;)</pre></div><div class="lbl">Edge case · typed 4 · the smallest group</div><pre class="out">How many people are in your group (4 to 12)?
+4
+
+Your group&#x27;s total price:
+$140</pre><div class="lbl">Edge case · typed 12 · the biggest group</div><pre class="out">How many people are in your group (4 to 12)?
+12
+
+Your group&#x27;s total price:
+$420</pre><div class="lbl">Edge case · typed 3.5 | 13 | 9 · a decimal, then too big, then a good size</div><pre class="out">How many people are in your group (4 to 12)?
+3.5
+invalid literal for int() with base 10: &#x27;3.5&#x27;
+How many people are in your group (4 to 12)?
+13
+Too big: a boat holds at most 12 people.
+How many people are in your group (4 to 12)?
+9
+
+Your group&#x27;s total price:
+$315</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>The <code>return size</code> line has to be lined up with the <code>if</code>, after both checks. Leave it out and the function hands back <code>None</code>, the loop ends, and the last line stops with <code>TypeError: unsupported operand type(s) for *: &#x27;NoneType&#x27; and &#x27;int&#x27;</code>. Also print <code>err</code> in the except block instead of typing your own message there, so each problem shows its own text.</p></div></div></details></article>
+<h2 id="rate">Rate yourself</h2><p>Give each section a 1 (shaky), 2 (okay) or 3 (solid). Your ratings save with your progress. Any 1s? Redo that section's last exercise tomorrow from a blank cell, without the plan. That's the real test, and those are the sections to bring questions about to the Exam 3 review.</p>
+<div class="tablewrap"><table><thead><tr><th>Section</th><th>Topic</th><th>Your rating</th></tr></thead><tbody><tr><td><b>A</b></td><td>Split, convert and filter</td><td><div class="rate" role="radiogroup" aria-label="Rating for section A"><input type="radio" name="rate-A" id="rate-A-1" value="1" data-sec="A"><label for="rate-A-1">1</label><input type="radio" name="rate-A" id="rate-A-2" value="2" data-sec="A"><label for="rate-A-2">2</label><input type="radio" name="rate-A" id="rate-A-3" value="3" data-sec="A"><label for="rate-A-3">3</label></div></td></tr><tr><td><b>B</b></td><td>A function and a Y/N loop</td><td><div class="rate" role="radiogroup" aria-label="Rating for section B"><input type="radio" name="rate-B" id="rate-B-1" value="1" data-sec="B"><label for="rate-B-1">1</label><input type="radio" name="rate-B" id="rate-B-2" value="2" data-sec="B"><label for="rate-B-2">2</label><input type="radio" name="rate-B" id="rate-B-3" value="3" data-sec="B"><label for="rate-B-3">3</label></div></td></tr><tr><td><b>C</b></td><td>Validate with raise and except</td><td><div class="rate" role="radiogroup" aria-label="Rating for section C"><input type="radio" name="rate-C" id="rate-C-1" value="1" data-sec="C"><label for="rate-C-1">1</label><input type="radio" name="rate-C" id="rate-C-2" value="2" data-sec="C"><label for="rate-C-2">2</label><input type="radio" name="rate-C" id="rate-C-3" value="3" data-sec="C"><label for="rate-C-3">3</label></div></td></tr></tbody></table></div>
+<div class="box why"><p class="boxlbl">Before the exam</p><ul><li>Redo any exercise you rated a 1, from a blank cell.</li><li>Say the thinking order out loud on every problem: restate, plan, imports and constants, inputs, structure, body, after the loop, test.</li><li>Know the traps: converting with <code>int()</code> before you compare, <code>not</code> in front of <code>isalnum()</code>, a slice that stops BEFORE its end number, <code>or</code> (not <code>and</code>) for a value outside a range, <code>raise</code> inside the function and <code>try</code> around the call, and a missing <code>return</code>.</li></ul></div>
+<p><button class="reset" id="reset" type="button">Reset my progress</button></p>
+<p class="sub">Progress is stored only in this browser on this device. A different browser, a private window or clearing your browsing data starts fresh.</p></main><script>
+(function(){
+const KEY="cop1047c-exam3-study-v1";
+const ticks=[...document.querySelectorAll('.tick')];
+const radios=[...document.querySelectorAll('.rate input')];
+const saveEl=document.getElementById('save');
+let state={done:{},ratings:{}}, canSave=false;
+function setStatus(s,m){saveEl.dataset.s=s;saveEl.textContent=m;}
+function render(){
+  ticks.forEach(t=>{t.checked=!!state.done[t.dataset.id];t.closest('.card').classList.toggle('is-done',t.checked);});
+  radios.forEach(r=>{r.checked=String(state.ratings[r.dataset.sec]||'')===r.value;});
+  const n=ticks.filter(t=>t.checked).length;
+  document.getElementById('done').textContent=n;
+  document.getElementById('barfill').style.width=(100*n/ticks.length)+'%';
+  document.querySelectorAll('.jump a').forEach(a=>{const ts=ticks.filter(t=>t.dataset.sec===a.dataset.sec);a.classList.toggle('full',ts.length>0&&ts.every(t=>t.checked));});
+}
+function save(){
+  render();
+  if(!canSave) return;
+  try{localStorage.setItem(KEY,JSON.stringify(state));setStatus('saved','Saved in this browser');}
+  catch(e){canSave=false;setStatus('error','This browser stopped saving. Your checkmarks last until you close the page.');}
+}
+try{
+  const raw=localStorage.getItem(KEY);
+  if(raw){const d=JSON.parse(raw);state={done:Object.assign({},d.done||{}),ratings:Object.assign({},d.ratings||{})};}
+  localStorage.setItem(KEY+'-test','1');localStorage.removeItem(KEY+'-test');
+  canSave=true;setStatus('saved',raw?'Progress loaded from this browser':'Progress saves in this browser');
+}catch(e){setStatus('local','This browser is blocking saving (private window?). Your checkmarks last until you close the page.');}
+ticks.forEach(t=>t.addEventListener('change',()=>{if(t.checked) state.done[t.dataset.id]=true; else delete state.done[t.dataset.id]; save();}));
+radios.forEach(r=>r.addEventListener('change',()=>{state.ratings[r.dataset.sec]=Number(r.value);save();}));
+const btn=document.getElementById('reset');let armed=false;
+btn.addEventListener('click',()=>{
+  if(!armed){armed=true;btn.classList.add('armed');btn.textContent='Tap again to clear every checkmark and rating';setTimeout(()=>{armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';},4000);return;}
+  armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';state={done:{},ratings:{}};save();
+});
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
+  const pre=b.parentElement.querySelector('pre');const t=pre.innerText;
+  const done=m=>{b.textContent=m;setTimeout(()=>b.textContent='Copy',1400);};
+  const sel=()=>{const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);done('Selected: press Ctrl+C');};
+  try{navigator.clipboard.writeText(t).then(()=>done('Copied'),sel);}catch(e){sel();}
+}));
+render();
+})();
+</script></body></html>
