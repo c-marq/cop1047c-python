@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Knowledge Pillars Start Here · COP1047C</title><meta name="description" content="Sign up for Knowledge Pillars, join the COP1047C classroom, learn how one objective works, and book the Python Coding Specialist certification exam."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:wght@400;600;700&display=swap"><style>
+/* Layout: one reading column; sticky progress strip; each exercise is a worksheet card with plan, target, hints, solution */
+:root{
+ --bg:#F6F7F9; --surface:#FFFFFF; --fg:#1C2433; --muted:#5A6577; --line:#DCE1E8;
+ --brand:#1B2A41; --brand-fg:#FFFFFF; --accent:#F5B82E; --accent-ink:#1B2A41; --link:#2F5F98;
+ --code-bg:#22272E; --code-fg:#E6EDF3; --out-bg:#EEF1F5; --out-fg:#1D232B;
+ --go-bg:#DDF3E6; --go-fg:#17663A; --why-bg:#DCEAF7; --why-fg:#1A4C78;
+ --hint-bg:#FCF3D9; --hint-fg:#6E5606; --stop-bg:#F8DDDA; --stop-fg:#8E2A20;
+ --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+ --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+ --f-mono:"JetBrains Mono", ui-monospace, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}}
+:root[data-theme="dark"]{
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:17px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding-inline:18px;padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.2}
+h1{font-size:clamp(28px,5vw,40px);margin:26px 0 6px;font-weight:700}
+h2{font-size:24px;margin:38px 0 10px}
+h4{font-size:16px;margin:16px 0 6px;font-family:var(--f-body);font-weight:700;letter-spacing:.02em}
+a{color:var(--link)}
+p{margin:8px 0}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--out-bg);color:var(--out-fg);padding:1px 6px;border-radius:4px}
+.sub{color:var(--muted);font-size:15px;max-width:65ch}
+.prog{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:2px solid var(--accent);padding-block:10px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.prog .count{font-weight:700;font-variant-numeric:tabular-nums}
+.bar{flex:1 1 140px;height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--go-fg);transition:width .3s}
+.jump{display:flex;gap:4px;flex-wrap:wrap}
+.jump a{font-size:13px;text-decoration:none;color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:1px 9px;font-variant-numeric:tabular-nums}
+.jump a.full{background:var(--go-bg);color:var(--go-fg);border-color:transparent}
+.save{font-size:13px;color:var(--muted);flex-basis:100%}
+.save[data-s="saved"]{color:var(--go-fg)} .save[data-s="error"]{color:var(--stop-fg)}
+.map{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.map span{padding:5px 11px;border-radius:14px;font-size:14px;border:1px solid var(--line)}
+.map .done{background:var(--go-bg);color:var(--go-fg);border-color:transparent;font-weight:600}
+.map .now{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.box{border-radius:8px;padding:12px 16px;margin:12px 0}
+.box .boxlbl{font-weight:700;margin:0 0 4px;letter-spacing:.03em;font-size:14px;text-transform:uppercase}
+.go{background:var(--go-bg);color:var(--fg)} .go .boxlbl{color:var(--go-fg)}
+.why{background:var(--why-bg);color:var(--fg)} .why .boxlbl{color:var(--why-fg)}
+.warn{background:var(--hint-bg);color:var(--fg)} .warn .boxlbl{color:var(--hint-fg)}
+.stop{background:var(--stop-bg);color:var(--fg)} .stop .boxlbl{color:var(--stop-fg)}
+.box ol,.box ul{margin:4px 0;padding-left:22px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15.5px;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-family:var(--f-body);font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+td.n{font-variant-numeric:tabular-nums;color:var(--muted);width:2em}
+.codewrap{position:relative;margin:8px 0;min-width:0}
+pre{margin:0;overflow-x:auto;white-space:pre;font-family:var(--f-mono);font-size:14px;line-height:1.5;border-radius:8px;padding:12px 14px}
+pre.code{background:var(--code-bg);color:var(--code-fg);padding-right:72px}
+pre.out{background:var(--out-bg);color:var(--out-fg);margin-bottom:10px}
+.lbl{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:8px}
+.copy{position:absolute;top:8px;right:8px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:5px;padding:4px 10px;font:600 13px var(--f-body);cursor:pointer}
+.copy:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.sec{background:var(--brand);color:var(--brand-fg);border-radius:10px;padding:14px 18px;margin:40px 0 12px;scroll-margin-top:70px}
+.sec h2{margin:0;color:var(--accent);font-size:22px}
+.sec p{margin:4px 0 0;opacity:.85;font-size:15px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:16px 0;scroll-margin-top:70px}
+.card.is-done{border-color:var(--go-fg)}
+.card h3{margin:0 0 6px;display:flex;gap:10px;align-items:center;font-size:20px}
+.card h3 label{display:flex;gap:10px;align-items:center;cursor:pointer}
+.tick{width:20px;height:20px;accent-color:var(--go-fg);flex:none}
+.tag{font-family:var(--f-mono);font-size:13px;background:var(--brand);color:var(--brand-fg);border-radius:5px;padding:1px 7px}
+details{margin:6px 0}
+summary{cursor:pointer;font-weight:700;padding:8px 12px;border-radius:6px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ "} details[open]>summary::before{content:"▾ "}
+details.hint>summary{background:var(--hint-bg);color:var(--hint-fg)}
+details.sol>summary{background:var(--stop-bg);color:var(--stop-fg)}
+details>div{padding:4px 4px 4px 12px}
+.rate{display:flex;gap:6px;flex-wrap:wrap}
+.rate input{position:absolute;opacity:0;pointer-events:none}
+.rate label{border:1px solid var(--line);border-radius:6px;padding:4px 12px;cursor:pointer;font-variant-numeric:tabular-nums;background:var(--surface)}
+.rate input:checked+label{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.rate input:focus-visible+label{outline:3px solid var(--link);outline-offset:2px}
+.reset{background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.reset.armed{border-color:var(--stop-fg);color:var(--stop-fg)}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+@media (max-width:480px){body{font-size:16px} pre{font-size:13px}}
+body{margin:0}
+.bluf{background:var(--brand);color:var(--brand-fg);border-radius:10px;padding:16px 20px;margin:18px 0}
+.bluf h2{color:var(--accent);margin:0 0 6px;font-size:22px}
+.bluf li{margin:5px 0} .bluf a{color:#FFE7A8}
+.facts{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 4px}
+.facts div{flex:1 1 120px;background:rgba(255,255,255,.12);border-radius:8px;padding:8px 12px;text-align:center;font-size:14px}
+.facts b{display:block;font-size:28px;font-family:var(--f-display);color:var(--accent);line-height:1.1}
+.oneline{font-weight:600}
+ol.steps,ul.steps{padding-left:24px;margin:6px 0} ol.steps li,ul.steps li{margin:5px 0}
+.chk{display:flex;gap:10px;align-items:flex-start;margin:8px 0;cursor:pointer}
+.chk input{width:20px;height:20px;margin-top:3px;accent-color:var(--go-fg);flex:none}
+table.omap td{vertical-align:top}
+table.omap ul{margin:4px 0;padding-left:18px} table.omap li{margin:3px 0}
+.pill{display:inline-block;font-size:12.5px;font-weight:700;border-radius:10px;padding:1px 9px;margin:2px 0 4px}
+.pill.now{background:var(--go-bg);color:var(--go-fg)} .pill.later{background:var(--why-bg);color:var(--why-fg)}
+.rowchk{font-size:13.5px;margin-top:8px}
+pre.out.err{background:var(--stop-bg);color:var(--stop-fg)}
+.part{font-family:var(--f-display);font-size:19px;margin:22px 0 4px}
+.sec,.card,table.omap tr{scroll-margin-top:90px}
+@media (max-width:700px){.sec,.card,table.omap tr{scroll-margin-top:130px}}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px} .cols>div{min-width:0}
+@media (max-width:700px){
+ .cols{grid-template-columns:1fr}
+ table.omap thead{display:none}
+ table.omap,table.omap tbody,table.omap tr,table.omap td{display:block;width:100%}
+ table.omap tr{border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:12px 0;background:var(--surface)}
+ table.omap td{border:0;padding:5px 0}
+ table.omap td[data-l]::before{content:attr(data-l);display:block;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+}
+body{margin:0}</style></head><body><main class="wrap"><div class="prog" role="region" aria-label="Progress"><span class="count"><span id="done">0</span> / 9 assignments done</span><div class="bar" aria-hidden="true"><i id="barfill"></i></div><nav class="jump" aria-label="Jump to a step"><a href="#s1">1</a><a href="#s2">2</a><a href="#s3">3</a><a href="#s4">4</a><a href="#s5">5</a><a href="#s6">6</a></nav><span class="save" id="save" data-s="wait">Checking whether this browser can save your progress…</span></div>
+<p class="sub"><a href="../../">&larr; All COP1047C practice pages</a></p>
+<h1>Knowledge Pillars Start Here</h1>
+<p class="sub">COP1047C Intro to Python · Miami Dade College · This page gets you signed up, shows how one objective works, tells you where to study each objective, and walks you through booking your certification exam. Every code sample and output here came from a real run on Python 3.12. Your checkmarks save in this browser, so you can close the page and pick up where you left off.</p>
+<section class="bluf" aria-labelledby="bluf-h"><h2 id="bluf-h">Bottom line up front</h2><ul>
+<li><b>Your final exam is a certification.</b> It is the Knowledge Pillars (KP) <b>Python Coding Specialist (PCS)</b> exam. Details on the <a href="https://knowledge-pillars.com/python-coding-specialist/" target="_blank" rel="noopener">official exam page</a>.</li>
+<li><b>The practice assignments count toward your grade.</b> Canvas has nine of them. See Canvas for due dates.</li>
+<li><b>Five of the nine cover what we already learned</b> (Objectives 1, 2, 3 and 4, 5 and 9, from Chapters 1 to 8), so start those now. The other four (Objectives 6, 7, 8 and 10) match Chapters 9 to 12, so do each one after we cover its chapter.</li>
+<li><b>Your next three moves:</b> sign up and join our classroom (Step 1), do one objective until you see 100% (Step 2), and book your exam early (Step 6).</li></ul>
+<div class="facts"><div><b>35</b>questions</div><div><b>50</b>minutes</div><div><b>75%</b>to pass</div></div></section>
+<section class="sec" id="s1"><h2>Step 1 · Sign up and join our classroom</h2><p>You need a KP account and a seat in our KP classroom. Join while we are in class.</p></section>
+<div class="box why"><p class="boxlbl">Already signed up?</p><p class="oneline">Check that Classrooms shows our class, then skip to Step 2.</p></div>
+<h3 class="part">Create your account (skip this if you already have one)</h3>
+<ol class="steps"><li>Go to <a href="https://platform.knowledge-pillars.com/" target="_blank" rel="noopener">platform.knowledge-pillars.com</a> and click <b>Sign Up</b>.</li><li>Enter your <b>real first and last name</b>, exactly as it appears in Canvas.</li><li>Enter your <b>MyMDC email address</b> and make up a password you will remember.</li><li>Finish the rest of the form and click the <b>Sign Up</b> button.</li></ol>
+<h3 class="part">Join our classroom (skip this if Classrooms already shows our class)</h3>
+<ol class="steps"><li>Go to <a href="https://platform.knowledge-pillars.com/" target="_blank" rel="noopener">platform.knowledge-pillars.com</a> and sign in.</li><li>Click <b>Classrooms</b> on the left menu, then click the <b>Join classroom</b> button. (It is also on the Overview page.)</li><li>Type the <b>classroom code</b>. It is in Canvas: open the <b>Certification Practice / Final Exam</b> module, then open the <b>How To Use Knowledge Pillars</b> link (it opens a document that shows the code). Copy and paste the code so you do not mistype it.</li><li>After you join, you will show as <b>pending</b> until Professor Marquez accepts you. Join while we are in class so he can accept you right away. If you join later, email him.</li></ol>
+<label class="chk"><input type="checkbox" class="tick" data-kind="step" data-id="s1"><span>I have an account and I joined our class (pending until it is accepted is fine).</span></label>
+<section class="sec" id="s2"><h2>Step 2 · Do one objective</h2><p>Each Canvas practice assignment is one objective in KP. Here is the whole loop, start to finish.</p></section>
+<ol class="steps"><li>Sign in at <a href="https://platform.knowledge-pillars.com/" target="_blank" rel="noopener">platform.knowledge-pillars.com</a>. Click <b>Practice tests</b> (under the Practice heading on the left menu). Canvas may say "Practice": on the site it is Practice tests.</li><li>Click <b>Start Test</b> on the right side.</li><li>Under <b>Practice Test</b>, click the <b>Start Test</b> button.</li><li>Under "Select questions", click <b>"Select to only show questions from…"</b>, then click the <b>Open List</b> button.</li><li>Select <b>only</b> the objective named in the Canvas assignment. (For the Objectives 3 &amp; 4 assignment, select #3 and #4. Note: #4 sometimes appears below #10 in the list, so scroll.) Click <b>Save</b>.</li><li>Click <b>Start Practice Test</b> at the bottom right. Read the instructions, then click <b>Start The Exam</b>.</li><li>Answer the question and click <b>Submit Task</b>. If you get it wrong, you can try again.</li><li>Click <b>Next Task</b> at the top for the next question. When you reach the end, click the pink <b>Finish Exam</b> button at the top right.</li><li>Look at your score. <b>Under 100%?</b> Start the practice test again and review the questions you missed. Keep going until you see 100%.</li><li>In the Canvas assignment, type this sentence exactly (use the Copy button):</li></ol>
+<div class="codewrap"><pre class="code">I have completed the required objective with a score of 100%</pre><button class="copy" type="button">Copy</button></div>
+<div class="box warn"><p class="boxlbl">Only type it when it is true</p><p>The sentence says your score was 100%. Type it after you have seen 100% on the score screen, not before.</p></div>
+<p class="sub">Questions come in different shapes: multiple choice, drag and drop, and puzzles where you put lines of code in the right order. Retries are allowed, so use them.</p>
+<section class="sec" id="s3"><h2>Step 3 · The objective map</h2><p>Nine Canvas assignments. What each covers, which chapters match it, where to study, and what to watch for.</p></section>
+<p>The "watch for" items come from Professor Marquez's KP Certification Prep Guide (<a href="https://colab.research.google.com/drive/1mD1DUc5GDUjBZ_L23ajqPgFuDDZsEcXB" target="_blank" rel="noopener">Colab notebook</a> or <a href="https://drive.google.com/file/d/12Yyruq0lRm7n8_Q9QPKWZhB8yvxqCTjt/view" target="_blank" rel="noopener">PDF</a>). Do the <span class="pill now">Start now</span> objectives first. For the <span class="pill later">After Ch N</span> ones, wait until we have covered that chapter. Due dates are in Canvas.</p>
+<div class="tablewrap"><table class="omap"><thead><tr><th>Canvas assignment</th><th>What it covers</th><th>Our chapter and where to study</th><th>Watch for</th></tr></thead><tbody><tr id="o1"><td data-l="Canvas assignment"><b>Objective 1 (Python Basics)</b><br><span class="pill now">Start now</span><label class="chk rowchk"><input type="checkbox" class="tick" data-kind="obj" data-id="o1" aria-label="Objective 1 (Python Basics): done in Knowledge Pillars and submitted in Canvas"><span>Done in KP and submitted in Canvas</span></label></td><td data-l="What it covers">What Python is, interpreter vs compiler, syntax and indentation, keywords, comments.</td><td data-l="Our chapter and where to study"><b>Ch 1 to 3</b><br>zyBooks Ch 1 to 3 and your notebooks. No practice page yet. See <a href="../../">All practice pages</a>.</td><td data-l="Watch for"><ul><li>A list changes in place. An int never does: Python makes a new one.</li><li>Python is dynamically typed (a variable can hold any type) and strongly typed (it will not add a string and an int).</li><li>A shebang (#!) must be the very first line of a script.</li></ul></td></tr><tr id="o2"><td data-l="Canvas assignment"><b>Objective 2 (Variables &amp; Operators)</b><br><span class="pill now">Start now</span><label class="chk rowchk"><input type="checkbox" class="tick" data-kind="obj" data-id="o2" aria-label="Objective 2 (Variables &amp; Operators): done in Knowledge Pillars and submitted in Canvas"><span>Done in KP and submitted in Canvas</span></label></td><td data-l="What it covers">Data types, input, scope, casting, arithmetic, string, bitwise and relational operators, precedence.</td><td data-l="Our chapter and where to study"><b>Ch 2 and 3, plus Ch 7 for string tests</b><br>zyBooks, your Ch 2, 3 and 7 notebooks.<br>Practice: <a href="../../part-3-functions-strings-exceptions/chapter-07-strings-practice/">Ch 7 Strings practice</a></td><td data-l="Watch for"><ul><li>int + float gives a float on its own. A number plus a string is a TypeError until you use int() or str().</li><li>/ always gives a float. // and % give the floor and the remainder.</li><li>Bitwise shortcuts are in the prep guide: ~3 is -4 and 3 | 9 is 11.</li></ul></td></tr><tr id="o34"><td data-l="Canvas assignment"><b>Objectives 3 &amp; 4 (Conditionals &amp; Loops)</b><br><span class="pill now">Start now</span><label class="chk rowchk"><input type="checkbox" class="tick" data-kind="obj" data-id="o34" aria-label="Objectives 3 &amp; 4 (Conditionals &amp; Loops): done in Knowledge Pillars and submitted in Canvas"><span>Done in KP and submitted in Canvas</span></label></td><td data-l="What it covers">and, or, not, if/elif/else, for with range, while, nested loops, break, continue.</td><td data-l="Our chapter and where to study"><b>Ch 4 and 5</b><br>zyBooks, your Ch 4 and 5 notebooks. In KP, select #3 and #4 (#4 sometimes appears below #10 in the list).<br>Practice: <a href="../../part-2-decisions-and-loops/exam-2-practice/">Exam 2 Practice</a>, <a href="../../part-2-decisions-and-loops/exam-2-study-set/">Exam 2 Study Set</a></td><td data-l="Watch for"><ul><li>and runs before or.</li><li>Truthiness: 0, 0.0, &quot;&quot; and [] are False. &quot;0&quot; and &quot; &quot; are True.</li><li>range(2, 5) stops before 5. A loop inside a loop finishes all its turns for every turn of the outer loop.</li></ul></td></tr><tr id="o5"><td data-l="Canvas assignment"><b>Objective 5 (Functions)</b><br><span class="pill now">Start now</span><label class="chk rowchk"><input type="checkbox" class="tick" data-kind="obj" data-id="o5" aria-label="Objective 5 (Functions): done in Knowledge Pillars and submitted in Canvas"><span>Done in KP and submitted in Canvas</span></label></td><td data-l="What it covers">def, parameters, return, default values, recursion, lambda, generators.</td><td data-l="Our chapter and where to study"><b>Ch 6</b><br>zyBooks, your Ch 6 notebooks.<br>Practice: <a href="../../part-3-functions-strings-exceptions/chapter-06-functions-part-1-practice/">Ch 6 Part 1 practice</a>, <a href="../../part-3-functions-strings-exceptions/chapter-06-functions-part-2-practice/">Part 2</a>, <a href="../../part-3-functions-strings-exceptions/chapter-06-functions-part-3-practice/">Part 3</a>, <a href="../../part-3-functions-strings-exceptions/exam-3-study-set/">Exam 3 Study Set</a></td><td data-l="Watch for"><ul><li>Type hints are hints, not rules. Python does not check them.</li><li>A recursive function needs a base case, or it never stops.</li><li>round(5.9) gives the int 6. round(5.88, 1) gives the float 5.9.</li></ul></td></tr><tr id="o6"><td data-l="Canvas assignment"><b>Objective 6 (Python Data Structures)</b><br><span class="pill later">After Ch 9</span><label class="chk rowchk"><input type="checkbox" class="tick" data-kind="obj" data-id="o6" aria-label="Objective 6 (Python Data Structures): done in Knowledge Pillars and submitted in Canvas"><span>Done in KP and submitted in Canvas</span></label></td><td data-l="What it covers">Lists, strings, tuples, sets, dictionaries, slices.</td><td data-l="Our chapter and where to study"><b>Ch 3 and Ch 9 (Lists and Dictionaries)</b><br>zyBooks and the Ch 9 notebook. See <a href="../../">All practice pages</a>.</td><td data-l="Watch for"><ul><li>sort() changes the list and gives back None. sorted() makes a new list.</li><li>append adds one item. extend adds every item of a list.</li><li>A slice stops before the end number: my_list[2:5] is items 2, 3 and 4.</li></ul></td></tr><tr id="o7"><td data-l="Canvas assignment"><b>Objective 7 (Using Modules and Packages)</b><br><span class="pill later">After Ch 11</span><label class="chk rowchk"><input type="checkbox" class="tick" data-kind="obj" data-id="o7" aria-label="Objective 7 (Using Modules and Packages): done in Knowledge Pillars and submitted in Canvas"><span>Done in KP and submitted in Canvas</span></label></td><td data-l="What it covers">import, from, the random and math modules, packages, the re module.</td><td data-l="Our chapter and where to study"><b>Ch 11 (Modules)</b><br>zyBooks and the Ch 11 notebook. See <a href="../../">All practice pages</a>.</td><td data-l="Watch for"><ul><li>import random then random.choice(x), or from random import * (no prefix).</li><li>random.randint(2, 5) can give 5. The end is included here.</li><li>Do not memorize the re (regular expression) characters.</li></ul></td></tr><tr id="o8"><td data-l="Canvas assignment"><b>Objective 8 (Classes, Objects and OOP)</b><br><span class="pill later">After Ch 10</span><label class="chk rowchk"><input type="checkbox" class="tick" data-kind="obj" data-id="o8" aria-label="Objective 8 (Classes, Objects and OOP): done in Knowledge Pillars and submitted in Canvas"><span>Done in KP and submitted in Canvas</span></label></td><td data-l="What it covers">class, __init__, self, methods, inheritance, dunder methods.</td><td data-l="Our chapter and where to study"><b>Ch 10 (Classes)</b><br>zyBooks and the Ch 10 notebook. See <a href="../../">All practice pages</a>.</td><td data-l="Watch for"><ul><li>__init__ sets up a new object. __len__ makes len() work on your class.</li><li>self is the first parameter of every method.</li><li>Keywords are lowercase: class is right, Class is a SyntaxError. Only True, False and None start with a capital.</li></ul></td></tr><tr id="o9"><td data-l="Canvas assignment"><b>Objective 9 (Exceptions)</b><br><span class="pill now">Start now</span><label class="chk rowchk"><input type="checkbox" class="tick" data-kind="obj" data-id="o9" aria-label="Objective 9 (Exceptions): done in Knowledge Pillars and submitted in Canvas"><span>Done in KP and submitted in Canvas</span></label></td><td data-l="What it covers">try and except, common errors, events, SyntaxError vs errors at run time.</td><td data-l="Our chapter and where to study"><b>Ch 8</b><br>zyBooks, your Ch 8 notebook.<br>Practice: <a href="../../part-3-functions-strings-exceptions/chapter-08-exceptions-practice/">Ch 8 Exceptions practice</a></td><td data-l="Watch for"><ul><li>int(&quot;a&quot;) is a ValueError (right type, bad value). int([1, 2, 3]) is a TypeError (wrong type).</li><li>A SyntaxError stops everything before any line runs. Other errors happen when their line runs.</li><li>try and except &quot;traps&quot; an error. Know the words event and thread too.</li></ul></td></tr><tr id="o10"><td data-l="Canvas assignment"><b>Objective 10 (I/O operations)</b><br><span class="pill later">After Ch 12</span><label class="chk rowchk"><input type="checkbox" class="tick" data-kind="obj" data-id="o10" aria-label="Objective 10 (I/O operations): done in Knowledge Pillars and submitted in Canvas"><span>Done in KP and submitted in Canvas</span></label></td><td data-l="What it covers">Open, read and write files, text vs binary.</td><td data-l="Our chapter and where to study"><b>Ch 12 (Files)</b><br>zyBooks and the Ch 12 notebook. See <a href="../../">All practice pages</a>.</td><td data-l="Watch for"><ul><li>Modes: r reads, w writes (and erases), a adds to the end, rb and wb are for binary files.</li><li>x mode makes a new file only. If the file exists you get a FileExistsError.</li><li>One practice question asks about scikit-learn. We do not cover it, so skip it.</li></ul></td></tr></tbody></table></div>
+<section class="sec" id="s4"><h2>Step 4 · Predict the output</h2><p>The tricky ones the prep guide warns about. Read the code, say the output out loud, then open the answer.</p></section>
+<p>To run one yourself, copy it into a code cell at <a href="https://colab.new" target="_blank" rel="noopener">colab.new</a>. Every output below came from running that exact code on Python 3.12.</p>
+<article class="card" id="p1"><h3><span class="tag">1</span>Mixing types <span class="sub" style="font-size:14px">· Objective 2</span></h3><div class="codewrap"><pre class="code">print(3 + 5.0)
+print(3 + &quot;3&quot;)</pre><button class="copy" type="button">Copy</button></div><details class="sol"><summary>Show the answer</summary><div><div class="lbl">What it prints</div><pre class="out">8.0</pre><div class="lbl">Then the program stops with this error</div><pre class="out err">TypeError: unsupported operand type(s) for +: &#x27;int&#x27; and &#x27;str&#x27;</pre><p><b>Why:</b> Python turns the int into a float on its own when you mix them. It never turns a number into a string, or a string into a number, on its own. Use str() or int() yourself.</p></div></details></article>
+<article class="card" id="p2"><h3><span class="tag">2</span>Division <span class="sub" style="font-size:14px">· Objective 2</span></h3><div class="codewrap"><pre class="code">print(10 / 2)
+print(10 // 2)
+print(type(10 / 2))</pre><button class="copy" type="button">Copy</button></div><details class="sol"><summary>Show the answer</summary><div><div class="lbl">What it prints</div><pre class="out">5.0
+5
+&lt;class &#x27;float&#x27;&gt;</pre><p><b>Why:</b> / always gives a float, even when it divides evenly. // gives the floor, and two ints give an int.</p></div></details></article>
+<article class="card" id="p3"><h3><span class="tag">3</span>round() <span class="sub" style="font-size:14px">· Objective 5</span></h3><div class="codewrap"><pre class="code">print(round(5.9))
+print(round(5.88, 1))
+print(round(2.5))</pre><button class="copy" type="button">Copy</button></div><details class="sol"><summary>Show the answer</summary><div><div class="lbl">What it prints</div><pre class="out">6
+5.9
+2</pre><p><b>Why:</b> With no second number, round gives an int. With 1, you get one decimal place. Bonus: Python rounds a half to the nearest even number, so 2.5 becomes 2.</p></div></details></article>
+<article class="card" id="p4"><h3><span class="tag">4</span>Type hints <span class="sub" style="font-size:14px">· Objective 5</span></h3><div class="codewrap"><pre class="code">def double(n: int) -&gt; int:
+    return n * 2
+
+print(double(&quot;ha&quot;))</pre><button class="copy" type="button">Copy</button></div><details class="sol"><summary>Show the answer</summary><div><div class="lbl">What it prints</div><pre class="out">haha</pre><p><b>Why:</b> n: int is a hint for people, not a rule. Python ran it with a string and repeated it.</p></div></details></article>
+<article class="card" id="p5"><h3><span class="tag">5</span>and before or <span class="sub" style="font-size:14px">· Objective 3</span></h3><div class="codewrap"><pre class="code">print(True or False and False)
+print((True or False) and False)</pre><button class="copy" type="button">Copy</button></div><details class="sol"><summary>Show the answer</summary><div><div class="lbl">What it prints</div><pre class="out">True
+False</pre><p><b>Why:</b> and goes first. The first line is True or (False and False), which is True. Parentheses change the order.</p></div></details></article>
+<article class="card" id="p6"><h3><span class="tag">6</span>Truthiness <span class="sub" style="font-size:14px">· Objective 3</span></h3><div class="codewrap"><pre class="code">if &quot;0&quot;:
+    print(&quot;A&quot;)
+if []:
+    print(&quot;B&quot;)
+if &quot; &quot;:
+    print(&quot;C&quot;)
+if 0.0:
+    print(&quot;D&quot;)</pre><button class="copy" type="button">Copy</button></div><details class="sol"><summary>Show the answer</summary><div><div class="lbl">What it prints</div><pre class="out">A
+C</pre><p><b>Why:</b> Any non-empty string is True, even &quot;0&quot; and &quot; &quot;. An empty list and 0.0 are False.</p></div></details></article>
+<article class="card" id="p7"><h3><span class="tag">7</span>The ternary (one-line if) <span class="sub" style="font-size:14px">· Objective 3</span></h3><div class="codewrap"><pre class="code">a = 8
+b = 3
+biggest = a if a &gt; b else b
+print(biggest)</pre><button class="copy" type="button">Copy</button></div><details class="sol"><summary>Show the answer</summary><div><div class="lbl">What it prints</div><pre class="out">8</pre><p><b>Why:</b> The shape is value_if_true if condition else value_if_false. 8 &gt; 3 is True, so biggest is a.</p></div></details></article>
+<article class="card" id="p8"><h3><span class="tag">8</span>range stops before the end <span class="sub" style="font-size:14px">· Objective 4</span></h3><div class="codewrap"><pre class="code">for i in range(2, 5):
+    print(i, end=&quot; &quot;)
+print()
+print(list(range(3)))</pre><button class="copy" type="button">Copy</button></div><details class="sol"><summary>Show the answer</summary><div><div class="lbl">What it prints</div><pre class="out">2 3 4 
+[0, 1, 2]</pre><p><b>Why:</b> range(2, 5) gives 2, 3 and 4. range(3) starts at 0 and gives 0, 1, 2.</p></div></details></article>
+<article class="card" id="p9"><h3><span class="tag">9</span>ValueError or TypeError? <span class="sub" style="font-size:14px">· Objective 9</span></h3><div class="codewrap"><pre class="code">for item in [&quot;a&quot;, [1, 2, 3]]:
+    try:
+        int(item)
+    except ValueError:
+        print(&quot;ValueError&quot;)
+    except TypeError:
+        print(&quot;TypeError&quot;)</pre><button class="copy" type="button">Copy</button></div><details class="sol"><summary>Show the answer</summary><div><div class="lbl">What it prints</div><pre class="out">ValueError
+TypeError</pre><p><b>Why:</b> int(&quot;a&quot;) is the right type (a string) with a bad value, so ValueError. int([1, 2, 3]) is the wrong type, so TypeError.</p></div></details></article>
+<article class="card" id="p10"><h3><span class="tag">10</span>sort() or sorted()? <span class="sub" style="font-size:14px">· Objective 6</span></h3><div class="codewrap"><pre class="code">nums = [3, 1, 2]
+result = nums.sort()
+print(result)
+print(nums)
+copy = sorted([9, 7, 8])
+print(copy)</pre><button class="copy" type="button">Copy</button></div><details class="sol"><summary>Show the answer</summary><div><div class="lbl">What it prints</div><pre class="out">None
+[1, 2, 3]
+[7, 8, 9]</pre><p><b>Why:</b> sort() changes the list and returns None, so result is None. sorted() leaves the original alone and returns a new list.</p></div></details></article>
+<article class="card" id="p11"><h3><span class="tag">11</span>append or extend? <span class="sub" style="font-size:14px">· Objective 6</span></h3><div class="codewrap"><pre class="code">a = [1, 2]
+a.append([3, 4])
+print(a)
+b = [1, 2]
+b.extend([3, 4])
+print(b)</pre><button class="copy" type="button">Copy</button></div><details class="sol"><summary>Show the answer</summary><div><div class="lbl">What it prints</div><pre class="out">[1, 2, [3, 4]]
+[1, 2, 3, 4]</pre><p><b>Why:</b> append adds its argument as ONE item, even a list. extend adds each item of the list.</p></div></details></article>
+<section class="sec" id="s5"><h2>Step 5 · The Exam Simulator</h2><p>A full practice exam with no feedback, like the real thing. Canvas requires two attempts, with 85 or higher on at least one.</p></section>
+<div class="box why"><p class="boxlbl">It opens later</p><p>The Exam Simulator opens later. See Canvas. The steps are here so you know what to expect.</p></div>
+<ol class="steps"><li>Sign in at <a href="https://platform.knowledge-pillars.com/" target="_blank" rel="noopener">platform.knowledge-pillars.com</a>. Click <b>Practice tests</b> (under the Practice heading on the left menu), then <b>Start Test</b> on the right side.</li><li>Under <b>Exam Simulator</b>, click the <b>Start Simulation</b> button.</li><li>Read the message and click <b>Next</b>, then <b>Start The Exam</b>.</li><li>Answer the questions. You will <b>not</b> get feedback after each one. To come back to a hard question later, click the <b>Bookmark</b> button on it.</li><li>When you finish, click <b>Review and Finish Exam</b>. Go back to any unanswered or bookmarked question. Then click <b>Finish Exam</b> at the bottom right of the Review window.</li></ol>
+<div class="box warn"><p class="boxlbl">Answer every question</p><p>On the real exam an unanswered question counts as wrong. Bookmark the hard ones, but do not leave any blank.</p></div>
+<p>Also read the KP Certification Prep Guide for the topics we did not cover in class: <a href="https://colab.research.google.com/drive/1mD1DUc5GDUjBZ_L23ajqPgFuDDZsEcXB" target="_blank" rel="noopener">Colab notebook</a> or <a href="https://drive.google.com/file/d/12Yyruq0lRm7n8_Q9QPKWZhB8yvxqCTjt/view" target="_blank" rel="noopener">PDF</a>.</p>
+<section class="sec" id="s6"><h2>Step 6 · Book your certification exam</h2><p>The exam is your final. Book it early. The last day to test is on the Taking the Certification Exam page in Canvas.</p></section>
+<h3 class="part">Part 1 · Before you book</h3>
+<label class="chk"><input type="checkbox" class="tick" data-kind="step" data-id="survey"><span>Finish the <b>Certification Exam Survey: Questions + Acknowledgment</b> quiz in Canvas. One question asks where you will take the exam, so decide now: a testing center (preferred) or remote.</span></label>
+<label class="chk"><input type="checkbox" class="tick" data-kind="step" data-id="practice"><span>Finish all the practice assignments in Step 3.</span></label>
+<label class="chk"><input type="checkbox" class="tick" data-kind="step" data-id="sim"><span>Take the Exam Simulator twice, with 85 or higher on at least one attempt (Step 5). It opens later. See Canvas.</span></label>
+<h3 class="part">Part 2 · Preferred: an MDC Testing Center</h3>
+<ol class="steps"><li><b>Pick an MDC Testing Center</b> that is easiest for you to get to. The <a href="https://www.mdc.edu/testing/contact/" target="_blank" rel="noopener">contacts page</a> lists them.</li><li><b>Check the hours:</b> <a href="https://www.mdc.edu/testing/contact/office-hours-of-operation/" target="_blank" rel="noopener">MDC Testing Center hours of operation</a>.</li><li><b>Call the center and book.</b> Phone numbers are on the <a href="https://www.mdc.edu/testing/contact/" target="_blank" rel="noopener">MDC Testing Center contacts</a> page. Say the exam name: <b>"Python Coding Specialist (PCS)"</b>.</li><li><b>Bring your Knowledge Pillars login</b> (your email and password). Ask on the call if you need anything else, such as an ID.</li><li><b>Book early.</b> Do not book a time after the last day to test. That day is on the Taking the Certification Exam page in Canvas.</li></ol>
+<label class="chk"><input type="checkbox" class="tick" data-kind="step" data-id="booked"><span>My exam is booked (campus and time written down), or I have my remote code.</span></label>
+<h3 class="part">Part 3 · Remote with KP: only if you have no other choice</h3>
+<div class="box warn"><p class="boxlbl">Why it is risky</p><p>KP takes several days to review the exam video and report your result. Use remote only if a testing center truly will not work for you.</p></div>
+<ol class="steps"><li>Read the policies first: <a href="https://knowledge-pillars.com/online-proctored-exams/" target="_blank" rel="noopener">KP online proctored exams policies</a>.</li><li><b>Email Professor Marquez</b> to get your exam code.</li><li>Set up your computer: <b>Chrome only</b>. Close any other open Chrome windows, then open a new regular window (not private) with no other tabs. Turn off any ad blocker. Do not block cookies. Turn off extra monitors.</li><li>When you are ready, sign in to KP, click <b>Take exam</b> under Certify, agree to the non-disclosure agreement, say Yes to being part of an exam group, and enter your code. Then follow the proctoring steps.</li></ol>
+<h3 class="part">Part 4 · After the exam</h3>
+<ol class="steps"><li>Sign in to KP and click <b>Exam results</b> under Certify.</li><li>Take a <b>screenshot</b> that shows the exam details and your score (on the right side).</li><li>Upload the screenshot to <b>Final (Certification) Exam -- Submit Your Result!</b> in the Canvas Modules area.</li><li>Took it remotely and the status says <b>Pending Review</b>? Stop there and email Professor Marquez that you are waiting for KP to review it.</li></ol>
+<label class="chk"><input type="checkbox" class="tick" data-kind="step" data-id="uploaded"><span>I uploaded my result screenshot in Canvas.</span></label>
+<div class="box why"><p class="boxlbl">Links in one place</p><ul><li><a href="https://platform.knowledge-pillars.com/" target="_blank" rel="noopener">platform.knowledge-pillars.com</a>: practice, simulator and exam results</li><li><a href="https://knowledge-pillars.com/python-coding-specialist/" target="_blank" rel="noopener">Python Coding Specialist exam page</a>: exam facts and the full list of exam topics</li><li><a href="https://www.mdc.edu/testing/contact/" target="_blank" rel="noopener">MDC Testing Center contacts</a> and <a href="https://www.mdc.edu/testing/contact/office-hours-of-operation/" target="_blank" rel="noopener">MDC Testing Center hours of operation</a></li><li><a href="https://colab.research.google.com/drive/1mD1DUc5GDUjBZ_L23ajqPgFuDDZsEcXB" target="_blank" rel="noopener">KP Certification Prep Guide (Colab notebook)</a> and <a href="https://drive.google.com/file/d/12Yyruq0lRm7n8_Q9QPKWZhB8yvxqCTjt/view" target="_blank" rel="noopener">KP Certification Prep Guide (PDF)</a></li></ul></div>
+<p><button class="reset" id="reset" type="button">Reset my progress</button></p>
+<p class="sub">Progress is stored only in this browser on this device. A different browser, a private window or clearing your browsing data starts fresh.</p></main><script>
+(function(){
+const KEY="cop1047c-kp-start-v1";
+const ticks=[...document.querySelectorAll('.tick')];
+const saveEl=document.getElementById('save');
+let state={obj:{},steps:{}}, canSave=false;
+function setStatus(s,m){saveEl.dataset.s=s;saveEl.textContent=m;}
+function render(){
+  ticks.forEach(t=>{const bag=t.dataset.kind==='obj'?state.obj:state.steps;t.checked=!!bag[t.dataset.id];});
+  const objs=ticks.filter(t=>t.dataset.kind==='obj');
+  const n=objs.filter(t=>t.checked).length;
+  document.getElementById('done').textContent=n;
+  document.getElementById('barfill').style.width=(100*n/objs.length)+'%';
+}
+function save(){
+  render();
+  if(!canSave) return;
+  try{localStorage.setItem(KEY,JSON.stringify(state));setStatus('saved','Saved in this browser');}
+  catch(e){canSave=false;setStatus('error','This browser stopped saving. Your checkmarks last until you close the page.');}
+}
+try{
+  const raw=localStorage.getItem(KEY);
+  if(raw){const d=JSON.parse(raw);state={obj:Object.assign({},d.obj||{}),steps:Object.assign({},d.steps||{})};}
+  localStorage.setItem(KEY+'-test','1');localStorage.removeItem(KEY+'-test');
+  canSave=true;setStatus('saved',raw?'Progress loaded from this browser':'Progress saves in this browser');
+}catch(e){setStatus('local','This browser is blocking saving (private window?). Your checkmarks last until you close the page.');}
+ticks.forEach(t=>t.addEventListener('change',()=>{const bag=t.dataset.kind==='obj'?state.obj:state.steps;if(t.checked) bag[t.dataset.id]=true; else delete bag[t.dataset.id]; save();}));
+const btn=document.getElementById('reset');let armed=false;
+btn.addEventListener('click',()=>{
+  if(!armed){armed=true;btn.classList.add('armed');btn.textContent='Tap again to clear every checkmark';setTimeout(()=>{armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';},4000);return;}
+  armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';state={obj:{},steps:{}};save();
+});
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
+  const pre=b.parentElement.querySelector('pre');const t=pre.innerText;
+  const done=m=>{b.textContent=m;setTimeout(()=>b.textContent='Copy',1400);};
+  const sel=()=>{const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);done('Selected: press Ctrl+C');};
+  try{navigator.clipboard.writeText(t).then(()=>done('Copied'),sel);}catch(e){sel();}
+}));
+render();
+})();
+</script></body></html>

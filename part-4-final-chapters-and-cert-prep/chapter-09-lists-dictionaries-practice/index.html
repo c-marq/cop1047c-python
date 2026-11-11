@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Chapter 9 Practice · COP1047C</title><meta name="description" content="Optional practice enhancements for COP1047C Chapter 9: list methods, loops over lists, filtering and sorting, nested lists, and dictionaries."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:wght@400;600;700&display=swap"><style>
+/* Layout: one reading column; sticky progress strip; each exercise is a worksheet card with plan, target, hints, solution */
+:root{
+ --bg:#F6F7F9; --surface:#FFFFFF; --fg:#1C2433; --muted:#5A6577; --line:#DCE1E8;
+ --brand:#1B2A41; --brand-fg:#FFFFFF; --accent:#F5B82E; --accent-ink:#1B2A41; --link:#2F5F98;
+ --code-bg:#22272E; --code-fg:#E6EDF3; --out-bg:#EEF1F5; --out-fg:#1D232B;
+ --go-bg:#DDF3E6; --go-fg:#17663A; --why-bg:#DCEAF7; --why-fg:#1A4C78;
+ --hint-bg:#FCF3D9; --hint-fg:#6E5606; --stop-bg:#F8DDDA; --stop-fg:#8E2A20;
+ --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+ --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+ --f-mono:"JetBrains Mono", ui-monospace, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}}
+:root[data-theme="dark"]{
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:17px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding-inline:18px;padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.2}
+h1{font-size:clamp(28px,5vw,40px);margin:26px 0 6px;font-weight:700}
+h2{font-size:24px;margin:38px 0 10px}
+h4{font-size:16px;margin:16px 0 6px;font-family:var(--f-body);font-weight:700;letter-spacing:.02em}
+a{color:var(--link)}
+p{margin:8px 0}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--out-bg);color:var(--out-fg);padding:1px 6px;border-radius:4px;white-space:pre-wrap}
+.sub{color:var(--muted);font-size:15px;max-width:65ch}
+.prog{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:2px solid var(--accent);padding-block:10px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.prog .count{font-weight:700;font-variant-numeric:tabular-nums}
+.bar{flex:1 1 140px;height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--go-fg);transition:width .3s}
+.jump{display:flex;gap:4px;flex-wrap:wrap}
+.jump a{font-size:13px;text-decoration:none;color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:1px 9px;font-variant-numeric:tabular-nums}
+.jump a.full{background:var(--go-bg);color:var(--go-fg);border-color:transparent}
+.save{font-size:13px;color:var(--muted);flex-basis:100%}
+.save[data-s="saved"]{color:var(--go-fg)} .save[data-s="error"]{color:var(--stop-fg)}
+.map{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.map span{padding:5px 11px;border-radius:14px;font-size:14px;border:1px solid var(--line)}
+.map .done{background:var(--go-bg);color:var(--go-fg);border-color:transparent;font-weight:600}
+.map .now{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.box{border-radius:8px;padding:12px 16px;margin:12px 0}
+.box .boxlbl{font-weight:700;margin:0 0 4px;letter-spacing:.03em;font-size:14px;text-transform:uppercase}
+.go{background:var(--go-bg);color:var(--fg)} .go .boxlbl{color:var(--go-fg)}
+.why{background:var(--why-bg);color:var(--fg)} .why .boxlbl{color:var(--why-fg)}
+.warn{background:var(--hint-bg);color:var(--fg)} .warn .boxlbl{color:var(--hint-fg)}
+.stop{background:var(--stop-bg);color:var(--fg)} .stop .boxlbl{color:var(--stop-fg)}
+.box ol,.box ul{margin:4px 0;padding-left:22px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15.5px;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-family:var(--f-body);font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+td.n{font-variant-numeric:tabular-nums;color:var(--muted);width:2em}
+.codewrap{position:relative;margin:8px 0;min-width:0}
+pre{margin:0;overflow-x:auto;white-space:pre;font-family:var(--f-mono);font-size:14px;line-height:1.5;border-radius:8px;padding:12px 14px}
+pre.code{background:var(--code-bg);color:var(--code-fg);padding-right:72px}
+pre.out{background:var(--out-bg);color:var(--out-fg);margin-bottom:10px}
+.lbl{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:8px}
+.copy{position:absolute;top:8px;right:8px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:5px;padding:4px 10px;font:600 13px var(--f-body);cursor:pointer}
+.copy:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.sec{background:var(--brand);color:var(--brand-fg);border-radius:10px;padding:14px 18px;margin:40px 0 12px;scroll-margin-top:70px}
+.sec h2{margin:0;color:var(--accent);font-size:22px}
+.sec p{margin:4px 0 0;opacity:.85;font-size:15px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:16px 0;scroll-margin-top:70px}
+.card.is-done{border-color:var(--go-fg)}
+.card h3{margin:0 0 6px;display:flex;gap:10px;align-items:center;font-size:20px}
+.card h3 label{display:flex;gap:10px;align-items:center;cursor:pointer}
+.tick{width:20px;height:20px;accent-color:var(--go-fg);flex:none}
+.tag{font-family:var(--f-mono);font-size:13px;background:var(--brand);color:var(--brand-fg);border-radius:5px;padding:1px 7px}
+details{margin:6px 0}
+summary{cursor:pointer;font-weight:700;padding:8px 12px;border-radius:6px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ "} details[open]>summary::before{content:"▾ "}
+details.hint>summary{background:var(--hint-bg);color:var(--hint-fg)}
+details.sol>summary{background:var(--stop-bg);color:var(--stop-fg)}
+details>div{padding:4px 4px 4px 12px}
+.rate{display:flex;gap:6px;flex-wrap:wrap}
+.rate input{position:absolute;opacity:0;pointer-events:none}
+.rate label{border:1px solid var(--line);border-radius:6px;padding:4px 12px;cursor:pointer;font-variant-numeric:tabular-nums;background:var(--surface)}
+.rate input:checked+label{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.rate input:focus-visible+label{outline:3px solid var(--link);outline-offset:2px}
+.reset{background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.reset.armed{border-color:var(--stop-fg);color:var(--stop-fg)}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+@media (max-width:480px){body{font-size:16px} pre{font-size:13px}}
+body{margin:0}</style></head><body><main class="wrap"><div class="prog" role="region" aria-label="Progress"><span class="count"><span id="done">0</span> / 5 done</span><div class="bar" aria-hidden="true"><i id="barfill"></i></div><nav class="jump" aria-label="Jump to section"><a href="#secF" data-sec="F">F</a></nav><span class="save" id="save" data-s="wait">Checking whether this browser can save your progress…</span></div>
+<p class="sub"><a href="../../">&larr; All COP1047C practice pages</a></p><h1>Chapter 9 Practice Enhancements: Lists and Dictionaries</h1><p class="sub">COP1047C Intro to Python · Miami Dade College · Optional · 5 short exercises on list methods, typed numbers on one line, filtering and sorting, nested lists, and dictionaries. Every sample run and solution here was produced by running the code on Python 3.12. Your checkmarks and self-ratings save in this browser.</p><h2>What's covered</h2><div class="map"><span>F · Ch 9 · zyBooks Chapter 9</span></div><div class="box go"><p class="boxlbl">Optional · on your own time</p><p><b>Your zyBooks labs and homework come first.</b> This page is extra practice if you want more reps on what we did in class. It is not graded and nothing here is due. Do one exercise or all five, whenever it works for you.</p></div><p>F1 counts, removes and inserts in a list. F2 reads one typed line of numbers, splits it, and finds the best and the average. F3 reads a line of whole numbers, builds a new list from it, sorts it, prints it on one line, and slices the top three. F4 changes one number in every row of a list of lists. F5 adds, looks up, sorts and removes items in a dictionary.</p><p>Want more first? See the <a href="../../part-3-functions-strings-exceptions/chapter-08-exceptions-practice/">Chapter 8 Practice Enhancements</a>.</p><h2>How to use this practice set</h2><div class="box go"><p class="boxlbl">Do this in Colab</p><ol><li>Open a new notebook at colab.new. Use one code cell per exercise.</li><li>Read the story and answer the <b>Think first</b> questions out loud, or as a comment, before writing code.</li><li>Copy <b>Your plan</b> into the cell. The plan is the program, written as comments.</li><li>Build one plan line at a time. Type the code under its comment and run the cell after each piece.</li><li>Compare with the <b>Target</b> run. Type the same inputs: the logic and the numbers should match. Your messages can be worded your own way unless the story quotes them exactly.</li><li>Stuck? Open Hint 1. Still stuck after a couple of minutes? Hint 2, then Hint 3.</li><li>Open the solution last. Compare it to yours, then try the edge cases it lists.</li><li>Tick the box beside the title. Your progress saves in this browser.</li></ol></div><div class="box why"><p class="boxlbl">Why plan in comments first?</p><p>It's the order experienced programmers think in, and the same order we use when we build exercises live in class. A blank cell is hard. A to-do list is easy: each comment becomes one or two lines of code.</p></div><div class="box warn"><p class="boxlbl">Use the solutions honestly</p><p>The solutions are here so you can check your thinking, not skip it. If you open a solution before trying, close it, wait a day, and redo that exercise from a blank cell. That's what the exam will feel like.</p></div>
+<h3>The thinking order, for every exercise</h3><div class="tablewrap"><table><thead><tr><th></th><th>Step</th><th>Ask yourself</th></tr></thead><tbody><tr><td class="n">1</td><td><b>Restate</b></td><td>What goes in, what comes out, what are the rules? Look at the target run.</td></tr><tr><td class="n">2</td><td><b>Plan in comments</b></td><td>3 to 6 # lines, in order. Imports go first.</td></tr><tr><td class="n">3</td><td><b>Imports and constants</b></td><td>import random? Fixed values in ALL_CAPS?</td></tr><tr><td class="n">4</td><td><b>Inputs and starting variables</b></td><td>int, float or text? Counters and totals start at 0 before the loop.</td></tr><tr><td class="n">5</td><td><b>Pick the structure</b></td><td>One decision (if), repeat an unknown number of times (while), or a known number (for)?</td></tr><tr><td class="n">6</td><td><b>Body, one line at a time</b></td><td>What happens on each pass? What changes so the loop can end?</td></tr><tr><td class="n">7</td><td><b>After the loop</b></td><td>Summaries print once, at the left edge.</td></tr><tr><td class="n">8</td><td><b>Test</b></td><td>The sample input first, then an edge case: 0, the boundary, an empty entry.</td></tr></tbody></table></div>
+<section class="sec" id="secF"><h2>F · Lists and dictionaries</h2><p>Ch 9 · zyBooks Chapter 9 · Change lists with methods, loop over them without breaking them, and look things up in a dictionary.</p></section><div class="box why"><p class="boxlbl">Quick refresher</p><p>A list keeps items in order and can change: <code>append</code>, <code>remove</code>, <code>pop</code>, <code>insert</code>, <code>count</code>. <code>sort()</code> changes a list and returns nothing; <code>sorted()</code> returns a new one. <code>get(key, default)</code> reads a dictionary without a KeyError.</p><div class="codewrap"><pre class="code">sales = [200, 100, 300]
+sales.append(400)
+print(sales, sorted(sales, reverse=True))
+menu = {&quot;taco&quot;: 4}
+print(menu.get(&quot;pizza&quot;, 0))</pre></div><pre class="out">[200, 100, 300, 400] [400, 300, 200, 100]
+0</pre></div><article class="card" id="F1"><h3><label><input type="checkbox" class="tick" id="tick-F1" data-id="F1" data-sec="F"><span class="tag">F1</span>Line at the truck</label></h3><p>A food truck in Wynwood keeps its pickup line in a list (it's in the plan). Ask <code>Who is leaving the line? </code>. If that name is in the line, print how many times it appears, like <code>Ana is in line 3 times</code>, and remove only the FIRST one. If not, print the name and <code>is not in line</code>. Either way, Sam joins at position 1. Then print the line.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li><code>count</code> tells how many times a name appears. <code>remove</code> takes out only the first match.</li><li>A name that isn't in the list makes <code>remove</code> crash, so check with <code>in</code> first.</li><li><code>insert(1, "Sam")</code> puts Sam BEFORE whoever is at position 1 now.</li><li>Insert and print happen either way, so they go after the if and else, not inside them.</li></ol></div><h4>Think first</h4><ul><li>What does remove do when the name isn&#x27;t in the list?</li><li>Should you count before or after you remove? Try both and compare.</li><li>Where does insert(1, &quot;Sam&quot;) put Sam: before or after the item at position 1?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># F1 · Line at the truck
+# Given data:
+line = [&quot;Ana&quot;, &quot;Luis&quot;, &quot;Ana&quot;, &quot;Maya&quot;, &quot;Ana&quot;]   # Run as given
+
+# PLAN
+# 1. imports: none needed
+# 2. name = input(&quot;Who is leaving the line? &quot;)
+# 3. if name is in line: print how many times it is there, like: Ana is in line 3 times, then remove only the FIRST one
+# 4. otherwise: print the name and &quot;is not in line&quot;
+# 5. insert &quot;Sam&quot; at position 1, then print the line
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed &quot;Ana&quot;</div><pre class="out">Who is leaving the line? Ana
+Ana is in line 3 times
+[&#x27;Luis&#x27;, &#x27;Sam&#x27;, &#x27;Ana&#x27;, &#x27;Maya&#x27;, &#x27;Ana&#x27;]</pre><details class="hint"><summary>Hint 1</summary><div><p>name = input(&quot;Who is leaving the line? &quot;), then if name in line:</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Inside the if: print(name, &quot;is in line&quot;, line.count(name), &quot;times&quot;), then line.remove(name)</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>else: print(name, &quot;is not in line&quot;). Then, at the left edge: line.insert(1, &quot;Sam&quot;) and print(line)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">line = [&quot;Ana&quot;, &quot;Luis&quot;, &quot;Ana&quot;, &quot;Maya&quot;, &quot;Ana&quot;]
+
+name = input(&quot;Who is leaving the line? &quot;)
+if name in line:
+    print(name, &quot;is in line&quot;, line.count(name), &quot;times&quot;)
+    line.remove(name)
+else:
+    print(name, &quot;is not in line&quot;)
+line.insert(1, &quot;Sam&quot;)
+print(line)</pre></div><div class="lbl">Edge case · typed Zoe, who is not in line</div><pre class="out">Who is leaving the line? Zoe
+Zoe is not in line
+[&#x27;Ana&#x27;, &#x27;Sam&#x27;, &#x27;Luis&#x27;, &#x27;Ana&#x27;, &#x27;Maya&#x27;, &#x27;Ana&#x27;]</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Skip the <code>in</code> check and a name that isn't there crashes: <code>ValueError: list.remove(x): x not in list</code>. And count BEFORE you remove: counting after the remove prints 2, not 3 (<code>Ana is in line 2 times</code>).</p></div></div></details></article><article class="card" id="F2"><h3><label><input type="checkbox" class="tick" id="tick-F2" data-id="F2" data-sec="F"><span class="tag">F2</span>Nightly sales</label></h3><p>A Wynwood food truck owner types one line with every night's sales, separated by spaces, like <code>200 100 300</code>. Ask <code>Sales for each night, separated by spaces: </code>, turn each piece into a float, and keep them in a list. Print the best night with a dollar sign and 2 decimals, like <code>Best night: $300.00</code>, and the average night the same way, like <code>Average night: $200.00</code>.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>An empty list (<code>sales = []</code>) collects the numbers, one <code>append</code> per piece.</li><li><code>text.split()</code> cuts the typed line at the spaces into a list of pieces. Extra spaces don't matter.</li><li>Each piece is still text. <code>float(part)</code> turns it into a number BEFORE it goes in the list, so decimals like 250.5 work too.</li><li><code>max(sales)</code> is the best night. <code>sum(sales) / len(sales)</code> is the average. <code>:.2f</code> gives 2 decimals.</li></ol></div><h4>Think first</h4><ul><li>What does &quot;200 100 300&quot;.split() give you? Try it in a cell.</li><li>Why float() and not int()? What would int(&quot;250.5&quot;) do?</li><li>What happens if someone types an empty line?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># F2 · Nightly sales
+# PLAN
+# 1. imports: none needed
+# 2. text = input(&quot;Sales for each night, separated by spaces: &quot;), then sales = [] (an empty list)
+# 3. for part in text.split(): turn each piece into a float and append it to sales
+# 4. print the best night with a $ and 2 decimals: Best night: $300.00
+# 5. print the average night the same way: Average night: $200.00
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed &quot;200 100 300&quot;</div><pre class="out">Sales for each night, separated by spaces: 200 100 300
+Best night: $300.00
+Average night: $200.00</pre><details class="hint"><summary>Hint 1</summary><div><p>text = input(&quot;Sales for each night, separated by spaces: &quot;), then sales = []</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>for part in text.split(): then sales.append(float(part))</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>print(f&quot;Best night: ${max(sales):.2f}&quot;) and print(f&quot;Average night: ${sum(sales) / len(sales):.2f}&quot;)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">text = input(&quot;Sales for each night, separated by spaces: &quot;)
+sales = []
+for part in text.split():
+    sales.append(float(part))
+print(f&quot;Best night: ${max(sales):.2f}&quot;)
+print(f&quot;Average night: ${sum(sales) / len(sales):.2f}&quot;)</pre></div><div class="lbl">Edge case · decimals: typed 250.5 100</div><pre class="out">Sales for each night, separated by spaces: 250.5 100
+Best night: $250.50
+Average night: $175.25</pre><div class="lbl">Edge case · extra spaces: typed 200 100 300 with spaces everywhere</div><pre class="out">Sales for each night, separated by spaces:   200   100  300 
+Best night: $300.00
+Average night: $200.00</pre><div class="lbl">Edge case · one night: typed 150</div><pre class="out">Sales for each night, separated by spaces: 150
+Best night: $150.00
+Average night: $150.00</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Forget <code>float()</code> and the list holds text, so the format fails: <code>ValueError: Unknown format code &#x27;f&#x27; for object of type &#x27;str&#x27;</code>. Use <code>int()</code> and a decimal like 250.5 fails: <code>ValueError: invalid literal for int() with base 10: &#x27;250.5&#x27;</code>. And an empty line gives <code>ValueError: max() iterable argument is empty</code>.</p></div></div></details></article><article class="card" id="F3"><h3><label><input type="checkbox" class="tick" id="tick-F3" data-id="F3" data-sec="F"><span class="tag">F3</span>Busiest nights</label></h3><p>A food truck types one line with the number of customers on each night, like <code>7 3 4 9 12 5 8</code>, then a second answer to <code>Smallest busy night? </code> (a whole number). Build a new list of the nights with at least that many customers, sort it from busiest to slowest, and print it on ONE line after <code>Busy nights:</code>, each number followed by a space. Then print the top three using a slice, like <code>Top three: [12, 9, 8]</code>.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Read the line the way you did in F2, but each piece goes through <code>int()</code>.</li><li>Build a NEW list (<code>busy</code>) with <code>append</code> instead of removing from <code>customers</code>. Removing while looping skips items.</li><li><code>busy.sort(reverse=True)</code> puts the busiest first. It changes the list and returns nothing.</li><li><code>print(night, end=" ")</code> keeps the next print on the same line, with a space after each number. A bare <code>print()</code> at the end finishes the line.</li><li><code>busy[:3]</code> is the first three. A slice of a short list never crashes.</li></ol></div><h4>Think first</h4><ul><li>Why not remove the small numbers from customers itself?</li><li>What does sort(reverse=True) return?</li><li>What should the top three look like when no night is busy enough?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># F3 · Busiest nights
+# PLAN
+# 1. imports: none needed
+# 2. text = input(&quot;Customers each night, separated by spaces: &quot;), then customers = [] and, for each piece of text.split(), append int(piece)
+# 3. minimum = int(input(&quot;Smallest busy night? &quot;))
+# 4. busy = [] (an empty list), then loop over customers and append each night that is at least minimum
+# 5. busy.sort(reverse=True)
+# 6. print &quot;Busy nights:&quot; and then the numbers on ONE line, each followed by a space (end=&quot; &quot;), then an empty print() to finish the line
+# 7. print the top three with a slice: Top three: [12, 9, 8]
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed &quot;7 3 4 9 12 5 8&quot;, then &quot;6&quot;</div><pre class="out">Customers each night, separated by spaces: 7 3 4 9 12 5 8
+Smallest busy night? 6
+Busy nights: 12 9 8 7 
+Top three: [12, 9, 8]</pre><details class="hint"><summary>Hint 1</summary><div><p>text = input(...), then customers = [], then for part in text.split(): customers.append(int(part))</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>minimum = int(input(&quot;Smallest busy night? &quot;)), then busy = [], then for night in customers: if night &gt;= minimum: busy.append(night)</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>busy.sort(reverse=True), print(&quot;Busy nights:&quot;, end=&quot; &quot;), for night in busy: print(night, end=&quot; &quot;), then print() and print(&quot;Top three:&quot;, busy[:3])</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">text = input(&quot;Customers each night, separated by spaces: &quot;)
+customers = []
+for part in text.split():
+    customers.append(int(part))
+minimum = int(input(&quot;Smallest busy night? &quot;))
+busy = []
+for night in customers:
+    if night &gt;= minimum:
+        busy.append(night)
+busy.sort(reverse=True)
+print(&quot;Busy nights:&quot;, end=&quot; &quot;)
+for night in busy:
+    print(night, end=&quot; &quot;)
+print()
+print(&quot;Top three:&quot;, busy[:3])</pre></div><div class="lbl">Edge case · typed 20 (no night is that busy)</div><pre class="out">Customers each night, separated by spaces: 7 3 4 9 12 5 8
+Smallest busy night? 20
+Busy nights: 
+Top three: []</pre><div class="lbl">Edge case · typed 3 (every night counts)</div><pre class="out">Customers each night, separated by spaces: 7 3 4 9 12 5 8
+Smallest busy night? 3
+Busy nights: 12 9 8 7 5 4 3 
+Top three: [12, 9, 8]</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Removing the small ones from <code>customers</code> while you loop leaves one behind, because 3 and 4 sit side by side. For 6 it prints <code>Busy nights: 12 9 8 7 4 </code>, and that 4 does not belong. Forget <code>int()</code> and the comparison fails: <code>TypeError: &#x27;&gt;=&#x27; not supported between instances of &#x27;str&#x27; and &#x27;int&#x27;</code>. Forget the bare <code>print()</code> and the next line joins the numbers: <code>Busy nights: 12 9 8 7 Top three: [12, 9, 8]</code>. The spaces after the numbers are real, even though Colab doesn't show them.</p></div></div></details></article><article class="card" id="F4"><h3><label><input type="checkbox" class="tick" id="tick-F4" data-id="F4" data-sec="F"><span class="tag">F4</span>Tip the last night</label></h3><p>Three trucks sold on three nights. Each row of the list is one truck and each column is one night (it's in the plan). Every truck got a $50 tip on its LAST night. Add 50 to the last number in every row and print the whole list. Then print each truck's total like <code>Truck total: 650</code>.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li><code>sales[i]</code> is the whole row for truck i. <code>sales[i][-1]</code> is that truck's last night.</li><li>A loop over <code>range(len(sales))</code> visits every row number.</li><li><code>-1</code> means the last item, whatever the length.</li><li>A second loop over the rows prints <code>sum(row)</code> for each truck.</li></ol></div><h4>Think first</h4><ul><li>What is sales[1]? What is sales[1][-1]?</li><li>Why is += used here and not = ?</li><li>Which loop do you need to change the list, and which to just read it?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># F4 · Tip the last night
+# Given data (one row per truck, one column per night):
+sales = [[200, 100, 300], [100, 100, 200], [300, 200, 100]]   # Run as given
+
+# PLAN
+# 1. imports: none needed
+# 2. a loop over the row numbers: for i in range(len(sales))
+# 3. inside: add 50 to the LAST night of row i, using the index -1
+# 4. print sales
+# 5. then loop over the rows and print each truck&#x27;s total: Truck total: 650
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">[[200, 100, 350], [100, 100, 250], [300, 200, 150]]
+Truck total: 650
+Truck total: 450
+Truck total: 650</pre><details class="hint"><summary>Hint 1</summary><div><p>for i in range(len(sales)):</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>Inside: sales[i][-1] += 50</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>After that loop: print(sales), then for row in sales: and print(&quot;Truck total:&quot;, sum(row))</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">sales = [[200, 100, 300], [100, 100, 200], [300, 200, 100]]
+
+for i in range(len(sales)):
+    sales[i][-1] += 50
+print(sales)
+for row in sales:
+    print(&quot;Truck total:&quot;, sum(row))</pre></div><div class="lbl">Also works · for row in sales: row[-1] += 50</div><pre class="out">[[200, 100, 350], [100, 100, 250], [300, 200, 150]]
+Truck total: 650
+Truck total: 450
+Truck total: 650</pre><div class="box warn"><p class="boxlbl">Watch out</p><p><code>sales[i] += 50</code> tries to add a number to a whole row: <code>TypeError: &#x27;int&#x27; object is not iterable</code>. And <code>[0]</code> instead of <code>[-1]</code> runs without an error but tips the FIRST night. The totals stay 650, 450, 650 either way, so check the printed list, not only the totals.</p></div></div></details></article><article class="card" id="F5"><h3><label><input type="checkbox" class="tick" id="tick-F5" data-id="F5" data-sec="F"><span class="tag">F5</span>Menu board</label></h3><p>A food truck's menu is a dictionary (it's in the plan). Add <code>flan</code> for 3 dollars. Ask <code>Which item? </code> and print the price like <code>arepa costs $5</code>, or <code>Not on the menu</code>. Then print <code>Menu board:</code> and every item with its price, A to Z ignoring upper and lower case. Last, Batido sells out: remove it, print <code>Sold out: Batido ($6)</code>, and print how many items are left.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li><code>menu["flan"] = 3</code> adds a new key.</li><li><code>menu.get(item, 0)</code> gives 0 instead of a KeyError when the item isn't there. A real price is never 0, so 0 means "not on the menu".</li><li><code>list(menu.keys())</code> makes a list of the names. <code>names.sort(key=str.upper)</code> sorts it ignoring case. Then <code>menu[name]</code> is each price.</li><li><code>menu.pop("Batido", 0)</code> removes the item and gives back its price. <code>len(menu)</code> counts what is left.</li></ol></div><h4>Think first</h4><ul><li>What does menu[&quot;pizza&quot;] do? What does menu.get(&quot;pizza&quot;, 0) do?</li><li>Why does &quot;Batido&quot; need key=str.upper to land in the right place?</li><li>Should you sort before or after Batido sells out?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># F5 · Menu board
+# Given data:
+menu = {&quot;taco&quot;: 4, &quot;Batido&quot;: 6, &quot;arepa&quot;: 5}   # Run as given
+
+# PLAN
+# 1. imports: none needed
+# 2. add flan for 3 dollars
+# 3. item = input(&quot;Which item? &quot;), then price = menu.get(item, 0)
+# 4. price is 0? print &quot;Not on the menu&quot;. Otherwise print the item and its price like: arepa costs $5
+# 5. print &quot;Menu board:&quot; then every item and price, A to Z ignoring upper and lower case:
+#    names = list(menu.keys()), then names.sort(key=str.upper), then loop over names
+# 6. Batido sold out: pop it (default 0) and print: Sold out: Batido ($6)
+# 7. print how many items are left: Items left: 3
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed &quot;arepa&quot;</div><pre class="out">Which item? arepa
+arepa costs $5
+Menu board:
+arepa 5
+Batido 6
+flan 3
+taco 4
+Sold out: Batido ($6)
+Items left: 3</pre><details class="hint"><summary>Hint 1</summary><div><p>menu[&quot;flan&quot;] = 3, then item = input(&quot;Which item? &quot;), then price = menu.get(item, 0)</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>if price == 0: print(&quot;Not on the menu&quot;) else: print(f&quot;{item} costs ${price}&quot;)</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>names = list(menu.keys()), then names.sort(key=str.upper), then for name in names: print(name, menu[name]). Last: sold_out = menu.pop(&quot;Batido&quot;, 0)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">menu = {&quot;taco&quot;: 4, &quot;Batido&quot;: 6, &quot;arepa&quot;: 5}
+
+menu[&quot;flan&quot;] = 3
+item = input(&quot;Which item? &quot;)
+price = menu.get(item, 0)
+if price == 0:
+    print(&quot;Not on the menu&quot;)
+else:
+    print(f&quot;{item} costs ${price}&quot;)
+print(&quot;Menu board:&quot;)
+names = list(menu.keys())
+names.sort(key=str.upper)
+for name in names:
+    print(name, menu[name])
+sold_out = menu.pop(&quot;Batido&quot;, 0)
+print(f&quot;Sold out: Batido (${sold_out})&quot;)
+print(&quot;Items left:&quot;, len(menu))</pre></div><div class="lbl">Edge case · typed pizza</div><pre class="out">Which item? pizza
+Not on the menu
+Menu board:
+arepa 5
+Batido 6
+flan 3
+taco 4
+Sold out: Batido ($6)
+Items left: 3</pre><div class="lbl">Edge case · typed Taco (capital T)</div><pre class="out">Which item? Taco
+Not on the menu
+Menu board:
+arepa 5
+Batido 6
+flan 3
+taco 4
+Sold out: Batido ($6)
+Items left: 3</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Without <code>key=str.upper</code> the capital B sorts first, so Batido jumps ahead of arepa (<code>Batido 6</code> comes first). <code>menu[item]</code> with a missing item crashes: <code>KeyError: &#x27;pizza&#x27;</code>. And typed Taco (capital T) is not on the menu, because keys must match exactly.</p></div></div></details></article><h2 id="rate">Rate yourself</h2><p>Give each section a 1 (shaky), 2 (okay) or 3 (solid). Your ratings save with your progress. Any 1s? Redo that section's last exercise tomorrow from a blank cell, without the plan. That's the real test, and those are the ones to bring questions about next class.</p>
+<div class="tablewrap"><table><thead><tr><th>Section</th><th>Topic</th><th>Your rating</th></tr></thead><tbody><tr><td><b>F</b></td><td>List methods, loops over lists, filtering and sorting, nested lists, dictionaries</td><td><div class="rate" role="radiogroup" aria-label="Rating for section F"><input type="radio" name="rate-F" id="rate-F-1" value="1" data-sec="F"><label for="rate-F-1">1</label><input type="radio" name="rate-F" id="rate-F-2" value="2" data-sec="F"><label for="rate-F-2">2</label><input type="radio" name="rate-F" id="rate-F-3" value="3" data-sec="F"><label for="rate-F-3">3</label></div></td></tr></tbody></table></div>
+<div class="box why"><p class="boxlbl">If you want more practice</p><ul><li>Redo any exercise you rated a 1, from a blank cell.</li><li>Say the thinking order out loud on every problem: restate, plan, imports and constants, inputs, structure, body, after the loop, test.</li><li>Know the traps: an index one off (the 8th item is index 7), sort() and append() returning None, removing from a list while looping over it, a slice end that is exclusive, text from split() that was never turned into numbers with int() or float(), a row index and a column index swapped, and a dictionary key that doesn't match exactly.</li></ul></div>
+<p><button class="reset" id="reset" type="button">Reset my progress</button></p>
+<p class="sub">Progress is stored only in this browser on this device. A different browser, a private window or clearing your browsing data starts fresh.</p></main><script>
+(function(){
+const KEY="cop1047c-ch09-practice-v1";
+const ticks=[...document.querySelectorAll('.tick')];
+const radios=[...document.querySelectorAll('.rate input')];
+const saveEl=document.getElementById('save');
+let state={done:{},ratings:{}}, canSave=false;
+function setStatus(s,m){saveEl.dataset.s=s;saveEl.textContent=m;}
+function render(){
+  ticks.forEach(t=>{t.checked=!!state.done[t.dataset.id];t.closest('.card').classList.toggle('is-done',t.checked);});
+  radios.forEach(r=>{r.checked=String(state.ratings[r.dataset.sec]||'')===r.value;});
+  const n=ticks.filter(t=>t.checked).length;
+  document.getElementById('done').textContent=n;
+  document.getElementById('barfill').style.width=(100*n/ticks.length)+'%';
+  document.querySelectorAll('.jump a').forEach(a=>{const ts=ticks.filter(t=>t.dataset.sec===a.dataset.sec);a.classList.toggle('full',ts.length>0&&ts.every(t=>t.checked));});
+}
+function save(){
+  render();
+  if(!canSave) return;
+  try{localStorage.setItem(KEY,JSON.stringify(state));setStatus('saved','Saved in this browser');}
+  catch(e){canSave=false;setStatus('error','This browser stopped saving. Your checkmarks last until you close the page.');}
+}
+try{
+  const raw=localStorage.getItem(KEY);
+  if(raw){const d=JSON.parse(raw);state={done:Object.assign({},d.done||{}),ratings:Object.assign({},d.ratings||{})};}
+  localStorage.setItem(KEY+'-test','1');localStorage.removeItem(KEY+'-test');
+  canSave=true;setStatus('saved',raw?'Progress loaded from this browser':'Progress saves in this browser');
+}catch(e){setStatus('local','This browser is blocking saving (private window?). Your checkmarks last until you close the page.');}
+ticks.forEach(t=>t.addEventListener('change',()=>{if(t.checked) state.done[t.dataset.id]=true; else delete state.done[t.dataset.id]; save();}));
+radios.forEach(r=>r.addEventListener('change',()=>{state.ratings[r.dataset.sec]=Number(r.value);save();}));
+const btn=document.getElementById('reset');let armed=false;
+btn.addEventListener('click',()=>{
+  if(!armed){armed=true;btn.classList.add('armed');btn.textContent='Tap again to clear every checkmark and rating';setTimeout(()=>{armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';},4000);return;}
+  armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';state={done:{},ratings:{}};save();
+});
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
+  const pre=b.parentElement.querySelector('pre');const t=pre.innerText;
+  const done=m=>{b.textContent=m;setTimeout(()=>b.textContent='Copy',1400);};
+  const sel=()=>{const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);done('Selected: press Ctrl+C');};
+  try{navigator.clipboard.writeText(t).then(()=>done('Copied'),sel);}catch(e){sel();}
+}));
+render();
+})();
+</script></body></html>
