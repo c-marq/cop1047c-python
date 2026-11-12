@@ -108,9 +108,32 @@ table.omap ul{margin:4px 0;padding-left:18px} table.omap li{margin:3px 0}
 .pill.now{background:var(--go-bg);color:var(--go-fg)} .pill.later{background:var(--why-bg);color:var(--why-fg)}
 .rowchk{font-size:13.5px;margin-top:8px}
 pre.out.err{background:var(--stop-bg);color:var(--stop-fg)}
-.part{font-family:var(--f-display);font-size:19px;margin:22px 0 4px}
-.sec,.card,table.omap tr{scroll-margin-top:90px}
-@media (max-width:700px){.sec,.card,table.omap tr{scroll-margin-top:130px}}
+h3.part{font-family:var(--f-display);font-size:19px;margin:22px 0 4px}
+.sec,.card,table.omap tr,details.step{scroll-margin-top:90px}
+@media (max-width:700px){.sec,.card,table.omap tr,details.step{scroll-margin-top:130px}}
+/* collapsible: steps (navy band is the summary), parts, BLUF, links. Arrows reuse the page's summary arrows (the template draws them with summary::before). */
+details>div.stepbody{padding:0}
+details.step{margin:16px 0}
+details.step>summary.sec{position:relative;margin:0;padding-left:46px}
+details.step>summary.sec p{font-weight:400}
+details.step[open]>summary.sec{margin-bottom:12px}
+details.step>summary.sec::before,details.bluf>summary::before{content:"▸";position:absolute;color:var(--accent);font-size:22px;line-height:1.2}
+details.step>summary.sec::before{left:18px;top:14px}
+details.step[open]>summary.sec::before,details.bluf[open]>summary::before{content:"▾"}
+details.bluf>summary{position:relative;padding:0 0 0 30px;border-radius:0}
+details.bluf>summary::before{left:0;top:0}
+details.bluf>summary h2{margin:0}
+details.bluf[open]>summary h2{margin-bottom:6px}
+details.part{margin:14px 0 6px}
+details.part>summary{padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+details.part[open]>summary{margin-bottom:6px}
+details.part>summary h3.part{display:inline;margin:0}
+details.links>summary{padding:0;border-radius:0}
+details.links[open]>summary{margin-bottom:4px}
+details.links>summary.boxlbl{margin:0}
+.xbar{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}
+.xall{color:var(--fg);padding:8px 14px}
+@media print{.xbar{display:none}}
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px} .cols>div{min-width:0}
 @media (max-width:700px){
  .cols{grid-template-columns:1fr}
@@ -123,29 +146,35 @@ pre.out.err{background:var(--stop-bg);color:var(--stop-fg)}
 body{margin:0}</style></head><body><main class="wrap"><div class="prog" role="region" aria-label="Progress"><span class="count"><span id="done">0</span> / 9 assignments done</span><div class="bar" aria-hidden="true"><i id="barfill"></i></div><nav class="jump" aria-label="Jump to a step"><a href="#s1">1</a><a href="#s2">2</a><a href="#s3">3</a><a href="#s4">4</a><a href="#s5">5</a><a href="#s6">6</a></nav><span class="save" id="save" data-s="wait">Checking whether this browser can save your progress…</span></div>
 <p class="sub"><a href="../../">&larr; All COP1047C practice pages</a></p>
 <h1>Knowledge Pillars Start Here</h1>
-<p class="sub">COP1047C Intro to Python · Miami Dade College · This page gets you signed up, shows how one objective works, tells you where to study each objective, and walks you through booking your certification exam. Every code sample and output here came from a real run on Python 3.12. Your checkmarks save in this browser, so you can close the page and pick up where you left off.</p>
-<section class="bluf" aria-labelledby="bluf-h"><h2 id="bluf-h">Bottom line up front</h2><ul>
+<p class="sub">COP1047C Intro to Python · Miami Dade College · This page gets you signed up, shows how one objective works, tells you where to study each objective, and walks you through booking your certification exam. Every code sample and output here came from a real run on Python 3.12. Your checkmarks save in this browser, so you can close the page and pick up where you left off. Click a step to open it.</p>
+<details class="bluf" open data-k="bluf" aria-labelledby="bluf-h"><summary><h2 id="bluf-h">Bottom line up front</h2></summary><div class="stepbody"><ul>
 <li><b>Your final exam is a certification.</b> It is the Knowledge Pillars (KP) <b>Python Coding Specialist (PCS)</b> exam. Details on the <a href="https://knowledge-pillars.com/python-coding-specialist/" target="_blank" rel="noopener">official exam page</a>.</li>
 <li><b>The practice assignments count toward your grade.</b> Canvas has nine of them. See Canvas for due dates.</li>
 <li><b>Five of the nine cover what we already learned</b> (Objectives 1, 2, 3 and 4, 5 and 9, from Chapters 1 to 8), so start those now. The other four (Objectives 6, 7, 8 and 10) match Chapters 9 to 12, so do each one after we cover its chapter.</li>
 <li><b>Your next three moves:</b> sign up and join our classroom (Step 1), do one objective until you see 100% (Step 2), and book your exam early (Step 6).</li></ul>
-<div class="facts"><div><b>35</b>questions</div><div><b>50</b>minutes</div><div><b>75%</b>to pass</div></div></section>
-<section class="sec" id="s1"><h2>Step 1 · Sign up and join our classroom</h2><p>You need a KP account and a seat in our KP classroom. Join while we are in class.</p></section>
+<div class="facts"><div><b>35</b>questions</div><div><b>50</b>minutes</div><div><b>75%</b>to pass</div></div></div></details>
+<p class="xbar"><button class="reset xall" id="expandall" type="button">Expand all</button><button class="reset xall" id="collapseall" type="button">Collapse all</button></p>
+<details class="step" id="s1" data-k="s1"><summary class="sec"><h2>Step 1 · Sign up and join our classroom</h2><p>You need a KP account and a seat in our KP classroom. Join while we are in class.</p></summary><div class="stepbody">
 <div class="box why"><p class="boxlbl">Already signed up?</p><p class="oneline">Check that Classrooms shows our class, then skip to Step 2.</p></div>
-<h3 class="part">Create your account (skip this if you already have one)</h3>
+<details class="part" data-k="s1-a"><summary><h3 class="part">Create your account (skip this if you already have one)</h3></summary><div class="stepbody">
 <ol class="steps"><li>Go to <a href="https://platform.knowledge-pillars.com/" target="_blank" rel="noopener">platform.knowledge-pillars.com</a> and click <b>Sign Up</b>.</li><li>Enter your <b>real first and last name</b>, exactly as it appears in Canvas.</li><li>Enter your <b>MyMDC email address</b> and make up a password you will remember.</li><li>Finish the rest of the form and click the <b>Sign Up</b> button.</li></ol>
-<h3 class="part">Join our classroom (skip this if Classrooms already shows our class)</h3>
+</div></details>
+<details class="part" data-k="s1-b"><summary><h3 class="part">Join our classroom (skip this if Classrooms already shows our class)</h3></summary><div class="stepbody">
 <ol class="steps"><li>Go to <a href="https://platform.knowledge-pillars.com/" target="_blank" rel="noopener">platform.knowledge-pillars.com</a> and sign in.</li><li>Click <b>Classrooms</b> on the left menu, then click the <b>Join classroom</b> button. (It is also on the Overview page.)</li><li>Type the <b>classroom code</b>. It is in Canvas: open the <b>Certification Practice / Final Exam</b> module, then open the <b>How To Use Knowledge Pillars</b> link (it opens a document that shows the code). Copy and paste the code so you do not mistype it.</li><li>After you join, you will show as <b>pending</b> until Professor Marquez accepts you. Join while we are in class so he can accept you right away. If you join later, email him.</li></ol>
+</div></details>
 <label class="chk"><input type="checkbox" class="tick" data-kind="step" data-id="s1"><span>I have an account and I joined our class (pending until it is accepted is fine).</span></label>
-<section class="sec" id="s2"><h2>Step 2 · Do one objective</h2><p>Each Canvas practice assignment is one objective in KP. Here is the whole loop, start to finish.</p></section>
+</div></details>
+<details class="step" id="s2" data-k="s2"><summary class="sec"><h2>Step 2 · Do one objective</h2><p>Each Canvas practice assignment is one objective in KP. Here is the whole loop, start to finish.</p></summary><div class="stepbody">
 <ol class="steps"><li>Sign in at <a href="https://platform.knowledge-pillars.com/" target="_blank" rel="noopener">platform.knowledge-pillars.com</a>. Click <b>Practice tests</b> (under the Practice heading on the left menu). Canvas may say "Practice": on the site it is Practice tests.</li><li>Click <b>Start Test</b> on the right side.</li><li>Under <b>Practice Test</b>, click the <b>Start Test</b> button.</li><li>Under "Select questions", click <b>"Select to only show questions from…"</b>, then click the <b>Open List</b> button.</li><li>Select <b>only</b> the objective named in the Canvas assignment. (For the Objectives 3 &amp; 4 assignment, select #3 and #4. Note: #4 sometimes appears below #10 in the list, so scroll.) Click <b>Save</b>.</li><li>Click <b>Start Practice Test</b> at the bottom right. Read the instructions, then click <b>Start The Exam</b>.</li><li>Answer the question and click <b>Submit Task</b>. If you get it wrong, you can try again.</li><li>Click <b>Next Task</b> at the top for the next question. When you reach the end, click the pink <b>Finish Exam</b> button at the top right.</li><li>Look at your score. <b>Under 100%?</b> Start the practice test again and review the questions you missed. Keep going until you see 100%.</li><li>In the Canvas assignment, type this sentence exactly (use the Copy button):</li></ol>
 <div class="codewrap"><pre class="code">I have completed the required objective with a score of 100%</pre><button class="copy" type="button">Copy</button></div>
 <div class="box warn"><p class="boxlbl">Only type it when it is true</p><p>The sentence says your score was 100%. Type it after you have seen 100% on the score screen, not before.</p></div>
 <p class="sub">Questions come in different shapes: multiple choice, drag and drop, and puzzles where you put lines of code in the right order. Retries are allowed, so use them.</p>
-<section class="sec" id="s3"><h2>Step 3 · The objective map</h2><p>Nine Canvas assignments. What each covers, which chapters match it, where to study, and what to watch for.</p></section>
+</div></details>
+<details class="step" id="s3" data-k="s3"><summary class="sec"><h2>Step 3 · The objective map</h2><p>Nine Canvas assignments. What each covers, which chapters match it, where to study, and what to watch for.</p></summary><div class="stepbody">
 <p>The "watch for" items come from Professor Marquez's KP Certification Prep Guide (<a href="https://colab.research.google.com/drive/1mD1DUc5GDUjBZ_L23ajqPgFuDDZsEcXB" target="_blank" rel="noopener">Colab notebook</a> or <a href="https://drive.google.com/file/d/12Yyruq0lRm7n8_Q9QPKWZhB8yvxqCTjt/view" target="_blank" rel="noopener">PDF</a>). Do the <span class="pill now">Start now</span> objectives first. For the <span class="pill later">After Ch N</span> ones, wait until we have covered that chapter. Due dates are in Canvas.</p>
 <div class="tablewrap"><table class="omap"><thead><tr><th>Canvas assignment</th><th>What it covers</th><th>Our chapter and where to study</th><th>Watch for</th></tr></thead><tbody><tr id="o1"><td data-l="Canvas assignment"><b>Objective 1 (Python Basics)</b><br><span class="pill now">Start now</span><label class="chk rowchk"><input type="checkbox" class="tick" data-kind="obj" data-id="o1" aria-label="Objective 1 (Python Basics): done in Knowledge Pillars and submitted in Canvas"><span>Done in KP and submitted in Canvas</span></label></td><td data-l="What it covers">What Python is, interpreter vs compiler, syntax and indentation, keywords, comments.</td><td data-l="Our chapter and where to study"><b>Ch 1 to 3</b><br>zyBooks Ch 1 to 3 and your notebooks. No practice page yet. See <a href="../../">All practice pages</a>.</td><td data-l="Watch for"><ul><li>A list changes in place. An int never does: Python makes a new one.</li><li>Python is dynamically typed (a variable can hold any type) and strongly typed (it will not add a string and an int).</li><li>A shebang (#!) must be the very first line of a script.</li></ul></td></tr><tr id="o2"><td data-l="Canvas assignment"><b>Objective 2 (Variables &amp; Operators)</b><br><span class="pill now">Start now</span><label class="chk rowchk"><input type="checkbox" class="tick" data-kind="obj" data-id="o2" aria-label="Objective 2 (Variables &amp; Operators): done in Knowledge Pillars and submitted in Canvas"><span>Done in KP and submitted in Canvas</span></label></td><td data-l="What it covers">Data types, input, scope, casting, arithmetic, string, bitwise and relational operators, precedence.</td><td data-l="Our chapter and where to study"><b>Ch 2 and 3, plus Ch 7 for string tests</b><br>zyBooks, your Ch 2, 3 and 7 notebooks.<br>Practice: <a href="../../part-3-functions-strings-exceptions/chapter-07-strings-practice/">Ch 7 Strings practice</a></td><td data-l="Watch for"><ul><li>int + float gives a float on its own. A number plus a string is a TypeError until you use int() or str().</li><li>/ always gives a float. // and % give the floor and the remainder.</li><li>Bitwise shortcuts are in the prep guide: ~3 is -4 and 3 | 9 is 11.</li></ul></td></tr><tr id="o34"><td data-l="Canvas assignment"><b>Objectives 3 &amp; 4 (Conditionals &amp; Loops)</b><br><span class="pill now">Start now</span><label class="chk rowchk"><input type="checkbox" class="tick" data-kind="obj" data-id="o34" aria-label="Objectives 3 &amp; 4 (Conditionals &amp; Loops): done in Knowledge Pillars and submitted in Canvas"><span>Done in KP and submitted in Canvas</span></label></td><td data-l="What it covers">and, or, not, if/elif/else, for with range, while, nested loops, break, continue.</td><td data-l="Our chapter and where to study"><b>Ch 4 and 5</b><br>zyBooks, your Ch 4 and 5 notebooks. In KP, select #3 and #4 (#4 sometimes appears below #10 in the list).<br>Practice: <a href="../../part-2-decisions-and-loops/exam-2-practice/">Exam 2 Practice</a>, <a href="../../part-2-decisions-and-loops/exam-2-study-set/">Exam 2 Study Set</a></td><td data-l="Watch for"><ul><li>and runs before or.</li><li>Truthiness: 0, 0.0, &quot;&quot; and [] are False. &quot;0&quot; and &quot; &quot; are True.</li><li>range(2, 5) stops before 5. A loop inside a loop finishes all its turns for every turn of the outer loop.</li></ul></td></tr><tr id="o5"><td data-l="Canvas assignment"><b>Objective 5 (Functions)</b><br><span class="pill now">Start now</span><label class="chk rowchk"><input type="checkbox" class="tick" data-kind="obj" data-id="o5" aria-label="Objective 5 (Functions): done in Knowledge Pillars and submitted in Canvas"><span>Done in KP and submitted in Canvas</span></label></td><td data-l="What it covers">def, parameters, return, default values, recursion, lambda, generators.</td><td data-l="Our chapter and where to study"><b>Ch 6</b><br>zyBooks, your Ch 6 notebooks.<br>Practice: <a href="../../part-3-functions-strings-exceptions/chapter-06-functions-part-1-practice/">Ch 6 Part 1 practice</a>, <a href="../../part-3-functions-strings-exceptions/chapter-06-functions-part-2-practice/">Part 2</a>, <a href="../../part-3-functions-strings-exceptions/chapter-06-functions-part-3-practice/">Part 3</a>, <a href="../../part-3-functions-strings-exceptions/exam-3-study-set/">Exam 3 Study Set</a></td><td data-l="Watch for"><ul><li>Type hints are hints, not rules. Python does not check them.</li><li>A recursive function needs a base case, or it never stops.</li><li>round(5.9) gives the int 6. round(5.88, 1) gives the float 5.9.</li></ul></td></tr><tr id="o6"><td data-l="Canvas assignment"><b>Objective 6 (Python Data Structures)</b><br><span class="pill later">After Ch 9</span><label class="chk rowchk"><input type="checkbox" class="tick" data-kind="obj" data-id="o6" aria-label="Objective 6 (Python Data Structures): done in Knowledge Pillars and submitted in Canvas"><span>Done in KP and submitted in Canvas</span></label></td><td data-l="What it covers">Lists, strings, tuples, sets, dictionaries, slices.</td><td data-l="Our chapter and where to study"><b>Ch 3 and Ch 9 (Lists and Dictionaries)</b><br>zyBooks and the Ch 9 notebook. See <a href="../../">All practice pages</a>.</td><td data-l="Watch for"><ul><li>sort() changes the list and gives back None. sorted() makes a new list.</li><li>append adds one item. extend adds every item of a list.</li><li>A slice stops before the end number: my_list[2:5] is items 2, 3 and 4.</li></ul></td></tr><tr id="o7"><td data-l="Canvas assignment"><b>Objective 7 (Using Modules and Packages)</b><br><span class="pill later">After Ch 11</span><label class="chk rowchk"><input type="checkbox" class="tick" data-kind="obj" data-id="o7" aria-label="Objective 7 (Using Modules and Packages): done in Knowledge Pillars and submitted in Canvas"><span>Done in KP and submitted in Canvas</span></label></td><td data-l="What it covers">import, from, the random and math modules, packages, the re module.</td><td data-l="Our chapter and where to study"><b>Ch 11 (Modules)</b><br>zyBooks and the Ch 11 notebook. See <a href="../../">All practice pages</a>.</td><td data-l="Watch for"><ul><li>import random then random.choice(x), or from random import * (no prefix).</li><li>random.randint(2, 5) can give 5. The end is included here.</li><li>Do not memorize the re (regular expression) characters.</li></ul></td></tr><tr id="o8"><td data-l="Canvas assignment"><b>Objective 8 (Classes, Objects and OOP)</b><br><span class="pill later">After Ch 10</span><label class="chk rowchk"><input type="checkbox" class="tick" data-kind="obj" data-id="o8" aria-label="Objective 8 (Classes, Objects and OOP): done in Knowledge Pillars and submitted in Canvas"><span>Done in KP and submitted in Canvas</span></label></td><td data-l="What it covers">class, __init__, self, methods, inheritance, dunder methods.</td><td data-l="Our chapter and where to study"><b>Ch 10 (Classes)</b><br>zyBooks and the Ch 10 notebook. See <a href="../../">All practice pages</a>.</td><td data-l="Watch for"><ul><li>__init__ sets up a new object. __len__ makes len() work on your class.</li><li>self is the first parameter of every method.</li><li>Keywords are lowercase: class is right, Class is a SyntaxError. Only True, False and None start with a capital.</li></ul></td></tr><tr id="o9"><td data-l="Canvas assignment"><b>Objective 9 (Exceptions)</b><br><span class="pill now">Start now</span><label class="chk rowchk"><input type="checkbox" class="tick" data-kind="obj" data-id="o9" aria-label="Objective 9 (Exceptions): done in Knowledge Pillars and submitted in Canvas"><span>Done in KP and submitted in Canvas</span></label></td><td data-l="What it covers">try and except, common errors, events, SyntaxError vs errors at run time.</td><td data-l="Our chapter and where to study"><b>Ch 8</b><br>zyBooks, your Ch 8 notebook.<br>Practice: <a href="../../part-3-functions-strings-exceptions/chapter-08-exceptions-practice/">Ch 8 Exceptions practice</a></td><td data-l="Watch for"><ul><li>int(&quot;a&quot;) is a ValueError (right type, bad value). int([1, 2, 3]) is a TypeError (wrong type).</li><li>A SyntaxError stops everything before any line runs. Other errors happen when their line runs.</li><li>try and except &quot;traps&quot; an error. Know the words event and thread too.</li></ul></td></tr><tr id="o10"><td data-l="Canvas assignment"><b>Objective 10 (I/O operations)</b><br><span class="pill later">After Ch 12</span><label class="chk rowchk"><input type="checkbox" class="tick" data-kind="obj" data-id="o10" aria-label="Objective 10 (I/O operations): done in Knowledge Pillars and submitted in Canvas"><span>Done in KP and submitted in Canvas</span></label></td><td data-l="What it covers">Open, read and write files, text vs binary.</td><td data-l="Our chapter and where to study"><b>Ch 12 (Files)</b><br>zyBooks and the Ch 12 notebook. See <a href="../../">All practice pages</a>.</td><td data-l="Watch for"><ul><li>Modes: r reads, w writes (and erases), a adds to the end, rb and wb are for binary files.</li><li>x mode makes a new file only. If the file exists you get a FileExistsError.</li><li>One practice question asks about scikit-learn. We do not cover it, so skip it.</li></ul></td></tr></tbody></table></div>
-<section class="sec" id="s4"><h2>Step 4 · Predict the output</h2><p>The tricky ones the prep guide warns about. Read the code, say the output out loud, then open the answer.</p></section>
+</div></details>
+<details class="step" id="s4" data-k="s4"><summary class="sec"><h2>Step 4 · Predict the output</h2><p>The tricky ones the prep guide warns about. Read the code, say the output out loud, then open the answer.</p></summary><div class="stepbody">
 <p>To run one yourself, copy it into a code cell at <a href="https://colab.new" target="_blank" rel="noopener">colab.new</a>. Every output below came from running that exact code on Python 3.12.</p>
 <article class="card" id="p1"><h3><span class="tag">1</span>Mixing types <span class="sub" style="font-size:14px">· Objective 2</span></h3><div class="codewrap"><pre class="code">print(3 + 5.0)
 print(3 + &quot;3&quot;)</pre><button class="copy" type="button">Copy</button></div><details class="sol"><summary>Show the answer</summary><div><div class="lbl">What it prints</div><pre class="out">8.0</pre><div class="lbl">Then the program stops with this error</div><pre class="out err">TypeError: unsupported operand type(s) for +: &#x27;int&#x27; and &#x27;str&#x27;</pre><p><b>Why:</b> Python turns the int into a float on its own when you mix them. It never turns a number into a string, or a string into a number, on its own. Use str() or int() yourself.</p></div></details></article>
@@ -207,30 +236,38 @@ b = [1, 2]
 b.extend([3, 4])
 print(b)</pre><button class="copy" type="button">Copy</button></div><details class="sol"><summary>Show the answer</summary><div><div class="lbl">What it prints</div><pre class="out">[1, 2, [3, 4]]
 [1, 2, 3, 4]</pre><p><b>Why:</b> append adds its argument as ONE item, even a list. extend adds each item of the list.</p></div></details></article>
-<section class="sec" id="s5"><h2>Step 5 · The Exam Simulator</h2><p>A full practice exam with no feedback, like the real thing. Canvas requires two attempts, with 85 or higher on at least one.</p></section>
+</div></details>
+<details class="step" id="s5" data-k="s5"><summary class="sec"><h2>Step 5 · The Exam Simulator</h2><p>A full practice exam with no feedback, like the real thing. Canvas requires two attempts, with 85 or higher on at least one.</p></summary><div class="stepbody">
 <div class="box why"><p class="boxlbl">It opens later</p><p>The Exam Simulator opens later. See Canvas. The steps are here so you know what to expect.</p></div>
 <ol class="steps"><li>Sign in at <a href="https://platform.knowledge-pillars.com/" target="_blank" rel="noopener">platform.knowledge-pillars.com</a>. Click <b>Practice tests</b> (under the Practice heading on the left menu), then <b>Start Test</b> on the right side.</li><li>Under <b>Exam Simulator</b>, click the <b>Start Simulation</b> button.</li><li>Read the message and click <b>Next</b>, then <b>Start The Exam</b>.</li><li>Answer the questions. You will <b>not</b> get feedback after each one. To come back to a hard question later, click the <b>Bookmark</b> button on it.</li><li>When you finish, click <b>Review and Finish Exam</b>. Go back to any unanswered or bookmarked question. Then click <b>Finish Exam</b> at the bottom right of the Review window.</li></ol>
 <div class="box warn"><p class="boxlbl">Answer every question</p><p>On the real exam an unanswered question counts as wrong. Bookmark the hard ones, but do not leave any blank.</p></div>
 <p>Also read the KP Certification Prep Guide for the topics we did not cover in class: <a href="https://colab.research.google.com/drive/1mD1DUc5GDUjBZ_L23ajqPgFuDDZsEcXB" target="_blank" rel="noopener">Colab notebook</a> or <a href="https://drive.google.com/file/d/12Yyruq0lRm7n8_Q9QPKWZhB8yvxqCTjt/view" target="_blank" rel="noopener">PDF</a>.</p>
-<section class="sec" id="s6"><h2>Step 6 · Book your certification exam</h2><p>The exam is your final. Book it early. The last day to test is on the Taking the Certification Exam page in Canvas.</p></section>
-<h3 class="part">Part 1 · Before you book</h3>
+</div></details>
+<details class="step" id="s6" data-k="s6"><summary class="sec"><h2>Step 6 · Book your certification exam</h2><p>The exam is your final. Book it early. The last day to test is on the Taking the Certification Exam page in Canvas.</p></summary><div class="stepbody">
+<details class="part" data-k="s6-1"><summary><h3 class="part">Part 1 · Before you book</h3></summary><div class="stepbody">
 <label class="chk"><input type="checkbox" class="tick" data-kind="step" data-id="survey"><span>Finish the <b>Certification Exam Survey: Questions + Acknowledgment</b> quiz in Canvas. One question asks where you will take the exam, so decide now: a testing center (preferred) or remote.</span></label>
 <label class="chk"><input type="checkbox" class="tick" data-kind="step" data-id="practice"><span>Finish all the practice assignments in Step 3.</span></label>
 <label class="chk"><input type="checkbox" class="tick" data-kind="step" data-id="sim"><span>Take the Exam Simulator twice, with 85 or higher on at least one attempt (Step 5). It opens later. See Canvas.</span></label>
-<h3 class="part">Part 2 · Preferred: an MDC Testing Center</h3>
+</div></details>
+<details class="part" data-k="s6-2"><summary><h3 class="part">Part 2 · Preferred: an MDC Testing Center</h3></summary><div class="stepbody">
 <ol class="steps"><li><b>Pick an MDC Testing Center</b> that is easiest for you to get to. The <a href="https://www.mdc.edu/testing/contact/" target="_blank" rel="noopener">contacts page</a> lists them.</li><li><b>Check the hours:</b> <a href="https://www.mdc.edu/testing/contact/office-hours-of-operation/" target="_blank" rel="noopener">MDC Testing Center hours of operation</a>.</li><li><b>Call the center and book.</b> Phone numbers are on the <a href="https://www.mdc.edu/testing/contact/" target="_blank" rel="noopener">MDC Testing Center contacts</a> page. Say the exam name: <b>"Python Coding Specialist (PCS)"</b>.</li><li><b>Bring your Knowledge Pillars login</b> (your email and password). Ask on the call if you need anything else, such as an ID.</li><li><b>Book early.</b> Do not book a time after the last day to test. That day is on the Taking the Certification Exam page in Canvas.</li></ol>
 <label class="chk"><input type="checkbox" class="tick" data-kind="step" data-id="booked"><span>My exam is booked (campus and time written down), or I have my remote code.</span></label>
-<h3 class="part">Part 3 · Remote with KP: only if you have no other choice</h3>
+</div></details>
+<details class="part" data-k="s6-3"><summary><h3 class="part">Part 3 · Remote with KP: only if you have no other choice</h3></summary><div class="stepbody">
 <div class="box warn"><p class="boxlbl">Why it is risky</p><p>KP takes several days to review the exam video and report your result. Use remote only if a testing center truly will not work for you.</p></div>
 <ol class="steps"><li>Read the policies first: <a href="https://knowledge-pillars.com/online-proctored-exams/" target="_blank" rel="noopener">KP online proctored exams policies</a>.</li><li><b>Email Professor Marquez</b> to get your exam code.</li><li>Set up your computer: <b>Chrome only</b>. Close any other open Chrome windows, then open a new regular window (not private) with no other tabs. Turn off any ad blocker. Do not block cookies. Turn off extra monitors.</li><li>When you are ready, sign in to KP, click <b>Take exam</b> under Certify, agree to the non-disclosure agreement, say Yes to being part of an exam group, and enter your code. Then follow the proctoring steps.</li></ol>
-<h3 class="part">Part 4 · After the exam</h3>
+</div></details>
+<details class="part" data-k="s6-4"><summary><h3 class="part">Part 4 · After the exam</h3></summary><div class="stepbody">
 <ol class="steps"><li>Sign in to KP and click <b>Exam results</b> under Certify.</li><li>Take a <b>screenshot</b> that shows the exam details and your score (on the right side).</li><li>Upload the screenshot to <b>Final (Certification) Exam -- Submit Your Result!</b> in the Canvas Modules area.</li><li>Took it remotely and the status says <b>Pending Review</b>? Stop there and email Professor Marquez that you are waiting for KP to review it.</li></ol>
 <label class="chk"><input type="checkbox" class="tick" data-kind="step" data-id="uploaded"><span>I uploaded my result screenshot in Canvas.</span></label>
-<div class="box why"><p class="boxlbl">Links in one place</p><ul><li><a href="https://platform.knowledge-pillars.com/" target="_blank" rel="noopener">platform.knowledge-pillars.com</a>: practice, simulator and exam results</li><li><a href="https://knowledge-pillars.com/python-coding-specialist/" target="_blank" rel="noopener">Python Coding Specialist exam page</a>: exam facts and the full list of exam topics</li><li><a href="https://www.mdc.edu/testing/contact/" target="_blank" rel="noopener">MDC Testing Center contacts</a> and <a href="https://www.mdc.edu/testing/contact/office-hours-of-operation/" target="_blank" rel="noopener">MDC Testing Center hours of operation</a></li><li><a href="https://colab.research.google.com/drive/1mD1DUc5GDUjBZ_L23ajqPgFuDDZsEcXB" target="_blank" rel="noopener">KP Certification Prep Guide (Colab notebook)</a> and <a href="https://drive.google.com/file/d/12Yyruq0lRm7n8_Q9QPKWZhB8yvxqCTjt/view" target="_blank" rel="noopener">KP Certification Prep Guide (PDF)</a></li></ul></div>
+</div></details>
+</div></details>
+<details class="box why links" open data-k="links"><summary class="boxlbl">Links in one place</summary><ul><li><a href="https://platform.knowledge-pillars.com/" target="_blank" rel="noopener">platform.knowledge-pillars.com</a>: practice, simulator and exam results</li><li><a href="https://knowledge-pillars.com/python-coding-specialist/" target="_blank" rel="noopener">Python Coding Specialist exam page</a>: exam facts and the full list of exam topics</li><li><a href="https://www.mdc.edu/testing/contact/" target="_blank" rel="noopener">MDC Testing Center contacts</a> and <a href="https://www.mdc.edu/testing/contact/office-hours-of-operation/" target="_blank" rel="noopener">MDC Testing Center hours of operation</a></li><li><a href="https://colab.research.google.com/drive/1mD1DUc5GDUjBZ_L23ajqPgFuDDZsEcXB" target="_blank" rel="noopener">KP Certification Prep Guide (Colab notebook)</a> and <a href="https://drive.google.com/file/d/12Yyruq0lRm7n8_Q9QPKWZhB8yvxqCTjt/view" target="_blank" rel="noopener">KP Certification Prep Guide (PDF)</a></li></ul></details>
 <p><button class="reset" id="reset" type="button">Reset my progress</button></p>
 <p class="sub">Progress is stored only in this browser on this device. A different browser, a private window or clearing your browsing data starts fresh.</p></main><script>
 (function(){
 const KEY="cop1047c-kp-start-v1";
+const OKEY="cop1047c-kp-start-v1-open";
 const ticks=[...document.querySelectorAll('.tick')];
 const saveEl=document.getElementById('save');
 let state={obj:{},steps:{}}, canSave=false;
@@ -267,5 +304,44 @@ document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
   try{navigator.clipboard.writeText(t).then(()=>done('Copied'),sel);}catch(e){sel();}
 }));
 render();
+
+/* Collapsible steps and parts. Which ones are open is remembered under its own key (OKEY); the progress key above is never touched,
+   and Reset my progress clears checkmarks only. Every storage access is in try/catch, so the page works with storage blocked. */
+const dets=[...document.querySelectorAll('details[data-k]')];
+let canSaveOpen=false, printing=false, snap=null, openState={};
+try{
+  const raw=localStorage.getItem(OKEY);canSaveOpen=true;
+  if(raw){try{const d=JSON.parse(raw);if(d&&typeof d==='object'&&!Array.isArray(d)) openState=d;}catch(e){}}
+}catch(e){}
+dets.forEach(d=>{if(Object.prototype.hasOwnProperty.call(openState,d.dataset.k)) d.open=openState[d.dataset.k]===true;});
+function saveOpen(){
+  if(!canSaveOpen||printing) return;
+  const o={};dets.forEach(d=>{o[d.dataset.k]=d.open;});
+  try{localStorage.setItem(OKEY,JSON.stringify(o));}catch(e){canSaveOpen=false;}
+}
+dets.forEach(d=>d.addEventListener('toggle',saveOpen));
+function setAll(v){dets.forEach(d=>{d.open=v;});saveOpen();}
+document.getElementById('expandall').addEventListener('click',()=>setAll(true));
+document.getElementById('collapseall').addEventListener('click',()=>setAll(false));
+/* A link or URL hash that points at a step, or at anything inside a closed step or part, opens it first and then scrolls to it. */
+function targetOf(h){
+  h=(h||'').replace(/^#/,'');if(!h) return null;
+  try{h=decodeURIComponent(h);}catch(e){}
+  return document.getElementById(h);
+}
+function openTo(el){
+  let changed=false;
+  for(let n=el;n&&n.nodeType===1;n=n.parentElement){if(n.tagName==='DETAILS'&&!n.open){n.open=true;changed=true;}}
+  return changed;
+}
+document.addEventListener('click',e=>{
+  const a=e.target.closest&&e.target.closest('a[href^="#"]');if(!a) return;
+  const el=targetOf(a.getAttribute('href'));if(el) openTo(el);
+});
+window.addEventListener('hashchange',()=>{const el=targetOf(location.hash);if(el&&openTo(el)) el.scrollIntoView();});
+{const el=targetOf(location.hash);if(el&&openTo(el)) el.scrollIntoView();}
+/* Printing: every step and part prints open, then goes back to how the student left it. */
+window.addEventListener('beforeprint',()=>{if(snap) return;printing=true;snap=dets.map(d=>d.open);dets.forEach(d=>{d.open=true;});});
+window.addEventListener('afterprint',()=>{if(snap){dets.forEach((d,i)=>{d.open=snap[i];});snap=null;}setTimeout(()=>{printing=false;},0);});
 })();
 </script></body></html>
