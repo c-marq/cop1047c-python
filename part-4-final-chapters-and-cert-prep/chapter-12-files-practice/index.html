@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Chapter 12 Practice · COP1047C</title><meta name="description" content="Optional practice enhancements for COP1047C Chapter 12: reading lines from a file, comparing text, totaling numbers, writing and appending."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:wght@400;600;700&display=swap"><style>
+/* Layout: one reading column; sticky progress strip; each exercise is a worksheet card with plan, target, hints, solution */
+:root{
+ --bg:#F6F7F9; --surface:#FFFFFF; --fg:#1C2433; --muted:#5A6577; --line:#DCE1E8;
+ --brand:#1B2A41; --brand-fg:#FFFFFF; --accent:#F5B82E; --accent-ink:#1B2A41; --link:#2F5F98;
+ --code-bg:#22272E; --code-fg:#E6EDF3; --out-bg:#EEF1F5; --out-fg:#1D232B;
+ --go-bg:#DDF3E6; --go-fg:#17663A; --why-bg:#DCEAF7; --why-fg:#1A4C78;
+ --hint-bg:#FCF3D9; --hint-fg:#6E5606; --stop-bg:#F8DDDA; --stop-fg:#8E2A20;
+ --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+ --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+ --f-mono:"JetBrains Mono", ui-monospace, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}}
+:root[data-theme="dark"]{
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:17px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding-inline:18px;padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.2}
+h1{font-size:clamp(28px,5vw,40px);margin:26px 0 6px;font-weight:700}
+h2{font-size:24px;margin:38px 0 10px}
+h4{font-size:16px;margin:16px 0 6px;font-family:var(--f-body);font-weight:700;letter-spacing:.02em}
+a{color:var(--link)}
+p{margin:8px 0}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--out-bg);color:var(--out-fg);padding:1px 6px;border-radius:4px;white-space:pre-wrap}
+.sub{color:var(--muted);font-size:15px;max-width:65ch}
+.prog{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:2px solid var(--accent);padding-block:10px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.prog .count{font-weight:700;font-variant-numeric:tabular-nums}
+.bar{flex:1 1 140px;height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--go-fg);transition:width .3s}
+.jump{display:flex;gap:4px;flex-wrap:wrap}
+.jump a{font-size:13px;text-decoration:none;color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:1px 9px;font-variant-numeric:tabular-nums}
+.jump a.full{background:var(--go-bg);color:var(--go-fg);border-color:transparent}
+.save{font-size:13px;color:var(--muted);flex-basis:100%}
+.save[data-s="saved"]{color:var(--go-fg)} .save[data-s="error"]{color:var(--stop-fg)}
+.map{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.map span{padding:5px 11px;border-radius:14px;font-size:14px;border:1px solid var(--line)}
+.map .done{background:var(--go-bg);color:var(--go-fg);border-color:transparent;font-weight:600}
+.map .now{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.box{border-radius:8px;padding:12px 16px;margin:12px 0}
+.box .boxlbl{font-weight:700;margin:0 0 4px;letter-spacing:.03em;font-size:14px;text-transform:uppercase}
+.go{background:var(--go-bg);color:var(--fg)} .go .boxlbl{color:var(--go-fg)}
+.why{background:var(--why-bg);color:var(--fg)} .why .boxlbl{color:var(--why-fg)}
+.warn{background:var(--hint-bg);color:var(--fg)} .warn .boxlbl{color:var(--hint-fg)}
+.stop{background:var(--stop-bg);color:var(--fg)} .stop .boxlbl{color:var(--stop-fg)}
+.box ol,.box ul{margin:4px 0;padding-left:22px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15.5px;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-family:var(--f-body);font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+td.n{font-variant-numeric:tabular-nums;color:var(--muted);width:2em}
+.codewrap{position:relative;margin:8px 0;min-width:0}
+pre{margin:0;overflow-x:auto;white-space:pre;font-family:var(--f-mono);font-size:14px;line-height:1.5;border-radius:8px;padding:12px 14px}
+pre.code{background:var(--code-bg);color:var(--code-fg);padding-right:72px}
+pre.out{background:var(--out-bg);color:var(--out-fg);margin-bottom:10px}
+.lbl{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:8px}
+.copy{position:absolute;top:8px;right:8px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:5px;padding:4px 10px;font:600 13px var(--f-body);cursor:pointer}
+.copy:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.sec{background:var(--brand);color:var(--brand-fg);border-radius:10px;padding:14px 18px;margin:40px 0 12px;scroll-margin-top:70px}
+.sec h2{margin:0;color:var(--accent);font-size:22px}
+.sec p{margin:4px 0 0;opacity:.85;font-size:15px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:16px 0;scroll-margin-top:70px}
+.card.is-done{border-color:var(--go-fg)}
+.card h3{margin:0 0 6px;display:flex;gap:10px;align-items:center;font-size:20px}
+.card h3 label{display:flex;gap:10px;align-items:center;cursor:pointer}
+.tick{width:20px;height:20px;accent-color:var(--go-fg);flex:none}
+.tag{font-family:var(--f-mono);font-size:13px;background:var(--brand);color:var(--brand-fg);border-radius:5px;padding:1px 7px}
+details{margin:6px 0}
+summary{cursor:pointer;font-weight:700;padding:8px 12px;border-radius:6px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ "} details[open]>summary::before{content:"▾ "}
+details.hint>summary{background:var(--hint-bg);color:var(--hint-fg)}
+details.sol>summary{background:var(--stop-bg);color:var(--stop-fg)}
+details>div{padding:4px 4px 4px 12px}
+.rate{display:flex;gap:6px;flex-wrap:wrap}
+.rate input{position:absolute;opacity:0;pointer-events:none}
+.rate label{border:1px solid var(--line);border-radius:6px;padding:4px 12px;cursor:pointer;font-variant-numeric:tabular-nums;background:var(--surface)}
+.rate input:checked+label{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.rate input:focus-visible+label{outline:3px solid var(--link);outline-offset:2px}
+.reset{background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.reset.armed{border-color:var(--stop-fg);color:var(--stop-fg)}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+@media (max-width:480px){body{font-size:16px} pre{font-size:13px}}
+body{margin:0}</style></head><body><main class="wrap"><div class="prog" role="region" aria-label="Progress"><span class="count"><span id="done">0</span> / 5 done</span><div class="bar" aria-hidden="true"><i id="barfill"></i></div><nav class="jump" aria-label="Jump to section"><a href="#secG" data-sec="G">G</a></nav><span class="save" id="save" data-s="wait">Checking whether this browser can save your progress…</span></div>
+<p class="sub"><a href="../../">&larr; All COP1047C practice pages</a></p><h1>Chapter 12 Practice Enhancements: Files</h1><p class="sub">COP1047C Intro to Python · Miami Dade College · Optional · 5 short exercises on reading lines from a file, comparing text, totaling numbers, writing a report, and appending. Every exercise writes its own sample file first, so you do not upload anything. Every sample run and solution here was produced by running the code on Python 3.12. Your checkmarks and self-ratings save in this browser.</p><h2>What's covered</h2><div class="map"><span>G · Ch 12 · zyBooks Chapter 12</span></div><div class="box go"><p class="boxlbl">Optional · on your own time</p><p><b>Your zyBooks labs and homework come first.</b> This page is extra practice if you want more reps on what we did in class. It is not graded and nothing here is due. Do one exercise or all five, whenever it works for you.</p></div><p>G1 reads boat names with <code>readlines()</code>, strips the newline, and compares each name to a typed cutoff. G2 totals a file of toll amounts. G3 reads a rentals file and writes a report file. G4 appends a typed entry to a log and counts the lines before and after. G5 searches a guest list for a typed name.</p><p>Want more first? See the <a href="../chapter-09-lists-dictionaries-practice/">Chapter 9 Practice Enhancements</a>.</p><h2>How to use this practice set</h2><div class="box go"><p class="boxlbl">Do this in Colab</p><ol><li>Open a new notebook at colab.new. Use one code cell per exercise.</li><li>Read the story and answer the <b>Think first</b> questions out loud, or as a comment, before writing code.</li><li>Copy <b>Your plan</b> into the cell. The plan is the program, written as comments.</li><li>Build one plan line at a time. Type the code under its comment and run the cell after each piece.</li><li>Compare with the <b>Target</b> run. Type the same inputs: the logic and the numbers should match. Your messages can be worded your own way unless the story quotes them exactly.</li><li>Stuck? Open Hint 1. Still stuck after a couple of minutes? Hint 2, then Hint 3.</li><li>Open the solution last. Compare it to yours, then try the edge cases it lists.</li><li>Tick the box beside the title. Your progress saves in this browser.</li></ol></div><div class="box why"><p class="boxlbl">Why plan in comments first?</p><p>It's the order experienced programmers think in, and the same order we use when we build exercises live in class. A blank cell is hard. A to-do list is easy: each comment becomes one or two lines of code.</p></div><div class="box warn"><p class="boxlbl">Use the solutions honestly</p><p>The solutions are here so you can check your thinking, not skip it. If you open a solution before trying, close it, wait a day, and redo that exercise from a blank cell. That's what the exam will feel like.</p></div>
+<h3>The thinking order, for every exercise</h3><div class="tablewrap"><table><thead><tr><th></th><th>Step</th><th>Ask yourself</th></tr></thead><tbody><tr><td class="n">1</td><td><b>Restate</b></td><td>What goes in, what comes out, what are the rules? Look at the target run.</td></tr><tr><td class="n">2</td><td><b>Plan in comments</b></td><td>3 to 6 # lines, in order. Imports go first.</td></tr><tr><td class="n">3</td><td><b>Imports and constants</b></td><td>import random? Fixed values in ALL_CAPS?</td></tr><tr><td class="n">4</td><td><b>Inputs and starting variables</b></td><td>int, float or text? Counters and totals start at 0 before the loop.</td></tr><tr><td class="n">5</td><td><b>Pick the structure</b></td><td>One decision (if), repeat an unknown number of times (while), or a known number (for)?</td></tr><tr><td class="n">6</td><td><b>Body, one line at a time</b></td><td>What happens on each pass? What changes so the loop can end?</td></tr><tr><td class="n">7</td><td><b>After the loop</b></td><td>Summaries print once, at the left edge.</td></tr><tr><td class="n">8</td><td><b>Test</b></td><td>The sample input first, then an edge case: 0, the boundary, an empty entry.</td></tr></tbody></table></div>
+<section class="sec" id="secG"><h2>G · Files</h2><p>Ch 12 · zyBooks Chapter 12 · Write a file, read it back line by line, compare text, and add to a file without erasing it.</p></section><div class="box why"><p class="boxlbl">Quick refresher</p><p><code>open(name, "w")</code> writes (and erases). <code>open(name, "a")</code> adds to the end. <code>readlines()</code> gives a list of lines, and every line keeps its newline until you <code>strip()</code> it. <code>write()</code> takes text only and adds no newline. Close a file before you read what you wrote.</p><div class="codewrap"><pre class="code">f = open(&quot;notes.txt&quot;, &quot;w&quot;)
+f.write(&quot;Ana\nLuis\n&quot;)
+f.close()
+
+f = open(&quot;notes.txt&quot;)
+lines = f.readlines()
+f.close()
+print(lines)
+print(lines[0].strip())</pre></div><pre class="out">[&#x27;Ana\n&#x27;, &#x27;Luis\n&#x27;]
+Ana</pre></div><article class="card" id="G1"><h3><label><input type="checkbox" class="tick" id="tick-G1" data-id="G1" data-sec="G"><span class="tag">G1</span>Boats up to the cutoff</label></h3><p>A marina keeps its boat names in a file, one per line (the plan writes the file for you). Ask <code>Cutoff boat name: </code>. Read the file with <code>readlines()</code>. For each boat, print the name and <code>- up to the cutoff</code> if the name sorts at or before the cutoff, or <code>- after the cutoff</code> if it sorts after it. Count the ones up to the cutoff and print <code>Up to Marlin: 2</code> at the end (with the typed cutoff in place of Marlin).</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>The file is already written. Open it again to read, use <code>readlines()</code>, and close it.</li><li>Each line still has its newline. <code>line.strip()</code> gives the plain name.</li><li>Text compares with <code>&lt;=</code> the way words sort in a dictionary: capitals sort before lowercase, so every name here starts with a capital.</li><li>A counter starts at 0 before the loop and goes up by 1 for every name up to the cutoff. The summary prints once, after the loop.</li></ol></div><h4>Think first</h4><ul><li>What does &quot;Marlin\n&quot; == &quot;Marlin&quot; give?</li><li>What does the count do if the cutoff comes before every name?</li><li>Why does the summary line go after the loop, at the left edge?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># G1 · Boats up to the cutoff
+# PLAN
+# 1. imports: none needed
+# 2. cutoff = input(&quot;Cutoff boat name: &quot;)
+# 3. open boats.txt, read ALL the lines with readlines(), then close it
+# 4. count = 0, then loop over the lines. strip the newline off each one. If the name is &lt;= the cutoff, print &quot;&lt;name&gt; - up to the cutoff&quot; and count it. Else print &quot;&lt;name&gt; - after the cutoff&quot;
+# 5. print &quot;Up to &lt;cutoff&gt;: N&quot; (the count)
+# 6. Run as given: write the sample file
+f = open(&quot;boats.txt&quot;, &quot;w&quot;)  # Run as given
+f.write(&quot;Sailfish\nMarlin\nTarpon\nBonefish\nSnook\n&quot;)  # Run as given
+f.close()  # Run as given
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed &quot;Marlin&quot;</div><pre class="out">Cutoff boat name: Marlin
+Sailfish - after the cutoff
+Marlin - up to the cutoff
+Tarpon - after the cutoff
+Bonefish - up to the cutoff
+Snook - after the cutoff
+Up to Marlin: 2</pre><details class="hint"><summary>Hint 1</summary><div><p>Start with cutoff = input(&quot;Cutoff boat name: &quot;), then f = open(&quot;boats.txt&quot;), lines = f.readlines(), f.close()</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>count = 0, then for line in lines: name = line.strip()</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>if name &lt;= cutoff: print(name, &quot;- up to the cutoff&quot;) and count += 1, else: print(name, &quot;- after the cutoff&quot;). Last: print(&quot;Up to&quot;, cutoff + &quot;:&quot;, count)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">f = open(&quot;boats.txt&quot;, &quot;w&quot;)
+f.write(&quot;Sailfish\nMarlin\nTarpon\nBonefish\nSnook\n&quot;)
+f.close()
+
+cutoff = input(&quot;Cutoff boat name: &quot;)
+
+f = open(&quot;boats.txt&quot;)
+lines = f.readlines()
+f.close()
+
+count = 0
+for line in lines:
+    name = line.strip()
+    if name &lt;= cutoff:
+        print(name, &quot;- up to the cutoff&quot;)
+        count += 1
+    else:
+        print(name, &quot;- after the cutoff&quot;)
+
+print(&quot;Up to&quot;, cutoff + &quot;:&quot;, count)</pre></div><div class="lbl">Edge case · typed Aardvark (no name comes first)</div><pre class="out">Cutoff boat name: Aardvark
+Sailfish - after the cutoff
+Marlin - after the cutoff
+Tarpon - after the cutoff
+Bonefish - after the cutoff
+Snook - after the cutoff
+Up to Aardvark: 0</pre><div class="lbl">Edge case · typed Zebra (every name is up to the cutoff)</div><pre class="out">Cutoff boat name: Zebra
+Sailfish - up to the cutoff
+Marlin - up to the cutoff
+Tarpon - up to the cutoff
+Bonefish - up to the cutoff
+Snook - up to the cutoff
+Up to Zebra: 5</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Forget <code>strip()</code> and the newline rides along. Each name prints with a line break in the middle, and typed Marlin counts only <code>Up to Marlin: 1</code> because "Marlin\n" is after "Marlin". Skip the lines that write the file and a fresh notebook has no boats: <code>FileNotFoundError: [Errno 2] No such file or directory: &#x27;boats.txt&#x27;</code>.</p></div></div></details></article><article class="card" id="G2"><h3><label><input type="checkbox" class="tick" id="tick-G2" data-id="G2" data-sec="G"><span class="tag">G2</span>Toll total</label></h3><p>A driver writes down the toll for each trip, one amount per line, in a file (the plan writes it). Read it with <code>readlines()</code>. Print <code>Trips:</code> and how many lines there are, <code>Total: $60</code> with the sum, and <code>Average: $12.00</code> with 2 decimals.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Read all the lines. <code>len(lines)</code> is the number of trips.</li><li>Each line is text with a newline. <code>int(line)</code> turns it into a number and ignores the newline.</li><li>A total starts at 0 before the loop and grows inside it.</li><li>The average is the total divided by the number of trips. <code>:.2f</code> gives 2 decimals.</li></ol></div><h4>Think first</h4><ul><li>What does int(&quot;10\n&quot;) give?</li><li>What happens to the average if the file is empty?</li><li>Which lines go inside the loop, and which go after it?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># G2 · Toll total
+# PLAN
+# 1. imports: none needed
+# 2. open tolls.txt, read ALL the lines with readlines(), then close it
+# 3. total = 0, then loop over the lines and add int(line) to total (int ignores the newline)
+# 4. print &quot;Trips:&quot; and len(lines), then &quot;Total: $&quot; with the total
+# 5. print &quot;Average: $&quot; with total / len(lines) to 2 decimals (:.2f)
+# 6. Run as given: write the sample file
+f = open(&quot;tolls.txt&quot;, &quot;w&quot;)  # Run as given
+f.write(&quot;5\n10\n15\n20\n10\n&quot;)  # Run as given
+f.close()  # Run as given
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">Trips: 5
+Total: $60
+Average: $12.00</pre><details class="hint"><summary>Hint 1</summary><div><p>f = open(&quot;tolls.txt&quot;), lines = f.readlines(), f.close()</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>total = 0, then for line in lines: total += int(line)</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>print(&quot;Trips:&quot;, len(lines)), print(f&quot;Total: ${total}&quot;), print(f&quot;Average: ${total / len(lines):.2f}&quot;)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">f = open(&quot;tolls.txt&quot;, &quot;w&quot;)
+f.write(&quot;5\n10\n15\n20\n10\n&quot;)
+f.close()
+
+f = open(&quot;tolls.txt&quot;)
+lines = f.readlines()
+f.close()
+
+total = 0
+for line in lines:
+    total += int(line)
+
+print(&quot;Trips:&quot;, len(lines))
+print(f&quot;Total: ${total}&quot;)
+print(f&quot;Average: ${total / len(lines):.2f}&quot;)</pre></div><div class="lbl">Edge case · one trip, a file holding just 7</div><pre class="out">Trips: 1
+Total: $7
+Average: $7.00</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Add the line without <code>int()</code> and the text can't be added to a number: <code>TypeError: unsupported operand type(s) for +=: &#x27;int&#x27; and &#x27;str&#x27;</code>. An empty file prints the first two lines and then <code>ZeroDivisionError: division by zero</code>.</p></div></div></details></article><article class="card" id="G3"><h3><label><input type="checkbox" class="tick" id="tick-G3" data-id="G3" data-sec="G"><span class="tag">G3</span>Rental report</label></h3><p>A rental desk keeps each rental as one line: an item, a space, and the hours (the plan writes the file). Read it with <code>readlines()</code>. Make a new file, <code>report.txt</code>, with one line per rental like <code>Kayak - Short</code>: 4 or more hours is <code>Full day</code>, 2 or 3 hours is <code>Half day</code>, and less is <code>Short</code>. Then open the report, print what is in it, and print <code>Total hours:</code> with the sum.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Read the rentals first. Open <code>report.txt</code> in <code>"w"</code> mode and keep it open while you loop.</li><li><code>line.split()</code> cuts a line into the item and the hours. The hours need <code>int()</code>.</li><li>One decision per line: if, elif, else.</li><li><code>report.write(name + " - " + category + "\n")</code> writes text and the Enter. Close the report, then open it again to read it.</li></ol></div><h4>Think first</h4><ul><li>What happens at exactly 4 hours? Which comparison do you need?</li><li>Why does write() need a &quot;\n&quot; added by you?</li><li>Why close the report before reading it back?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># G3 · Rental report
+# PLAN
+# 1. imports: none needed
+# 2. open boards.txt, read ALL the lines with readlines(), then close it
+# 3. open report.txt in &quot;w&quot; mode. total = 0
+# 4. loop over the lines. line.split() gives [name, hours]. hours = int(parts[1]). Add to total
+# 5. if hours &gt;= 4 the category is &quot;Full day&quot;, elif hours &gt;= 2 it is &quot;Half day&quot;, else &quot;Short&quot;
+# 6. write name + &quot; - &quot; + category + a newline to report.txt. Close it after the loop
+# 7. open report.txt again, print what is in it, then print the total hours
+# 8. Run as given: write the sample file
+f = open(&quot;boards.txt&quot;, &quot;w&quot;)  # Run as given
+f.write(&quot;Paddleboard 5\nKayak 1\nCanoe 3\nSailboat 6\n&quot;)  # Run as given
+f.close()  # Run as given
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">Paddleboard - Full day
+Kayak - Short
+Canoe - Half day
+Sailboat - Full day
+Total hours: 15</pre><details class="hint"><summary>Hint 1</summary><div><p>f = open(&quot;boards.txt&quot;), lines = f.readlines(), f.close(), then report = open(&quot;report.txt&quot;, &quot;w&quot;) and total = 0</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>for line in lines: parts = line.split(), name = parts[0], hours = int(parts[1]), total += hours</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>if hours &gt;= 4: category = &quot;Full day&quot;, elif hours &gt;= 2: ..., else: ... then report.write(...). After the loop: report.close(), read it back with print(f.read(), end=&quot;&quot;)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">f = open(&quot;boards.txt&quot;, &quot;w&quot;)
+f.write(&quot;Paddleboard 5\nKayak 1\nCanoe 3\nSailboat 6\n&quot;)
+f.close()
+
+f = open(&quot;boards.txt&quot;)
+lines = f.readlines()
+f.close()
+
+report = open(&quot;report.txt&quot;, &quot;w&quot;)
+total = 0
+for line in lines:
+    parts = line.split()
+    name = parts[0]
+    hours = int(parts[1])
+    total += hours
+    if hours &gt;= 4:
+        category = &quot;Full day&quot;
+    elif hours &gt;= 2:
+        category = &quot;Half day&quot;
+    else:
+        category = &quot;Short&quot;
+    report.write(name + &quot; - &quot; + category + &quot;\n&quot;)
+report.close()
+
+f = open(&quot;report.txt&quot;)
+print(f.read(), end=&quot;&quot;)
+f.close()
+print(&quot;Total hours:&quot;, total)</pre></div><div class="lbl">Edge case · the plan writes Raft 4, Tube 2 and Board 1 instead (exactly 4 hours and exactly 2 hours)</div><pre class="out">Raft - Full day
+Tube - Half day
+Board - Short
+Total hours: 7</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Use <code>&gt; 4</code> instead of <code>&gt;= 4</code> and a 4-hour rental quietly becomes Half day (<code>Raft - Half day</code>). Leave out the <code>"\n"</code> and the report runs together: <code>Paddleboard - Full dayKayak - ShortCanoe - Half daySailboat - Full dayTotal hours: 15</code>. Skip <code>int()</code> and the hours are text: <code>TypeError: unsupported operand type(s) for +=: &#x27;int&#x27; and &#x27;str&#x27;</code>.</p></div></div></details></article><article class="card" id="G4"><h3><label><input type="checkbox" class="tick" id="tick-G4" data-id="G4" data-sec="G"><span class="tag">G4</span>Add to the log</label></h3><p>A dock keeps a log file with one entry per line (the plan writes three entries). Ask <code>New log entry: </code>. Print how many lines the log has <code>Before:</code>, add the entry to the END of the file, then print how many lines it has <code>After:</code> and the last line, like <code>Last line: Dock closed</code>.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Read the file with <code>readlines()</code> to count the lines before.</li><li>Open it in <code>"a"</code> mode. Write the entry and a newline, then close it.</li><li>Read the file again. The count is one more, and the last item is the new entry.</li><li><code>lines[-1]</code> is the last line. It still has its newline, so <code>strip()</code> it.</li></ol></div><h4>Think first</h4><ul><li>What would &quot;w&quot; do to the three old entries?</li><li>Why does the entry need a newline of its own?</li><li>Why read the file again after closing?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># G4 · Add to the log
+# PLAN
+# 1. imports: none needed
+# 2. entry = input(&quot;New log entry: &quot;)
+# 3. open log.txt, read ALL the lines with readlines(), close it, and print &quot;Before:&quot;, the count, and the word lines (Before: 3 lines)
+# 4. open log.txt again in &quot;a&quot; mode, write the entry and a newline, close it
+# 5. read the file again with readlines(). Print After: with the new count, then the last line with the newline stripped
+# 6. Run as given: write the sample file
+f = open(&quot;log.txt&quot;, &quot;w&quot;)  # Run as given
+f.write(&quot;Dock opened\nBoats out\nBoats back\n&quot;)  # Run as given
+f.close()  # Run as given
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed &quot;Dock closed&quot;</div><pre class="out">New log entry: Dock closed
+Before: 3 lines
+After: 4 lines
+Last line: Dock closed</pre><details class="hint"><summary>Hint 1</summary><div><p>entry = input(&quot;New log entry: &quot;), then read the file with readlines() and print the count</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>f = open(&quot;log.txt&quot;, &quot;a&quot;), f.write(entry + &quot;\n&quot;), f.close()</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>Read it again, print the new count, then print(&quot;Last line:&quot;, lines[-1].strip())</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">f = open(&quot;log.txt&quot;, &quot;w&quot;)
+f.write(&quot;Dock opened\nBoats out\nBoats back\n&quot;)
+f.close()
+
+entry = input(&quot;New log entry: &quot;)
+
+f = open(&quot;log.txt&quot;)
+lines = f.readlines()
+f.close()
+print(&quot;Before:&quot;, len(lines), &quot;lines&quot;)
+
+f = open(&quot;log.txt&quot;, &quot;a&quot;)
+f.write(entry + &quot;\n&quot;)
+f.close()
+
+f = open(&quot;log.txt&quot;)
+lines = f.readlines()
+f.close()
+print(&quot;After:&quot;, len(lines), &quot;lines&quot;)
+print(&quot;Last line:&quot;, lines[-1].strip())</pre></div><div class="lbl">Edge case · a different entry: typed Gate locked</div><pre class="out">New log entry: Gate locked
+Before: 3 lines
+After: 4 lines
+Last line: Gate locked</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Open with <code>"w"</code> instead of <code>"a"</code> and the old entries are gone: <code>After: 1 lines</code>. Leave off the <code>strip()</code> on the last line and print adds a blank line after it, because the line still has its newline.</p></div></div></details></article><article class="card" id="G5"><h3><label><input type="checkbox" class="tick" id="tick-G5" data-id="G5" data-sec="G"><span class="tag">G5</span>Find a guest</label></h3><p>A guest list is a file with one name per line (the plan writes it). Ask <code>Guest name: </code>. Read the file with <code>readlines()</code> and look through the lines in order. If a line matches the typed name exactly, print <code>Found on line 3</code> (with the real line number, counting from 1) and stop looking. If no line matches, print the name and <code>is not on the list</code>.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Read all the lines, then walk through them with a counter that starts at 0 and goes up by 1 on each pass.</li><li>Compare <code>line.strip()</code> with the typed name. Without <code>strip()</code> the newline makes every name a mismatch.</li><li>When there is a match: print, set a flag <code>found = True</code>, and <code>break</code>.</li><li>After the loop, the flag decides whether to print the "not on the list" line.</li></ol></div><h4>Think first</h4><ul><li>What does the flag remember while the loop runs?</li><li>Does &quot;luis&quot; match &quot;Luis&quot;? Why or why not?</li><li>Why print the not-found message after the loop, not inside it?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># G5 · Find a guest
+# PLAN
+# 1. imports: none needed
+# 2. name = input(&quot;Guest name: &quot;)
+# 3. open guests.txt, read ALL the lines with readlines(), close it
+# 4. found = False and number = 0. Loop over the lines: add 1 to number, strip the newline, and if it equals the name, print Found on line and the number, set found = True, and break
+# 5. after the loop, if found is still False, print the name and &quot;is not on the list&quot;
+# 6. Run as given: write the sample file
+f = open(&quot;guests.txt&quot;, &quot;w&quot;)  # Run as given
+f.write(&quot;Ana\nLuis\nMaya\nSam\n&quot;)  # Run as given
+f.close()  # Run as given
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed &quot;Maya&quot;</div><pre class="out">Guest name: Maya
+Found on line 3</pre><details class="hint"><summary>Hint 1</summary><div><p>name = input(&quot;Guest name: &quot;), read the lines, then found = False and number = 0</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>for line in lines: number += 1, then if line.strip() == name:</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>Inside the if: print(&quot;Found on line&quot;, number), found = True, break. After the loop: if not found: print(name, &quot;is not on the list&quot;)</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">f = open(&quot;guests.txt&quot;, &quot;w&quot;)
+f.write(&quot;Ana\nLuis\nMaya\nSam\n&quot;)
+f.close()
+
+name = input(&quot;Guest name: &quot;)
+
+f = open(&quot;guests.txt&quot;)
+lines = f.readlines()
+f.close()
+
+found = False
+number = 0
+for line in lines:
+    number += 1
+    if line.strip() == name:
+        print(&quot;Found on line&quot;, number)
+        found = True
+        break
+
+if not found:
+    print(name, &quot;is not on the list&quot;)</pre></div><div class="lbl">Edge case · typed Zoe, who is not on the list</div><pre class="out">Guest name: Zoe
+Zoe is not on the list</pre><div class="lbl">Edge case · typed luis (lowercase): text must match exactly</div><pre class="out">Guest name: luis
+luis is not on the list</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Compare without <code>strip()</code> and nobody is ever found, even a name that is on the list: <code>Maya is not on the list</code>.</p></div></div></details></article><h2 id="rate">Rate yourself</h2><p>Give each section a 1 (shaky), 2 (okay) or 3 (solid). Your ratings save with your progress. Any 1s? Redo that section's last exercise tomorrow from a blank cell, without the plan. That's the real test, and those are the ones to bring questions about next class.</p>
+<div class="tablewrap"><table><thead><tr><th>Section</th><th>Topic</th><th>Your rating</th></tr></thead><tbody><tr><td><b>G</b></td><td>Reading lines, comparing text, totaling numbers, writing a report, appending</td><td><div class="rate" role="radiogroup" aria-label="Rating for section G"><input type="radio" name="rate-G" id="rate-G-1" value="1" data-sec="G"><label for="rate-G-1">1</label><input type="radio" name="rate-G" id="rate-G-2" value="2" data-sec="G"><label for="rate-G-2">2</label><input type="radio" name="rate-G" id="rate-G-3" value="3" data-sec="G"><label for="rate-G-3">3</label></div></td></tr></tbody></table></div>
+<div class="box why"><p class="boxlbl">If you want more practice</p><ul><li>Redo any exercise you rated a 1, from a blank cell.</li><li>Say the thinking order out loud on every problem: restate, plan, imports and constants, inputs, structure, body, after the loop, test.</li><li>Know the traps: opening with "w" when you meant "a" (it erases), forgetting to close a file before you read it back, a newline left on a line you compare, write() with a number instead of a string, no "\n" between written lines, and a number that is still text because it never went through int() or float().</li></ul></div>
+<p><button class="reset" id="reset" type="button">Reset my progress</button></p>
+<p class="sub">Progress is stored only in this browser on this device. A different browser, a private window or clearing your browsing data starts fresh.</p></main><script>
+(function(){
+const KEY="cop1047c-ch12-practice-v1";
+const ticks=[...document.querySelectorAll('.tick')];
+const radios=[...document.querySelectorAll('.rate input')];
+const saveEl=document.getElementById('save');
+let state={done:{},ratings:{}}, canSave=false;
+function setStatus(s,m){saveEl.dataset.s=s;saveEl.textContent=m;}
+function render(){
+  ticks.forEach(t=>{t.checked=!!state.done[t.dataset.id];t.closest('.card').classList.toggle('is-done',t.checked);});
+  radios.forEach(r=>{r.checked=String(state.ratings[r.dataset.sec]||'')===r.value;});
+  const n=ticks.filter(t=>t.checked).length;
+  document.getElementById('done').textContent=n;
+  document.getElementById('barfill').style.width=(100*n/ticks.length)+'%';
+  document.querySelectorAll('.jump a').forEach(a=>{const ts=ticks.filter(t=>t.dataset.sec===a.dataset.sec);a.classList.toggle('full',ts.length>0&&ts.every(t=>t.checked));});
+}
+function save(){
+  render();
+  if(!canSave) return;
+  try{localStorage.setItem(KEY,JSON.stringify(state));setStatus('saved','Saved in this browser');}
+  catch(e){canSave=false;setStatus('error','This browser stopped saving. Your checkmarks last until you close the page.');}
+}
+try{
+  const raw=localStorage.getItem(KEY);
+  if(raw){const d=JSON.parse(raw);state={done:Object.assign({},d.done||{}),ratings:Object.assign({},d.ratings||{})};}
+  localStorage.setItem(KEY+'-test','1');localStorage.removeItem(KEY+'-test');
+  canSave=true;setStatus('saved',raw?'Progress loaded from this browser':'Progress saves in this browser');
+}catch(e){setStatus('local','This browser is blocking saving (private window?). Your checkmarks last until you close the page.');}
+ticks.forEach(t=>t.addEventListener('change',()=>{if(t.checked) state.done[t.dataset.id]=true; else delete state.done[t.dataset.id]; save();}));
+radios.forEach(r=>r.addEventListener('change',()=>{state.ratings[r.dataset.sec]=Number(r.value);save();}));
+const btn=document.getElementById('reset');let armed=false;
+btn.addEventListener('click',()=>{
+  if(!armed){armed=true;btn.classList.add('armed');btn.textContent='Tap again to clear every checkmark and rating';setTimeout(()=>{armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';},4000);return;}
+  armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';state={done:{},ratings:{}};save();
+});
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
+  const pre=b.parentElement.querySelector('pre');const t=pre.innerText;
+  const done=m=>{b.textContent=m;setTimeout(()=>b.textContent='Copy',1400);};
+  const sel=()=>{const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);done('Selected: press Ctrl+C');};
+  try{navigator.clipboard.writeText(t).then(()=>done('Copied'),sel);}catch(e){sel();}
+}));
+render();
+})();
+</script></body></html>
