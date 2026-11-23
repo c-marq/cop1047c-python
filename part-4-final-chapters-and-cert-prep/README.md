@@ -6,6 +6,7 @@ Practice pages in this folder:
 
 - [Chapter 9 Practice Enhancements: Lists and Dictionaries](chapter-09-lists-dictionaries-practice/)
 - [Chapter 12 Practice Enhancements: Files](chapter-12-files-practice/)
+- [Chapter 10 Practice Enhancements: Classes](chapter-10-classes-practice/)
 - [Knowledge Pillars Start Here: Your Certification Final](knowledge-pillars-start-here/)
 - [Chapter 12 Data Files](chapter-12-files-data/) (three files the Chapter 12 notebook downloads; manual upload fallback)
 

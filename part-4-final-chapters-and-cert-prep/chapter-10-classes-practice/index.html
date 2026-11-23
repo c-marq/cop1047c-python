@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Chapter 10 Practice · COP1047C</title><meta name="description" content="Optional practice enhancements for COP1047C Chapter 10: defining a class, creating objects, instance methods, class attributes, constructor defaults, and a derived class."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:wght@400;600;700&display=swap"><style>
+/* Layout: one reading column; sticky progress strip; each exercise is a worksheet card with plan, target, hints, solution */
+:root{
+ --bg:#F6F7F9; --surface:#FFFFFF; --fg:#1C2433; --muted:#5A6577; --line:#DCE1E8;
+ --brand:#1B2A41; --brand-fg:#FFFFFF; --accent:#F5B82E; --accent-ink:#1B2A41; --link:#2F5F98;
+ --code-bg:#22272E; --code-fg:#E6EDF3; --out-bg:#EEF1F5; --out-fg:#1D232B;
+ --go-bg:#DDF3E6; --go-fg:#17663A; --why-bg:#DCEAF7; --why-fg:#1A4C78;
+ --hint-bg:#FCF3D9; --hint-fg:#6E5606; --stop-bg:#F8DDDA; --stop-fg:#8E2A20;
+ --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+ --f-body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+ --f-mono:"JetBrains Mono", ui-monospace, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}}
+:root[data-theme="dark"]{
+ --bg:#11161F; --surface:#18202C; --fg:#E4E9F0; --muted:#9AA6B8; --line:#2C3747;
+ --brand:#0B111A; --brand-fg:#F2F5F9; --accent:#F5B82E; --accent-ink:#141A24; --link:#8DB7EA;
+ --code-bg:#0B0F15; --code-fg:#E6EDF3; --out-bg:#202A38; --out-fg:#DDE4EE;
+ --go-bg:#173826; --go-fg:#9FE0B9; --why-bg:#16304A; --why-fg:#A9CDF2;
+ --hint-bg:#3A3112; --hint-fg:#F2D98A; --stop-bg:#45211D; --stop-fg:#F4B2AA; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:17px;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding-inline:18px;padding-block:0 64px}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.2}
+h1{font-size:clamp(28px,5vw,40px);margin:26px 0 6px;font-weight:700}
+h2{font-size:24px;margin:38px 0 10px}
+h4{font-size:16px;margin:16px 0 6px;font-family:var(--f-body);font-weight:700;letter-spacing:.02em}
+a{color:var(--link)}
+p{margin:8px 0}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--out-bg);color:var(--out-fg);padding:1px 6px;border-radius:4px;white-space:pre-wrap}
+.sub{color:var(--muted);font-size:15px;max-width:65ch}
+.prog{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:2px solid var(--accent);padding-block:10px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.prog .count{font-weight:700;font-variant-numeric:tabular-nums}
+.bar{flex:1 1 140px;height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--go-fg);transition:width .3s}
+.jump{display:flex;gap:4px;flex-wrap:wrap}
+.jump a{font-size:13px;text-decoration:none;color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:1px 9px;font-variant-numeric:tabular-nums}
+.jump a.full{background:var(--go-bg);color:var(--go-fg);border-color:transparent}
+.save{font-size:13px;color:var(--muted);flex-basis:100%}
+.save[data-s="saved"]{color:var(--go-fg)} .save[data-s="error"]{color:var(--stop-fg)}
+.map{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.map span{padding:5px 11px;border-radius:14px;font-size:14px;border:1px solid var(--line)}
+.map .done{background:var(--go-bg);color:var(--go-fg);border-color:transparent;font-weight:600}
+.map .now{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.box{border-radius:8px;padding:12px 16px;margin:12px 0}
+.box .boxlbl{font-weight:700;margin:0 0 4px;letter-spacing:.03em;font-size:14px;text-transform:uppercase}
+.go{background:var(--go-bg);color:var(--fg)} .go .boxlbl{color:var(--go-fg)}
+.why{background:var(--why-bg);color:var(--fg)} .why .boxlbl{color:var(--why-fg)}
+.warn{background:var(--hint-bg);color:var(--fg)} .warn .boxlbl{color:var(--hint-fg)}
+.stop{background:var(--stop-bg);color:var(--fg)} .stop .boxlbl{color:var(--stop-fg)}
+.box ol,.box ul{margin:4px 0;padding-left:22px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15.5px;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-family:var(--f-body);font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+td.n{font-variant-numeric:tabular-nums;color:var(--muted);width:2em}
+.codewrap{position:relative;margin:8px 0;min-width:0}
+pre{margin:0;overflow-x:auto;white-space:pre;font-family:var(--f-mono);font-size:14px;line-height:1.5;border-radius:8px;padding:12px 14px}
+pre.code{background:var(--code-bg);color:var(--code-fg);padding-right:72px}
+pre.out{background:var(--out-bg);color:var(--out-fg);margin-bottom:10px}
+.lbl{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:8px}
+.copy{position:absolute;top:8px;right:8px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:5px;padding:4px 10px;font:600 13px var(--f-body);cursor:pointer}
+.copy:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.sec{background:var(--brand);color:var(--brand-fg);border-radius:10px;padding:14px 18px;margin:40px 0 12px;scroll-margin-top:70px}
+.sec h2{margin:0;color:var(--accent);font-size:22px}
+.sec p{margin:4px 0 0;opacity:.85;font-size:15px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:16px 0;scroll-margin-top:70px}
+.card.is-done{border-color:var(--go-fg)}
+.card h3{margin:0 0 6px;display:flex;gap:10px;align-items:center;font-size:20px}
+.card h3 label{display:flex;gap:10px;align-items:center;cursor:pointer}
+.tick{width:20px;height:20px;accent-color:var(--go-fg);flex:none}
+.tag{font-family:var(--f-mono);font-size:13px;background:var(--brand);color:var(--brand-fg);border-radius:5px;padding:1px 7px}
+details{margin:6px 0}
+summary{cursor:pointer;font-weight:700;padding:8px 12px;border-radius:6px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ "} details[open]>summary::before{content:"▾ "}
+details.hint>summary{background:var(--hint-bg);color:var(--hint-fg)}
+details.sol>summary{background:var(--stop-bg);color:var(--stop-fg)}
+details>div{padding:4px 4px 4px 12px}
+.rate{display:flex;gap:6px;flex-wrap:wrap}
+.rate input{position:absolute;opacity:0;pointer-events:none}
+.rate label{border:1px solid var(--line);border-radius:6px;padding:4px 12px;cursor:pointer;font-variant-numeric:tabular-nums;background:var(--surface)}
+.rate input:checked+label{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.rate input:focus-visible+label{outline:3px solid var(--link);outline-offset:2px}
+.reset{background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.reset.armed{border-color:var(--stop-fg);color:var(--stop-fg)}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+@media (max-width:480px){body{font-size:16px} pre{font-size:13px}}
+body{margin:0}</style></head><body><main class="wrap"><div class="prog" role="region" aria-label="Progress"><span class="count"><span id="done">0</span> / 5 done</span><div class="bar" aria-hidden="true"><i id="barfill"></i></div><nav class="jump" aria-label="Jump to section"><a href="#secH" data-sec="H">H</a></nav><span class="save" id="save" data-s="wait">Checking whether this browser can save your progress…</span></div>
+<p class="sub"><a href="../../">&larr; All COP1047C practice pages</a></p><h1>Chapter 10 Practice Enhancements: Classes</h1><p class="sub">COP1047C Intro to Python · Miami Dade College · Optional · 5 short exercises on defining a class, creating objects, instance methods, class attributes, constructor defaults, and a derived class. Nothing to upload: each exercise is one Colab cell. Every sample run and solution here was produced by running the code on Python 3.12. Your checkmarks and self-ratings save in this browser.</p><h2>What's covered</h2><div class="map"><span>H · Ch 10 · zyBooks Chapter 10</span></div><div class="box go"><p class="boxlbl">Optional · on your own time</p><p><b>Your zyBooks labs and homework come first.</b> This page is extra practice if you want more reps on what we did in class. It is not graded and nothing here is due. Do one exercise or all five, whenever it works for you.</p></div><p>H1 defines a coffee window order class and makes objects. H2 adds constructor parameters and two instance methods. H3 counts pastries with a class attribute and shows how an instance attribute can hide it. H4 uses default values in a constructor. H5 builds a derived class that calls <code>super().__init__()</code>.</p><p>Want more first? See the <a href="../chapter-12-files-practice/">Chapter 12 Practice Enhancements</a> or the <a href="../chapter-09-lists-dictionaries-practice/">Chapter 9 Practice Enhancements</a>.</p><h2>How to use this practice set</h2><div class="box go"><p class="boxlbl">Do this in Colab</p><ol><li>Open a new notebook at colab.new. Use one code cell per exercise.</li><li>Read the story and answer the <b>Think first</b> questions out loud, or as a comment, before writing code.</li><li>Copy <b>Your plan</b> into the cell. The plan is the program, written as comments.</li><li>Build one plan line at a time. Type the code under its comment and run the cell after each piece.</li><li>Compare with the <b>Target</b> run. Type the same inputs: the logic and the numbers should match. Your messages can be worded your own way unless the story quotes them exactly.</li><li>Stuck? Open Hint 1. Still stuck after a couple of minutes? Hint 2, then Hint 3.</li><li>Open the solution last. Compare it to yours, then try the edge cases it lists.</li><li>Tick the box beside the title. Your progress saves in this browser.</li></ol></div><div class="box why"><p class="boxlbl">Why plan in comments first?</p><p>It's the order experienced programmers think in, and the same order we use when we build exercises live in class. A blank cell is hard. A to-do list is easy: each comment becomes one or two lines of code.</p></div><div class="box warn"><p class="boxlbl">Use the solutions honestly</p><p>The solutions are here so you can check your thinking, not skip it. If you open a solution before trying, close it, wait a day, and redo that exercise from a blank cell. That's what the exam will feel like.</p></div>
+<h3>The thinking order, for every exercise</h3><div class="tablewrap"><table><thead><tr><th></th><th>Step</th><th>Ask yourself</th></tr></thead><tbody><tr><td class="n">1</td><td><b>Restate</b></td><td>What goes in, what comes out, what are the rules? Look at the target run.</td></tr><tr><td class="n">2</td><td><b>Plan in comments</b></td><td>3 to 6 # lines, in order. Imports go first.</td></tr><tr><td class="n">3</td><td><b>Imports and constants</b></td><td>import random? Fixed values in ALL_CAPS?</td></tr><tr><td class="n">4</td><td><b>Inputs and starting variables</b></td><td>int, float or text? Counters and totals start at 0 before the loop.</td></tr><tr><td class="n">5</td><td><b>Pick the structure</b></td><td>One decision (if), repeat an unknown number of times (while), or a known number (for)?</td></tr><tr><td class="n">6</td><td><b>Body, one line at a time</b></td><td>What happens on each pass? What changes so the loop can end?</td></tr><tr><td class="n">7</td><td><b>After the loop</b></td><td>Summaries print once, at the left edge.</td></tr><tr><td class="n">8</td><td><b>Test</b></td><td>The sample input first, then an edge case: 0, the boundary, an empty entry.</td></tr></tbody></table></div>
+<section class="sec" id="secH"><h2>H · Classes</h2><p>Ch 10 · zyBooks Chapter 10 · Define your own type of object, give it attributes and methods, share a value across the class, and build one class on top of another.</p></section><div class="box why"><p class="boxlbl">Quick refresher</p><p><code>class Name:</code> defines a blueprint. <code>__init__(self, ...)</code> sets up each new object, and <code>self</code> is the object being built. Call the class to make an object: <code>Cup()</code>. Read and set attributes with dot notation. A method is a <code>def</code> inside the class that starts with <code>self</code>, and you call it without passing <code>self</code>. A value written under the class line is a class attribute, shared by every object. A parameter written <code>size="small"</code> has a default, used when you leave it out. <code>class Child(Parent):</code> builds on a parent class, and <code>super().__init__(...)</code> runs the parent's setup first.</p><div class="codewrap"><pre class="code">class Cup:
+    def __init__(self, size=&quot;small&quot;):
+        self.size = size
+
+    def describe(self):
+        return &quot;a &quot; + self.size + &quot; cup&quot;
+
+c = Cup()
+d = Cup(&quot;large&quot;)
+print(c.describe())
+print(d.describe())</pre></div><pre class="out">a small cup
+a large cup</pre></div><article class="card" id="H1"><h3><label><input type="checkbox" class="tick" id="tick-H1" data-id="H1" data-sec="H"><span class="tag">H1</span>Coffee window orders</label></h3><p>A coffee window in Hialeah writes down every order: who ordered, the size, and the price. Build a <code>CoffeeOrder</code> class whose <code>__init__(self)</code> gives every new order a name of <code>""</code>, a size of <code>""</code> and a price of <code>0</code>. Make two orders and set their attributes with dot notation: Ana, small, 3 dollars, and Luis, large, 5 dollars. Print one line per order, like <code>Ana ordered a small coffee for $3</code>. Then make a third order, set nothing, and print <code>vars(order3)</code> to see the starting values.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>The class comes first. <code>__init__(self)</code> sets up each new order, and <code>self</code> is the order being built.</li><li><code>order1 = CoffeeOrder()</code> makes the object. The parentheses matter: they call the class.</li><li>Set the attributes one by one with dot notation: <code>order1.name = "Ana"</code>.</li><li>Each object keeps its own values. The class itself is only the blueprint.</li></ol></div><h4>Think first</h4><ul><li>What does self stand for inside __init__?</li><li>What will vars(order3) show if you never set anything on it?</li><li>If you change order1.size later, does order2.size change too?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># H1 · Coffee window orders
+# PLAN
+# 1. imports: none needed
+# 2. class CoffeeOrder with __init__(self) that sets self.name = &quot;&quot;, self.size = &quot;&quot; and self.price = 0
+# 3. order1 = CoffeeOrder(), then set its name to &quot;Ana&quot;, size to &quot;small&quot; and price to 3 with dot notation
+# 4. order2 = CoffeeOrder(), then &quot;Luis&quot;, &quot;large&quot;, 5
+# 5. print one line per order: &lt;name&gt; ordered a &lt;size&gt; coffee for $&lt;price&gt;
+# 6. order3 = CoffeeOrder() and set nothing. print(vars(order3)) to see the starting values
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">Ana ordered a small coffee for $3
+Luis ordered a large coffee for $5
+{&#x27;name&#x27;: &#x27;&#x27;, &#x27;size&#x27;: &#x27;&#x27;, &#x27;price&#x27;: 0}</pre><details class="hint"><summary>Hint 1</summary><div><p>class CoffeeOrder: then, indented, def __init__(self): and three lines that start with self.</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>order1 = CoffeeOrder(), then order1.name = &quot;Ana&quot;, order1.size = &quot;small&quot;, order1.price = 3. Do the same for order2.</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>print(f&quot;{order1.name} ordered a {order1.size} coffee for ${order1.price}&quot;), the same for order2, then order3 = CoffeeOrder() and print(vars(order3))</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">class CoffeeOrder:
+    def __init__(self):
+        self.name = &quot;&quot;
+        self.size = &quot;&quot;
+        self.price = 0
+
+order1 = CoffeeOrder()
+order1.name = &quot;Ana&quot;
+order1.size = &quot;small&quot;
+order1.price = 3
+
+order2 = CoffeeOrder()
+order2.name = &quot;Luis&quot;
+order2.size = &quot;large&quot;
+order2.price = 5
+
+print(f&quot;{order1.name} ordered a {order1.size} coffee for ${order1.price}&quot;)
+print(f&quot;{order2.name} ordered a {order2.size} coffee for ${order2.price}&quot;)
+
+order3 = CoffeeOrder()
+print(vars(order3))</pre></div><div class="lbl">Edge case · change Ana&#x27;s size to medium after her order exists (Luis keeps large)</div><pre class="out">Ana ordered a small coffee for $3
+Luis ordered a large coffee for $5
+{&#x27;name&#x27;: &#x27;&#x27;, &#x27;size&#x27;: &#x27;&#x27;, &#x27;price&#x27;: 0}
+medium large</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Write <code>name = ""</code> without <code>self.</code> in <code>__init__</code> and the name is only a plain variable that vanishes when <code>__init__</code> ends, so a new order has no name: <code>{&#x27;size&#x27;: &#x27;&#x27;, &#x27;price&#x27;: 0}</code>. Leave off the parentheses, <code>order1 = CoffeeOrder</code>, and you are holding the class itself, not a new order. Both orders share it, so the second overwrites the first: <code>Luis ordered a large coffee for $5</code> on both lines.</p></div></div></details></article><article class="card" id="H2"><h3><label><input type="checkbox" class="tick" id="tick-H2" data-id="H2" data-sec="H"><span class="tag">H2</span>Cups and totals</label></h3><p>At the same window, an order also has a number of cups. A cup costs 3 dollars. Build <code>CoffeeOrder</code> with <code>__init__(self, name, price, cups)</code>, a method <code>total()</code> that returns the price times the cups, and a method <code>add_cups(more)</code> that adds to the cups. Ask <code>Name: </code> and <code>Cups: </code>, make the order, and print <code>Ana: 2 cups, total $6</code> (with the typed values). Then add 3 more cups and print the same line again.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>Constructor parameters mean the order is filled in the moment it is made: <code>CoffeeOrder(name, 3, cups)</code>.</li><li>A method is a <code>def</code> inside the class. Its first parameter is always <code>self</code>, and you do not pass it yourself.</li><li><code>total()</code> should <code>return</code> a number so the caller can print it. <code>add_cups()</code> changes the object, so it needs no return.</li><li><code>input()</code> gives text. <code>cups</code> needs <code>int()</code> before it goes in the order.</li></ol></div><h4>Think first</h4><ul><li>Why does the call order.total() have empty parentheses when the def has (self)?</li><li>What does order.cups hold after add_cups(3)?</li><li>Which attribute does total() read, and which does add_cups() change?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># H2 · Cups and totals
+# PLAN
+# 1. imports: none needed
+# 2. class CoffeeOrder with __init__(self, name, price, cups). Save all three on self
+# 3. a method total(self) that RETURNS self.price * self.cups
+# 4. a method add_cups(self, more) that adds more to self.cups (no return needed)
+# 5. name = input(&quot;Name: &quot;), cups = int(input(&quot;Cups: &quot;)), then order = CoffeeOrder(name, 3, cups). A cup costs 3
+# 6. print &quot;&lt;name&gt;: &lt;cups&gt; cups, total $&lt;total&gt;&quot; using order.total()
+# 7. order.add_cups(3), then print the same line again
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · typed &quot;Ana&quot;, then &quot;2&quot;</div><pre class="out">Name: Ana
+Cups: 2
+Ana: 2 cups, total $6
+Ana: 5 cups, total $15</pre><details class="hint"><summary>Hint 1</summary><div><p>class CoffeeOrder: with def __init__(self, name, price, cups): and three self. lines</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>def total(self): return self.price * self.cups, and def add_cups(self, more): self.cups += more</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>name = input(...), cups = int(input(...)), order = CoffeeOrder(name, 3, cups), print the line, order.add_cups(3), print it again</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">class CoffeeOrder:
+    def __init__(self, name, price, cups):
+        self.name = name
+        self.price = price
+        self.cups = cups
+
+    def total(self):
+        return self.price * self.cups
+
+    def add_cups(self, more):
+        self.cups += more
+
+name = input(&quot;Name: &quot;)
+cups = int(input(&quot;Cups: &quot;))
+
+order = CoffeeOrder(name, 3, cups)
+print(f&quot;{order.name}: {order.cups} cups, total ${order.total()}&quot;)
+
+order.add_cups(3)
+print(f&quot;{order.name}: {order.cups} cups, total ${order.total()}&quot;)</pre></div><div class="lbl">Edge case · typed Luis, then 0 (zero cups gives a total of 0, then 3 more cups)</div><pre class="out">Name: Luis
+Cups: 0
+Luis: 0 cups, total $0
+Luis: 3 cups, total $9</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Leave out <code>return</code> and <code>total()</code> gives back nothing, so the line says <code>total $None</code>. Write <code>order.total</code> without the parentheses and Python prints the method itself, which starts <code>total $&lt;bound method CoffeeOrder.total of</code>. Write <code>def total():</code> without <code>self</code> and the call fails: <code>TypeError: CoffeeOrder.total() takes 0 positional arguments but 1 was given</code>. Skip <code>int()</code> on the cups and the text <code>"2"</code> repeats the price (<code>3 * "2"</code> is <code>"222"</code>) until <code>add_cups</code> fails: <code>TypeError: can only concatenate str (not &quot;int&quot;) to str</code>. Forget an argument when you make the order and Python names it: <code>TypeError: CoffeeOrder.__init__() missing 1 required positional argument: &#x27;cups&#x27;</code>.</p></div></div></details></article><article class="card" id="H3"><h3><label><input type="checkbox" class="tick" id="tick-H3" data-id="H3" data-sec="H"><span class="tag">H3</span>Count the pastries</label></h3><p>A bakery in Little Havana makes pastries, and the owner wants to know how many have been made. Build a <code>Pastry</code> class. Two class attributes sit under the class line, before <code>__init__</code>: <code>PER_BOX = 6</code> (a box holds 6, shared by every pastry) and <code>made = 0</code> (a counter). Each pastry has its own name and price, and every new pastry adds 1 to <code>Pastry.made</code>. Make Guava (2 dollars), Cheese (2 dollars) and Coconut (3 dollars), and print <code>Guava costs $2</code> for each. Then print <code>Pastries made so far:</code> and the count, and <code>Pastries in a box:</code> with the box size read through the class and through an object. Last, try the trap: set <code>guava.made = 99</code> and print <code>guava.made:</code> with its value, then <code>Pastry.made:</code> with its value.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>A class attribute goes directly under the <code>class</code> line. An instance attribute goes inside <code>__init__</code> with <code>self.</code>.</li><li>To change the shared counter, use the class name: <code>Pastry.made += 1</code>.</li><li>You can read a class attribute through the class or through any object. Both show the same shared value.</li><li>Setting <code>guava.made = 99</code> does not change the shared counter. It gives guava its own separate attribute that hides the class one.</li></ol></div><h4>Think first</h4><ul><li>Which value belongs to each pastry, and which belongs to the whole class?</li><li>Why is the counter updated with Pastry.made and not self.made?</li><li>After guava.made = 99, which of the three pastries see 99?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># H3 · Count the pastries
+# PLAN
+# 1. imports: none needed
+# 2. class Pastry. Under the class line, before __init__, two class attributes: PER_BOX = 6 and made = 0
+# 3. __init__(self, name, price) saves self.name and self.price, then adds 1 to Pastry.made (the class name, not self)
+# 4. make guava = Pastry(&quot;Guava&quot;, 2), cheese = Pastry(&quot;Cheese&quot;, 2) and coconut = Pastry(&quot;Coconut&quot;, 3)
+# 5. print &quot;&lt;name&gt; costs $&lt;price&gt;&quot; for each of the three
+# 6. print &quot;Pastries made so far:&quot; with Pastry.made, then &quot;Pastries in a box:&quot; with Pastry.PER_BOX and guava.PER_BOX
+# 7. the trap: set guava.made = 99, then print &quot;guava.made:&quot; with guava.made, and &quot;Pastry.made:&quot; with Pastry.made, on two lines
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">Guava costs $2
+Cheese costs $2
+Coconut costs $3
+Pastries made so far: 3
+Pastries in a box: 6 and 6
+guava.made: 99
+Pastry.made: 3</pre><details class="hint"><summary>Hint 1</summary><div><p>class Pastry: then PER_BOX = 6 and made = 0 on their own lines, indented once, above def __init__</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>def __init__(self, name, price): self.name = name, self.price = price, Pastry.made += 1</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>Create the three pastries, print each one, then print(&quot;Pastries made so far:&quot;, Pastry.made). Finish with guava.made = 99 and the two prints.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">class Pastry:
+    PER_BOX = 6
+    made = 0
+
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+        Pastry.made += 1
+
+guava = Pastry(&quot;Guava&quot;, 2)
+cheese = Pastry(&quot;Cheese&quot;, 2)
+coconut = Pastry(&quot;Coconut&quot;, 3)
+
+print(f&quot;{guava.name} costs ${guava.price}&quot;)
+print(f&quot;{cheese.name} costs ${cheese.price}&quot;)
+print(f&quot;{coconut.name} costs ${coconut.price}&quot;)
+
+print(&quot;Pastries made so far:&quot;, Pastry.made)
+print(&quot;Pastries in a box:&quot;, Pastry.PER_BOX, &quot;and&quot;, guava.PER_BOX)
+
+guava.made = 99
+print(&quot;guava.made:&quot;, guava.made)
+print(&quot;Pastry.made:&quot;, Pastry.made)</pre></div><div class="lbl">Edge case · make a fourth pastry, Flan, after the trap (the shared count keeps going, guava keeps its 99)</div><pre class="out">Guava costs $2
+Cheese costs $2
+Coconut costs $3
+Pastries made so far: 3
+Pastries in a box: 6 and 6
+guava.made: 99
+Pastry.made: 3
+Pastry.made: 4
+cheese.made: 4
+guava.made: 99</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Write <code>self.made += 1</code> in <code>__init__</code> and every pastry quietly gets its own counter, while the shared one never moves: <code>Pastries made so far: 0</code>. Setting <code>guava.made = 99</code> does the same thing on purpose, for guava alone. The class keeps its own count (<code>Pastry.made: 3</code>) and the other pastries still read the class value.</p></div></div></details></article><article class="card" id="H4"><h3><label><input type="checkbox" class="tick" id="tick-H4" data-id="H4" data-sec="H"><span class="tag">H4</span>Kayak rental defaults</label></h3><p>A kayak stand on Key Biscayne rents by the hour. Build a <code>KayakRental</code> class with <code>__init__(self, name, hours=1, rate=10)</code>. The <code>=1</code> and <code>=10</code> are default values: they are used when you leave that argument out. A method <code>cost()</code> returns hours times rate. Make a list of three rentals, <code>KayakRental("Ana")</code>, <code>KayakRental("Luis", 3)</code> and <code>KayakRental("Marta", 2, 15)</code>, and print one line each like <code>Ana: 1 h at $10 = $10</code>. Then make Ivan with only the rate, <code>KayakRental("Ivan", rate=20)</code>, so the hours stay at their default, and print his line the same way.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>A parameter with <code>=</code> in the <code>def</code> line has a default. Parameters without defaults come first.</li><li><code>KayakRental("Ana")</code> fills in only <code>name</code>. <code>hours</code> and <code>rate</code> take their defaults, and each object still saves its own copy with <code>self.</code>.</li><li>To skip a middle default, name the one you want: <code>rate=20</code>.</li><li>A <code>for</code> loop over the list prints one line per rental, and <code>r.cost()</code> uses the same method for all of them.</li></ol></div><h4>Think first</h4><ul><li>Why must name come before hours and rate in the def line?</li><li>What are hours and rate for Ana, who gave only a name?</li><li>What does KayakRental(&quot;Ivan&quot;, 20) mean, and how is it different from rate=20?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># H4 · Kayak rental defaults
+# PLAN
+# 1. imports: none needed
+# 2. class KayakRental with __init__(self, name, hours=1, rate=10). hours and rate have default values. Save all three on self
+# 3. a method cost(self) that RETURNS self.hours * self.rate
+# 4. rentals = [KayakRental(&quot;Ana&quot;), KayakRental(&quot;Luis&quot;, 3), KayakRental(&quot;Marta&quot;, 2, 15)]
+# 5. for each rental print &quot;&lt;name&gt;: &lt;hours&gt; h at $&lt;rate&gt; = $&lt;cost&gt;&quot;
+# 6. make one more, KayakRental(&quot;Ivan&quot;, rate=20), skipping hours on purpose, and print it the same way
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">Ana: 1 h at $10 = $10
+Luis: 3 h at $10 = $30
+Marta: 2 h at $15 = $30
+Ivan: 1 h at $20 = $20</pre><details class="hint"><summary>Hint 1</summary><div><p>class KayakRental: def __init__(self, name, hours=1, rate=10): then self.name = name, self.hours = hours, self.rate = rate</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>def cost(self): return self.hours * self.rate. Then rentals = [KayakRental(&quot;Ana&quot;), ...]</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>for r in rentals: print(f&quot;{r.name}: {r.hours} h at ${r.rate} = ${r.cost()}&quot;). Then ivan = KayakRental(&quot;Ivan&quot;, rate=20) and print it the same way.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">class KayakRental:
+    def __init__(self, name, hours=1, rate=10):
+        self.name = name
+        self.hours = hours
+        self.rate = rate
+
+    def cost(self):
+        return self.hours * self.rate
+
+rentals = [KayakRental(&quot;Ana&quot;), KayakRental(&quot;Luis&quot;, 3), KayakRental(&quot;Marta&quot;, 2, 15)]
+
+for r in rentals:
+    print(f&quot;{r.name}: {r.hours} h at ${r.rate} = ${r.cost()}&quot;)
+
+ivan = KayakRental(&quot;Ivan&quot;, rate=20)
+print(f&quot;{ivan.name}: {ivan.hours} h at ${ivan.rate} = ${ivan.cost()}&quot;)</pre></div><div class="lbl">Edge case · Zoe rents for 0 hours (the default rate stays, the cost is 0)</div><pre class="out">Ana: 1 h at $10 = $10
+Luis: 3 h at $10 = $30
+Marta: 2 h at $15 = $30
+Ivan: 1 h at $20 = $20
+Zoe: 0 h at $10 = $0</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Mix up the order and the values land in the wrong places: <code>KayakRental("Marta", 15, 2)</code> prints <code>Marta: 15 h at $2 = $30</code>. Leave out a parameter that has no default and Python names it: <code>TypeError: KayakRental.__init__() missing 1 required positional argument: &#x27;name&#x27;</code>. Put a default before a parameter without one in the def line and the whole cell stops before it runs: <code>SyntaxError: parameter without a default follows parameter with a default</code>.</p></div></div></details></article><article class="card" id="H5"><h3><label><input type="checkbox" class="tick" id="tick-H5" data-id="H5" data-sec="H"><span class="tag">H5</span>Coffee delivery</label></h3><p>The window starts delivering to nearby buildings. The plan gives you the <code>CoffeeOrder</code> class from before, with <code>name</code>, <code>price</code>, <code>cups</code> and a <code>total()</code> method. Build a <code>Delivery</code> class derived from it. Its <code>__init__</code> takes <code>name, price, cups, fee</code>, hands the first three to the parent with <code>super().__init__(...)</code>, and saves <code>fee</code> itself. A new method <code>total_with_fee()</code> returns the order total plus the fee. Make <code>Delivery("Marta", 3, 4, 2)</code> (3 dollars a cup, 4 cups, a 2 dollar fee) and print <code>Marta: 4 cups, total $12</code> using the inherited <code>total()</code>, then <code>With delivery fee: $14</code>, then <code>vars(trip)</code>.</p><div class="box why"><p class="boxlbl">How to think about the plan</p><ol><li>The parent class is already written. Your task is only the new class: <code>class Delivery(CoffeeOrder):</code>.</li><li>The parent knows how to set up name, price and cups. <code>super().__init__(name, price, cups)</code> runs that setup for you.</li><li>Then add what is new: <code>self.fee = fee</code>.</li><li><code>total()</code> is inherited, so a Delivery can call it. <code>total_with_fee()</code> can call it too, with <code>self.total()</code>.</li></ol></div><h4>Think first</h4><ul><li>Which attributes does a Delivery get from the parent, and which are its own?</li><li>Why call super().__init__ instead of copying the three self. lines?</li><li>Does Delivery need its own total() method?</li></ul><h4>Your plan (copy into a Colab cell)</h4><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code"># H5 · Coffee delivery
+# PLAN
+# 1. imports: none needed
+# 2. class Delivery(CoffeeOrder) with __init__(self, name, price, cups, fee). First line inside: super().__init__(name, price, cups). Then self.fee = fee
+# 3. a method total_with_fee(self) that RETURNS self.total() + self.fee (total() comes from CoffeeOrder)
+# 4. trip = Delivery(&quot;Marta&quot;, 3, 4, 2)
+# 5. print &quot;&lt;name&gt;: &lt;cups&gt; cups, total $&lt;total&gt;&quot; using the inherited total()
+# 6. print &quot;With delivery fee: $&lt;total_with_fee&gt;&quot;, then print(vars(trip))
+# 7. Run as given: the class the window already uses
+class CoffeeOrder:  # Run as given
+    def __init__(self, name, price, cups):  # Run as given
+        self.name = name  # Run as given
+        self.price = price  # Run as given
+        self.cups = cups  # Run as given
+
+    def total(self):  # Run as given
+        return self.price * self.cups  # Run as given
+# YOUR CODE HERE</pre></div><h4>Target</h4><div class="lbl">Sample run · no input</div><pre class="out">Marta: 4 cups, total $12
+With delivery fee: $14
+{&#x27;name&#x27;: &#x27;Marta&#x27;, &#x27;price&#x27;: 3, &#x27;cups&#x27;: 4, &#x27;fee&#x27;: 2}</pre><details class="hint"><summary>Hint 1</summary><div><p>class Delivery(CoffeeOrder): then def __init__(self, name, price, cups, fee):</p></div></details><details class="hint"><summary>Hint 2</summary><div><p>First line inside __init__: super().__init__(name, price, cups). Second: self.fee = fee</p></div></details><details class="hint"><summary>Hint 3</summary><div><p>def total_with_fee(self): return self.total() + self.fee. Then trip = Delivery(&quot;Marta&quot;, 3, 4, 2) and the three prints.</p></div></details><details class="sol"><summary>Show solution (try first)</summary><div><div class="codewrap"><button class="copy" type="button">Copy</button><pre class="code">class CoffeeOrder:
+    def __init__(self, name, price, cups):
+        self.name = name
+        self.price = price
+        self.cups = cups
+
+    def total(self):
+        return self.price * self.cups
+
+class Delivery(CoffeeOrder):
+    def __init__(self, name, price, cups, fee):
+        super().__init__(name, price, cups)
+        self.fee = fee
+
+    def total_with_fee(self):
+        return self.total() + self.fee
+
+trip = Delivery(&quot;Marta&quot;, 3, 4, 2)
+print(f&quot;{trip.name}: {trip.cups} cups, total ${trip.total()}&quot;)
+print(f&quot;With delivery fee: ${trip.total_with_fee()}&quot;)
+print(vars(trip))</pre></div><div class="lbl">Edge case · a free delivery: Zoe, 3 dollars, 1 cup, fee 0 (both totals match)</div><pre class="out">Marta: 4 cups, total $12
+With delivery fee: $14
+{&#x27;name&#x27;: &#x27;Marta&#x27;, &#x27;price&#x27;: 3, &#x27;cups&#x27;: 4, &#x27;fee&#x27;: 2}
+3 3</pre><div class="box warn"><p class="boxlbl">Watch out</p><p>Skip <code>super().__init__(...)</code> and the parent's setup never runs, so the order has no name, price or cups: <code>AttributeError: &#x27;Delivery&#x27; object has no attribute &#x27;name&#x27;</code>. Forget the parent in the class line, <code>class Delivery:</code>, and <code>super()</code> has no parent to call: <code>TypeError: object.__init__() takes exactly one argument (the instance to initialize)</code>.</p></div></div></details></article><h2 id="rate">Rate yourself</h2><p>Give each section a 1 (shaky), 2 (okay) or 3 (solid). Your ratings save with your progress. Any 1s? Redo that section's last exercise tomorrow from a blank cell, without the plan. That's the real test, and those are the ones to bring questions about next class.</p>
+<div class="tablewrap"><table><thead><tr><th>Section</th><th>Topic</th><th>Your rating</th></tr></thead><tbody><tr><td><b>H</b></td><td>Defining a class, objects, instance methods, class attributes, constructor defaults, a derived class</td><td><div class="rate" role="radiogroup" aria-label="Rating for section H"><input type="radio" name="rate-H" id="rate-H-1" value="1" data-sec="H"><label for="rate-H-1">1</label><input type="radio" name="rate-H" id="rate-H-2" value="2" data-sec="H"><label for="rate-H-2">2</label><input type="radio" name="rate-H" id="rate-H-3" value="3" data-sec="H"><label for="rate-H-3">3</label></div></td></tr></tbody></table></div>
+<div class="box why"><p class="boxlbl">If you want more practice</p><ul><li>Redo any exercise you rated a 1, from a blank cell.</li><li>Say the thinking order out loud on every problem: restate, plan, imports and constants, inputs, structure, body, after the loop, test.</li><li>Know the traps: leaving <code>self.</code> off an attribute inside <code>__init__</code>, leaving the parentheses off when you make an object, <code>self</code> missing from a method's def line, a method with no <code>return</code> when you wanted a value, <code>self.count</code> where you meant <code>ClassName.count</code>, and a derived class that forgets <code>super().__init__()</code>.</li></ul></div>
+<p><button class="reset" id="reset" type="button">Reset my progress</button></p>
+<p class="sub">Progress is stored only in this browser on this device. A different browser, a private window or clearing your browsing data starts fresh.</p></main><script>
+(function(){
+const KEY="cop1047c-ch10-practice-v1";
+const ticks=[...document.querySelectorAll('.tick')];
+const radios=[...document.querySelectorAll('.rate input')];
+const saveEl=document.getElementById('save');
+let state={done:{},ratings:{}}, canSave=false;
+function setStatus(s,m){saveEl.dataset.s=s;saveEl.textContent=m;}
+function render(){
+  ticks.forEach(t=>{t.checked=!!state.done[t.dataset.id];t.closest('.card').classList.toggle('is-done',t.checked);});
+  radios.forEach(r=>{r.checked=String(state.ratings[r.dataset.sec]||'')===r.value;});
+  const n=ticks.filter(t=>t.checked).length;
+  document.getElementById('done').textContent=n;
+  document.getElementById('barfill').style.width=(100*n/ticks.length)+'%';
+  document.querySelectorAll('.jump a').forEach(a=>{const ts=ticks.filter(t=>t.dataset.sec===a.dataset.sec);a.classList.toggle('full',ts.length>0&&ts.every(t=>t.checked));});
+}
+function save(){
+  render();
+  if(!canSave) return;
+  try{localStorage.setItem(KEY,JSON.stringify(state));setStatus('saved','Saved in this browser');}
+  catch(e){canSave=false;setStatus('error','This browser stopped saving. Your checkmarks last until you close the page.');}
+}
+try{
+  const raw=localStorage.getItem(KEY);
+  if(raw){const d=JSON.parse(raw);state={done:Object.assign({},d.done||{}),ratings:Object.assign({},d.ratings||{})};}
+  localStorage.setItem(KEY+'-test','1');localStorage.removeItem(KEY+'-test');
+  canSave=true;setStatus('saved',raw?'Progress loaded from this browser':'Progress saves in this browser');
+}catch(e){setStatus('local','This browser is blocking saving (private window?). Your checkmarks last until you close the page.');}
+ticks.forEach(t=>t.addEventListener('change',()=>{if(t.checked) state.done[t.dataset.id]=true; else delete state.done[t.dataset.id]; save();}));
+radios.forEach(r=>r.addEventListener('change',()=>{state.ratings[r.dataset.sec]=Number(r.value);save();}));
+const btn=document.getElementById('reset');let armed=false;
+btn.addEventListener('click',()=>{
+  if(!armed){armed=true;btn.classList.add('armed');btn.textContent='Tap again to clear every checkmark and rating';setTimeout(()=>{armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';},4000);return;}
+  armed=false;btn.classList.remove('armed');btn.textContent='Reset my progress';state={done:{},ratings:{}};save();
+});
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
+  const pre=b.parentElement.querySelector('pre');const t=pre.innerText;
+  const done=m=>{b.textContent=m;setTimeout(()=>b.textContent='Copy',1400);};
+  const sel=()=>{const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);done('Selected: press Ctrl+C');};
+  try{navigator.clipboard.writeText(t).then(()=>done('Copied'),sel);}catch(e){sel();}
+}));
+render();
+})();
+</script></body></html>
